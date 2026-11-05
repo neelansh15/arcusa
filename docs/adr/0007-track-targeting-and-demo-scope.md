@@ -1,6 +1,6 @@
 # 0007. Track targeting and demo scope
 
-- Status: accepted
+- Status: superseded by 0017
 - Date: 2026-11-06
 - Deciders: alle, user
 

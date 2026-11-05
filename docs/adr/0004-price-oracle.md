@@ -1,6 +1,6 @@
 # 0004. Price oracle: Pyth equity price relayed by our backend into an arcusa oracle contract on Arc
 
-- Status: proposed
+- Status: superseded by 0015
 - Date: 2026-11-06
 - Deciders: alle, user
 

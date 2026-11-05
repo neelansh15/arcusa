@@ -1,6 +1,6 @@
 # 0009. Compliance and legal stance for the testnet demo
 
-- Status: accepted
+- Status: superseded by 0016
 - Date: 2026-11-06
 - Deciders: alle, user
 

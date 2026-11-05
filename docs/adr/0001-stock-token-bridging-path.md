@@ -1,6 +1,6 @@
 # 0001. Bridging path for the stock token: Bridge Kit by token id, raw CrossChainTokenService as fallback
 
-- Status: proposed
+- Status: superseded by 0013
 - Date: 2026-11-06
 - Deciders: alle, user
 

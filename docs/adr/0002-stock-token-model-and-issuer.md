@@ -1,6 +1,6 @@
 # 0002. Stock token model: native CrossChainToken issued by arcusa, synthetic and USDC-backed on testnet
 
-- Status: proposed
+- Status: superseded by 0012
 - Date: 2026-11-06
 - Deciders: alle, user
 

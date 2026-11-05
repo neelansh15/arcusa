@@ -2,7 +2,7 @@
 
 Shared task list between **alle** (primary agent) and **laptop** (Claude Code on the user's laptop). See `CLAUDE.md` for the rules.
 
-Statuses: `todo`, `doing`, `blocked`, `done`. Owners: `alle`, `laptop`.
+Statuses: `todo`, `doing`, `blocked`, `done`, `superseded`. Owners: `alle`, `laptop`.
 One block per task, newest at the bottom. Do not reuse IDs.
 
 ## Template
@@ -10,7 +10,7 @@ One block per task, newest at the bottom. Do not reuse IDs.
 ```
 ### T-000: Short imperative title
 - Owner: alle | laptop
-- Status: todo | doing | blocked | done
+- Status: todo | doing | blocked | done | superseded
 - ADR: docs/adr/NNNN-... (optional)
 - Depends on: T-xxx (optional)
 - Goal: one or two sentences.
@@ -21,40 +21,46 @@ One block per task, newest at the bottom. Do not reuse IDs.
 - Result: (filled when done) what changed, links, how to reproduce, what was NOT verified.
 ```
 
-## Critical path to the MVP (added 2026-11-06)
+## Critical path to the MVP (revised 2026-11-06)
 
 1. T-002 Repo skeleton
 2. T-003 Arc Studio app
-3. T-005 tAAPL token on Arc and Sepolia
-4. T-006 Bridge Kit custom-token spike
-5. T-008 ADR review
-6. T-009 PriceOracle and relayer
-7. T-010 Market contract
-8. T-011 Terminal UI
-9. T-013 Stock bridge in the UI
-10. T-014 End-to-end run
-11. T-016 README and diagram
-12. T-018 Demo video
-13. T-019 Submission
+3. T-022 Mock provider token, lock-and-mint on Arc (spike)
+4. T-024 Bridge Kit for wAAPL, both directions, timings (spike)
+5. T-032 ADR review
+6. T-026 PriceOracle with guards, and relayer
+7. T-027 InventoryMarket
+8. T-028 Seed inventory
+9. T-011 Terminal UI
+10. T-013 Bridge wAAPL in the UI
+11. T-014 End-to-end run
+12. T-016 README and diagram
+13. T-018 Demo video
+14. T-019 Submission
 
 These run in parallel and feed into the path:
-- T-001: user decisions; needed by T-019.
+- T-001: user decisions (now includes the off-hours demo mode); needed by T-019 and T-032.
 - T-004: USDC bridge-in spike; needed by T-012.
-- T-007: oracle spike; needed by T-008.
+- T-023: real provider token research (alle); needed by T-032.
+- T-025: oracle and market-session spike (alle); needed by T-026.
+- T-029: parity tests; needed by T-014.
+- T-030: parity panel in the UI; needed by T-014.
 - T-012: USDC bridge-in in the UI; needed by T-014.
 - T-015: draft architecture diagram; needed by T-016.
 - T-017: fact re-check; needed by T-018.
 
+Superseded on 2026-11-06: T-005, T-006, T-007, T-008, T-009, T-010 (replaced by T-022, T-024, T-025, T-032, T-026, T-027). Tasks T-001 and T-011 to T-019 now say `wAAPL` where they said `tAAPL`; read them with ADRs 0012 to 0017.
+
 Post-MVP: T-020 and T-021. Do not start these before T-019 is done.
 
-Spikes check items that are not verified in proposed ADRs. A spike may use a proposed ADR as its hypothesis. Build tasks wait for the ADR to be accepted (T-008).
+Spikes check items that are not verified in proposed ADRs. A spike may use a proposed ADR as its hypothesis. Build tasks wait for the ADR to be accepted (T-032).
 
 ## Tasks
 
 ### T-001: Get user decisions needed for submission and demo
 - Owner: alle
 - Status: todo
-- ADR: docs/adr/0007-track-targeting-and-demo-scope.md, docs/adr/0005-trading-and-settlement.md
+- ADR: docs/adr/0017-demo-scope-with-wrapped-token.md, docs/adr/0014-trading-against-pre-positioned-inventory.md
 - Depends on: none
 - Goal: Get the user's answers on the open choices that no agent can make alone, and record them in PLAN.md.
 - Acceptance criteria:
@@ -66,6 +72,7 @@ Spikes check items that are not verified in proposed ADRs. A spike may use a pro
   - [ ] All answers are recorded in the PLAN.md Log with a date.
 - Notes: US regular hours are 20:00-02:30 IST after the US DST change, so daytime judging will probably fall when the market is closed.
 - Result:
+- Added 2026-11-06: ask the user whether demo mode (trade off-hours at the last price with a wide spread, ADR 0015) is allowed, and whether the real provider tokens claim stays in the pitch if T-023 says no.
 
 ### T-002: Create repo skeleton per ADR 0010
 - Owner: laptop
@@ -113,7 +120,7 @@ Spikes check items that are not verified in proposed ADRs. A spike may use a pro
 
 ### T-005: Spike: deploy tAAPL as a native CrossChainToken on Arc and Sepolia (ADR 0002)
 - Owner: laptop
-- Status: todo
+- Status: superseded
 - ADR: docs/adr/0002-stock-token-model-and-issuer.md
 - Depends on: T-002
 - Goal: Deploy the stock token on both chains with the same deployer and salt, and settle the open questions in ADR 0002.
@@ -126,10 +133,11 @@ Spikes check items that are not verified in proposed ADRs. A spike may use a pro
   - [ ] `deployments/arc-testnet.json` and `deployments/sepolia.json` hold the token id, token addresses and TokenManager addresses. No keys.
 - Notes: Address fields are `bytes` packed to 20 bytes (`encodePacked`). Do not ABI-pad them to 32 bytes.
 - Result:
+- Superseded by T-022 on 2026-11-06 (asset model changed, ADR 0012). Do not start this task.
 
 ### T-006: Spike: Bridge Kit transfer of tAAPL by token id, in both directions (ADR 0001)
 - Owner: laptop
-- Status: todo
+- Status: superseded
 - ADR: docs/adr/0001-stock-token-bridging-path.md
 - Depends on: T-005
 - Goal: Show that Bridge Kit can move our own token between Arc testnet and Sepolia. If it cannot, prove the raw CCTS fallback.
@@ -141,10 +149,11 @@ Spikes check items that are not verified in proposed ADRs. A spike may use a pro
   - [ ] If Bridge Kit fails: `contracts/scripts/ccts-transfer.ts` does the raw flow (approve TokenManager, Iris quote, `crossChainTransfer`, poll, `receiveMessage`) and succeeds. The Result has the Bridge Kit error verbatim.
 - Notes: Sepolia-source transfers are expected to run at SLOW (Ethereum finality), because our token has no FX symbol for fast burn.
 - Result:
+- Superseded by T-024 on 2026-11-06 (asset model changed, ADR 0012). Do not start this task.
 
 ### T-007: Spike: oracle source for AAPL/USD on Arc testnet (ADR 0004)
 - Owner: laptop
-- Status: todo
+- Status: superseded
 - ADR: docs/adr/0004-price-oracle.md
 - Depends on: T-002
 - Goal: Confirm the relayer approach works, and check whether a verifiable oracle on Arc testnet is just as easy.
@@ -155,10 +164,11 @@ Spikes check items that are not verified in proposed ADRs. A spike may use a pro
   - [ ] The Result recommends a source in one line, with reasons.
 - Notes: Pyth's own table shows no Pyth Core contract on Arc testnet, only Pyth Pro (checked 2026-11-06).
 - Result:
+- Superseded by T-025 on 2026-11-06 (asset model changed, ADR 0012). Do not start this task.
 
 ### T-008: Review spike results and accept or supersede ADRs 0001, 0002, 0004, 0005, 0008
 - Owner: alle
-- Status: todo
+- Status: superseded
 - ADR: docs/adr/0001-stock-token-bridging-path.md, docs/adr/0002-stock-token-model-and-issuer.md, docs/adr/0004-price-oracle.md, docs/adr/0005-trading-and-settlement.md, docs/adr/0008-frontend-stack-and-wallet.md
 - Depends on: T-003, T-005, T-006, T-007
 - Goal: Turn the proposed ADRs into accepted ones, or write superseding ADRs, so the build tasks have rules to follow.
@@ -168,10 +178,11 @@ Spikes check items that are not verified in proposed ADRs. A spike may use a pro
   - [ ] The ADR index in `docs/adr/README.md` is updated.
 - Notes: Fast-moving facts in the ADRs must be re-fetched on the day of review.
 - Result:
+- Superseded by T-032 on 2026-11-06 (asset model changed, ADR 0012). Do not start this task.
 
 ### T-009: Build PriceOracle contract and oracle relayer
 - Owner: laptop
-- Status: todo
+- Status: superseded
 - ADR: docs/adr/0004-price-oracle.md (must be accepted)
 - Depends on: T-008
 - Goal: Get a fresh AAPL/USD price onchain on Arc testnet, with publish time and market status.
@@ -182,10 +193,11 @@ Spikes check items that are not verified in proposed ADRs. A spike may use a pro
   - [ ] Reading the oracle from Arc testnet returns a price whose publish time is less than 2 minutes behind Hermes while the relayer runs.
 - Notes: Gas is paid in USDC, with a 20 Gwei `maxFeePerGas` floor.
 - Result:
+- Superseded by T-026 on 2026-11-06 (asset model changed, ADR 0012). Do not start this task.
 
 ### T-010: Build market contract (oracle-priced mint and redeem) in Arc Studio
 - Owner: laptop
-- Status: todo
+- Status: superseded
 - ADR: docs/adr/0005-trading-and-settlement.md (must be accepted), docs/adr/0002-stock-token-model-and-issuer.md (must be accepted)
 - Depends on: T-008, T-009
 - Goal: Users can buy and sell tAAPL against USDC on Arc at the oracle price, within the rules in ADR 0005.
@@ -203,17 +215,18 @@ Spikes check items that are not verified in proposed ADRs. A spike may use a pro
   - [ ] A scripted buy and sell on Arc testnet succeed. The tx hashes are in Result, and the `Bought` and `Sold` events are visible on the explorer.
 - Notes:
 - Result:
+- Superseded by T-027 on 2026-11-06 (asset model changed, ADR 0012). Do not start this task.
 
 ### T-011: Build terminal UI: price, balances, buy and sell
 - Owner: laptop
 - Status: todo
-- ADR: docs/adr/0008-frontend-stack-and-wallet.md (must be accepted), docs/adr/0009-compliance-stance-testnet-demo.md
-- Depends on: T-003, T-010
-- Goal: A user connects a wallet and trades tAAPL against USDC on Arc from the terminal UI.
+- ADR: docs/adr/0008-frontend-stack-and-wallet.md (must be accepted), docs/adr/0016-compliance-provider-tokens.md
+- Depends on: T-003, T-027
+- Goal: A user connects a wallet and trades wAAPL against USDC on Arc from the terminal UI.
 - Acceptance criteria:
   - [ ] Wallet connect works for Arc testnet (5042002) and Ethereum Sepolia.
   - [ ] The UI shows the AAPL price, the age of the price, and market open or closed.
-  - [ ] The UI shows USDC and tAAPL balances on Arc and Sepolia.
+  - [ ] The UI shows USDC and wAAPL balances on Arc and Sepolia.
   - [ ] Buy and sell work from the UI on Arc testnet, with a tx link shown.
   - [ ] Every screen shows the testnet disclaimer from ADR 0009.
   - [ ] The UI changes are made through Studio or synced back to it. The Result notes which.
@@ -233,14 +246,14 @@ Spikes check items that are not verified in proposed ADRs. A spike may use a pro
 - Notes:
 - Result:
 
-### T-013: Add tAAPL bridge flow to the UI
+### T-013: Add wAAPL bridge flow to the UI
 - Owner: laptop
 - Status: todo
-- ADR: docs/adr/0001-stock-token-bridging-path.md (must be accepted)
-- Depends on: T-006, T-011
-- Goal: A user moves tAAPL from Arc to Sepolia, and back, from the terminal with Bridge Kit, or the fallback from ADR 0001.
+- ADR: docs/adr/0013-wrapped-token-bridging-path.md (must be accepted)
+- Depends on: T-024, T-011
+- Goal: A user moves wAAPL from Arc to Sepolia, and back, from the terminal with Bridge Kit, or the fallback from ADR 0001.
 - Acceptance criteria:
-  - [ ] The "Send tAAPL to Sepolia" and "Bring tAAPL to Arc" flows work. The UI shows the states PENDING, SENT, CONFIRMED, COMPLETE and FAILED.
+  - [ ] The "Send wAAPL to Sepolia" and "Bring wAAPL to Arc" flows work. The UI shows the states PENDING, SENT, CONFIRMED, COMPLETE and FAILED.
   - [ ] The expected wait is shown, with SLOW for the Sepolia-source direction.
   - [ ] Balances on both chains update after COMPLETE.
 - Notes:
@@ -249,11 +262,11 @@ Spikes check items that are not verified in proposed ADRs. A spike may use a pro
 ### T-014: Run the full demo flow end to end on a fresh wallet
 - Owner: laptop
 - Status: todo
-- ADR: docs/adr/0007-track-targeting-and-demo-scope.md
+- ADR: docs/adr/0017-demo-scope-with-wrapped-token.md
 - Depends on: T-012, T-013
 - Goal: Prove the demo scope in ADR 0007 works from a clean state.
 - Acceptance criteria:
-  - [ ] Starting from a fresh wallet, complete ADR 0007 MVP steps 1-4: deposit USDC, view price, buy tAAPL, bridge tAAPL to Sepolia.
+  - [ ] Starting from a fresh wallet, complete ADR 0007 MVP steps 1-4: deposit USDC, view price, buy wAAPL, bridge wAAPL to Sepolia.
   - [ ] Step 5 (bridge back and sell) is either done or marked skipped with the reason.
   - [ ] The Result has every tx hash, the timings and any manual step.
   - [ ] `docs/demo/demo-script.md` exists, with the click-by-click order and fallback steps, including what to do if Sepolia finality is slow.
@@ -264,7 +277,7 @@ Spikes check items that are not verified in proposed ADRs. A spike may use a pro
 - Owner: alle
 - Status: todo
 - ADR: docs/adr/0006-arc-studio-workflow.md
-- Depends on: T-008
+- Depends on: T-032
 - Goal: The Arc tracks require an architecture diagram. Draft it from the accepted ADRs so the laptop only needs to update addresses.
 - Acceptance criteria:
   - [ ] `docs/architecture/architecture.md` has a Mermaid diagram showing:
@@ -272,7 +285,7 @@ Spikes check items that are not verified in proposed ADRs. A spike may use a pro
     - the Sepolia USDC and Forwarding path;
     - Arc USDC;
     - the market contract, PriceOracle and relayer with Pyth Hermes;
-    - tAAPL and its TokenManagers on both chains;
+    - wAAPL and its TokenManagers on both chains;
     - CCTS and Iris;
     - Bridge Kit;
     - Arc Studio.
@@ -283,7 +296,7 @@ Spikes check items that are not verified in proposed ADRs. A spike may use a pro
 ### T-016: Write README for judges and finalize the diagram
 - Owner: laptop
 - Status: todo
-- ADR: docs/adr/0007-track-targeting-and-demo-scope.md, docs/adr/0009-compliance-stance-testnet-demo.md
+- ADR: docs/adr/0017-demo-scope-with-wrapped-token.md, docs/adr/0016-compliance-provider-tokens.md
 - Depends on: T-014, T-015
 - Goal: The README lets a judge understand, verify and run arcusa in five minutes.
 - Acceptance criteria:
@@ -312,7 +325,7 @@ Spikes check items that are not verified in proposed ADRs. A spike may use a pro
 ### T-018: Record the demo video
 - Owner: laptop
 - Status: todo
-- ADR: docs/adr/0007-track-targeting-and-demo-scope.md
+- ADR: docs/adr/0017-demo-scope-with-wrapped-token.md
 - Depends on: T-016, T-017
 - Goal: A short video that shows the core functions, Arc Studio, and use of Circle tools.
 - Acceptance criteria:
@@ -325,7 +338,7 @@ Spikes check items that are not verified in proposed ADRs. A spike may use a pro
 ### T-019: Submit to ETHGlobal Mumbai
 - Owner: laptop
 - Status: todo
-- ADR: docs/adr/0007-track-targeting-and-demo-scope.md
+- ADR: docs/adr/0017-demo-scope-with-wrapped-token.md
 - Depends on: T-001, T-018
 - Goal: Make a complete submission for the chosen Arc track or tracks.
 - Acceptance criteria:
@@ -333,6 +346,133 @@ Spikes check items that are not verified in proposed ADRs. A spike may use a pro
   - [ ] Repo access matches the T-001 decision.
   - [ ] The Result has the submission link and a screenshot path.
 - Notes:
+- Result:
+
+### T-022: Spike: mock provider token on Sepolia, lock-and-mint to Arc via the ownerless path (ADR 0012)
+- Owner: laptop
+- Status: todo
+- ADR: docs/adr/0012-provider-token-lock-and-wrap.md
+- Depends on: T-003
+- Goal: Prove that a mock provider token `mAAPL` on Sepolia can be registered as an ownerless LOCK_UNLOCK token and wrapped as `wAAPL` on Arc testnet.
+- Acceptance criteria:
+  - [ ] `mAAPL` is deployed on Sepolia (clearly named as a mock).
+  - [ ] `registerOwnerlessToken` succeeds with LOCK_UNLOCK; the Iris quote is fetched; `deployRemoteOwnerlessToken` succeeds on Arc.
+  - [ ] Remote rate limit is set above 0 and a transfer lock-and-mint works; locked amount on Sepolia equals `wAAPL` supply on Arc.
+  - [ ] Result lists tx hashes, addresses, the token id, and any revert or doc discrepancy.
+- Notes: Replaces T-005. Record whether anyone can register a token they do not control.
+- Result:
+
+### T-023: Research: can real provider tokens be locked and wrapped? (ADR 0012, ADR 0016)
+- Owner: alle
+- Status: todo
+- ADR: docs/adr/0012-provider-token-lock-and-wrap.md, docs/adr/0016-compliance-provider-tokens.md
+- Depends on: none
+- Goal: For Ondo and xStocks tokens, record what restricts holding or transferring them and whether a lock manager contract could hold them.
+- Acceptance criteria:
+  - [ ] For each provider: chain, token address, allowlist or transfer hooks, rebasing or fee-on-transfer behaviour, redemption terms. Read-only, from primary sources fetched that day.
+  - [ ] A clear yes, no or unknown on "can a contract we do not control hold it".
+  - [ ] Unverified items listed.
+- Result:
+
+### T-024: Spike: Bridge Kit transfer of wAAPL by token id, both directions, with measured timing (ADR 0013)
+- Owner: laptop
+- Status: todo
+- ADR: docs/adr/0013-wrapped-token-bridging-path.md
+- Depends on: T-022
+- Goal: Prove the user bridge path and measure it.
+- Acceptance criteria:
+  - [ ] Bridge Kit moves `wAAPL` Arc → Sepolia (unlock) and `mAAPL` Sepolia → Arc (mint), or the raw-contract fallback is proven.
+  - [ ] Elapsed time of each leg is recorded, and whether Fast Transfer exists for this token.
+  - [ ] The zero-address versus `TokenNotRegistered` discrepancy is confirmed or not.
+- Notes: Replaces T-006.
+- Result:
+
+### T-025: Spike: AAPL oracle, access terms and behaviour by market session (ADR 0015)
+- Owner: alle
+- Status: todo
+- ADR: docs/adr/0015-price-parity-and-off-hours-policy.md
+- Depends on: none
+- Goal: Pick the oracle source and learn what it publishes in each session.
+- Acceptance criteria:
+  - [ ] Pyth Pro (id 922) and Stork `AAPL_24_5`: key or token needs, testnet availability, whether session and confidence are readable onchain.
+  - [ ] What each feed returns pre-market, post-market, overnight, weekend. Use real payloads if a key is available; otherwise say not observed.
+  - [ ] RedStone and Chronicle equity coverage checked.
+  - [ ] A recommendation, or the fallback relayer if no key is available.
+- Notes: Replaces T-007. Needs a key from the user if the vendors require one.
+- Result:
+
+### T-026: Build PriceOracle with guards, and the relayer (ADR 0015)
+- Owner: laptop
+- Status: todo
+- ADR: docs/adr/0015-price-parity-and-off-hours-policy.md
+- Depends on: T-025, T-032
+- Goal: An oracle contract on Arc with the guards in ADR 0015, fed by the chosen source.
+- Acceptance criteria:
+  - [ ] Stores price, confidence, publish time and session. Rejects price ≤ 0, wide confidence, non-increasing publish time, and moves above the deviation cap unless `acceptGap` is used.
+  - [ ] The relayer (or verified feed) updates it on a schedule; heartbeat visible.
+  - [ ] Foundry tests cover each guard.
+- Notes: Replaces T-009.
+- Result:
+
+### T-027: Build InventoryMarket (ADR 0014)
+- Owner: laptop
+- Status: todo
+- ADR: docs/adr/0014-trading-against-pre-positioned-inventory.md
+- Depends on: T-026
+- Goal: Buy and sell `wAAPL` for USDC at oracle price ± spread from held inventory, with the caps and session rules from ADR 0015.
+- Acceptance criteria:
+  - [ ] Parameters: `maxAge`, per-session `spreadBps`, `maxTradeUsdc`, `maxExposureUsdc`, `minInventory`, `offHoursTrading`, pause.
+  - [ ] Reverts cleanly on stale price, closed session, short inventory, failed USDC transfer.
+  - [ ] Tests cover the 6 versus 18 decimal rounding.
+  - [ ] Built in Arc Studio per ADR 0006.
+- Notes: Replaces T-010.
+- Result:
+
+### T-028: Pre-position wAAPL inventory and document refills
+- Owner: laptop
+- Status: todo
+- ADR: docs/adr/0014-trading-against-pre-positioned-inventory.md
+- Depends on: T-024, T-027
+- Goal: Seed the market with `wAAPL` and USDC before the demo, and write how to refill.
+- Acceptance criteria:
+  - [ ] A script bridges `mAAPL` Sepolia → Arc and funds the market.
+  - [ ] Inventory and elapsed bridge time are logged in the Result.
+  - [ ] A short refill note exists in the README draft.
+- Result:
+
+### T-029: Parity tests and scenarios (ADR 0015)
+- Owner: laptop
+- Status: todo
+- ADR: docs/adr/0015-price-parity-and-off-hours-policy.md
+- Depends on: T-027
+- Goal: Show the controls work with tests, not claims.
+- Acceptance criteria:
+  - [ ] Foundry tests: stale price, session change, gap at the open, one-way flow draining inventory, stale-price arbitrage bounded by spread and caps.
+  - [ ] A table in the Result lists each scenario and the worst-case loss per trade.
+- Result:
+
+### T-030: Parity panel in the UI (ADR 0015)
+- Owner: laptop
+- Status: todo
+- ADR: docs/adr/0015-price-parity-and-off-hours-policy.md
+- Depends on: T-011
+- Goal: Show oracle price, session, age, spread, inventory, and locked versus wrapped supply.
+- Acceptance criteria:
+  - [ ] The off-hours banner shows when the market is closed.
+  - [ ] A warning appears when locked < wrapped supply or the oracle is older than `maxAge`.
+- Result:
+
+### T-032: Review spikes and accept or supersede ADRs 0008, 0012 to 0017
+- Owner: alle
+- Status: todo
+- ADR: docs/adr/0012-provider-token-lock-and-wrap.md, docs/adr/0013-wrapped-token-bridging-path.md, docs/adr/0014-trading-against-pre-positioned-inventory.md, docs/adr/0015-price-parity-and-off-hours-policy.md, docs/adr/0016-compliance-provider-tokens.md, docs/adr/0017-demo-scope-with-wrapped-token.md, docs/adr/0008-frontend-stack-and-wallet.md
+- Depends on: T-001, T-003, T-022, T-023, T-024, T-025
+- Goal: Turn the proposed ADRs into accepted ones, or supersede them, so the build tasks have rules to follow.
+- Acceptance criteria:
+  - [ ] Each ADR is `accepted`, or replaced by a new ADR linking the spike Result it is based on.
+  - [ ] The off-hours demo mode decision from T-001 is in ADR 0015.
+  - [ ] `docs/adr/README.md` is updated.
+- Notes: Replaces T-008. Re-fetch fast-moving facts on the day.
 - Result:
 
 ### T-020: (post-MVP) Spike: indexer options on Arc testnet and Sepolia

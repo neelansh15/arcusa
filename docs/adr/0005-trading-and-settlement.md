@@ -1,6 +1,6 @@
 # 0005. Trading and settlement: oracle-priced mint and redeem against USDC on Arc
 
-- Status: proposed
+- Status: superseded by 0014
 - Date: 2026-11-06
 - Deciders: alle, user
 
