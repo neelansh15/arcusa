@@ -15,6 +15,17 @@ A stock terminal settled on Arc: US-stock exposure for non-US users, funded with
 ## Doc discrepancy to remember
 Some Arc pages (Bridge page, provider README, `llms.txt`) still say "USDC and EURC only" while the supported-tokens page and Circle news say WETH, cirBTC and CCTPx third-party assets. Docs lag the product. Always re-check fresh before relying on either.
 
+## CCTP for non-USDC assets (Circle "expanded assets", found Nov 5 night)
+Docs: https://developers.circle.com/cctp/expanded-assets (the page Arc linked for this prize). A permissionless contract layer, entry point `CrossChainTokenService` (not TokenMessengerV2), fees paid in native gas, same Iris attestation. Four paths:
+1. Pre-configured tokens (EURC): no setup.
+2. **Custom token**: issuer configures its own ERC-20, keeps rate limits and pause control (burn-mint manager).
+3. **Ownerless token**: bridge an *existing* ERC-20 with protocol defaults. Home chain: `LOCK_UNLOCK` (token locked in a manager). Remote chains: protocol deploys a wrapped `CrossChainToken` (`NATIVE_CROSSCHAIN_TOKEN`, burn-mint). Steps: `registerOwnerlessToken(token)` on the home chain, read `tokenId`, fetch Iris quote (`msgType: "DeployTokenMessage"`), `deployRemoteOwnerlessToken` per destination, verify with `resolveTokenAddress`/`resolveTokenManager`, check remote rate limit > 0. Register on exactly ONE home chain, or supply locks with no release.
+4. Deploy a native crosschain token (CREATE3 deterministic address).
+- **This is lock-and-mint, built in by Circle.** The "lock the stock on the origin chain" premise is the ownerless model; we don't need to write our own vault. Backing = the original token locked at home; the wrapped token on Arc is a claim on it.
+- Testnet: `CrossChainTokenService` at `0x63753E722bd2C2A5DF6EE19C5106662208B81077` on both Ethereum Sepolia (domain 0) and Arc Testnet (domain 26) (sandbox, CREATE3).
+- Unverified: whether `registerOwnerlessToken` is truly permissionless (docs call the layer permissionless but state no access control on that call); compatibility with fee-on-transfer, rebasing and permissioned (compliance-gated) tokens, which tokenized stocks often are. Test it.
+- **Plan impact:** Testnet MVP = deploy tAAPL ERC-20 on Sepolia (home), register ownerless, deploy remote on Arc Testnet, bridge via Bridge Kit/CCTP, settle against USDC on Arc. Real stocks (Ondo/xStocks on Ethereum) could in principle be registered ownerless with Ethereum as home, but their transfer restrictions may break it. Read the risks before any mainnet test.
+
 ## Key design question: where does backing live?
 - **Real stocks**: someone must custody the real share (or hold the issuer's token) and the token must be redeemable. Burn-and-mint (CCTP) moves the token's *supply* across chains; the backing sits with the issuer, not in a bridge lock. Options: (a) issuer registers its token with CCTPx (Ondo/xStocks would do this), (b) lock-and-mint wrapper: lock the origin-chain stock token in a vault, mint a wrapper on Arc, (c) CCIP.
 - **Hackathon testnet**: no real backing exists either way. We can deploy a test ERC-20 (tAAPL) as issuer and show real burn-and-mint movement; price comes from an oracle. Value is illustrative only.
@@ -32,8 +43,8 @@ Some Arc pages (Bridge page, provider README, `llms.txt`) still say "USDC and EU
 - Workflow idea: start the project in Arc Studio (satisfies the rule), then `pull` the code and keep iterating in Claude Code, keeping the Studio URL as the submission link.
 
 ## Open questions
-1. Is CrossChainTokenService live on Arc testnet and in Bridge Kit? Permissionless or Circle-approved?
-2. Does Bridge Kit accept a custom token address?
+1. CrossChainTokenService is live on Arc testnet (see above). Still open: is `registerOwnerlessToken` permissionless, and does it work with our test token on Sepolia?
+2. Does Bridge Kit accept a custom/ownerless token address, or do we call CrossChainTokenService directly?
 3. Which issuers (Ondo, xStocks, others) plan to register on Arc, and when? Ask the Arc team.
 4. Arc prize rules: exact Arc Studio / Bridge Kit requirements.
 5. Compliance angle for tokenized stocks (transfer restrictions, geo-limits).
@@ -52,3 +63,5 @@ CCIP route (2.0 prize), Stablecoin FX for EUR users, ENS names, Definitive Flash
 - 2026-11-05: repo created. Wiki detail: https://wiki.superd.app/doc/arc-bridge-kit-stock-terminal-settlement-SuAj6Az1IB
 
 - 2026-11-05 (night): added Arc prize rules and Arc Studio CLI.
+
+- 2026-11-05 (late): added CCTP non-USDC (expanded assets) findings; this is the official lock-and-mint path.
