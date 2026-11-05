@@ -9,15 +9,17 @@
 ADR 0007 listed a demo that buys a self-issued `tAAPL`. The asset model changed (ADR 0012), and the user wants the bridge shown as its own step.
 
 ## Decision
+Demo stock: **NVDA**, chosen because Ondo lists it for 24/7 mint and redeem. Off-hours demo mode is approved by the user.
+
 Primary track and stretch items stay as in ADR 0007. The MVP demo, in order:
 1. Fresh wallet: bridge USDC Sepolia → Arc with Forwarding (ADR 0003).
-2. Terminal: AAPL price, session status, oracle age, balances (ADR 0015).
-3. Buy `wAAPL` with USDC from pre-positioned inventory (ADR 0014). If the market is closed, the off-hours banner shows (demo mode).
-4. **Bridge `wAAPL` Arc → Sepolia** with Bridge Kit as its own visible step (ADR 0013), and show the unlocked `mAAPL` on Sepolia.
-5. Show the lock-and-mint view: locked `mAAPL` on Sepolia equals `wAAPL` supply on Arc.
+2. Terminal: NVDA price (Ondo API, ADR 0015), session status, oracle age, balances (ADR 0015).
+3. Buy `wNVDA` with USDC from pre-positioned inventory (ADR 0014). If the market is closed, the off-hours banner shows (demo mode).
+4. **Bridge `wNVDA` Arc → Sepolia** with Bridge Kit as its own visible step (ADR 0013), and show the unlocked `mNVDA` on Sepolia.
+5. Show the lock-and-mint view: locked `mNVDA` on Sepolia equals `wNVDA` supply on Arc.
 6. If time allows: sell back. Show Arc Studio and the architecture diagram.
 
-Before recording, inventory is pre-positioned by bridging `mAAPL` Sepolia → Arc (T-028). The video says so.
+Before recording, inventory is pre-positioned by bridging `mNVDA` Sepolia → Arc (T-028). The video says so.
 
 ## Consequences
 - The pitch says "the stock token comes from a provider; we wrap and trade it", never "we issue stocks".

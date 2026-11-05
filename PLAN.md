@@ -37,17 +37,19 @@ Nov 6 update: more doc discrepancies were found while writing the ADRs. Examples
 6. ~~Compliance angle for tokenized stocks~~ Resolved for the testnet demo Nov 6: [ADR 0016](docs/adr/0016-compliance-provider-tokens.md) (replaces ADR 0009). Production compliance is post-MVP.
 
 ## Asset model (revised 2026-11-06)
-arcusa does not issue a token. Provider tokens (Ondo, xStocks and similar) are locked on their home chain through the CCTPx ownerless path and wrapped on Arc ([ADR 0012](docs/adr/0012-provider-token-lock-and-wrap.md)). The testnet demo uses a mock provider token `mAAPL` on Sepolia and its wrapped version `wAAPL` on Arc. Trades settle against pre-positioned `wAAPL` inventory at the oracle price ([ADR 0014](docs/adr/0014-trading-against-pre-positioned-inventory.md)). The bridge is shown as its own demo step ([ADR 0013](docs/adr/0013-wrapped-token-bridging-path.md), [ADR 0017](docs/adr/0017-demo-scope-with-wrapped-token.md)).
+Demo stock: NVDA (Ondo NVDAon is on its 24/7 list); price from the Ondo API via our relayer once we have a key; off-hours demo mode approved 2026-11-06.
+
+arcusa does not issue a token. Provider tokens (Ondo, xStocks and similar) are locked on their home chain through the CCTPx ownerless path and wrapped on Arc ([ADR 0012](docs/adr/0012-provider-token-lock-and-wrap.md)). The testnet demo uses a mock provider token `mNVDA` on Sepolia and its wrapped version `wNVDA` on Arc. Trades settle against pre-positioned `wNVDA` inventory at the oracle price ([ADR 0014](docs/adr/0014-trading-against-pre-positioned-inventory.md)). The bridge is shown as its own demo step ([ADR 0013](docs/adr/0013-wrapped-token-bridging-path.md), [ADR 0017](docs/adr/0017-demo-scope-with-wrapped-token.md)).
 
 ## Price parity
 How the price is kept right, and what the demo does when the US market is closed (20:00-02:30 IST is the only regular session): [ADR 0015](docs/adr/0015-price-parity-and-off-hours-policy.md). Short version: oracle with staleness, deviation and confidence guards; session-based spreads and caps; trading paused when closed by default, with an off-hours demo mode (last price, wide spread, labelled indicative) if the user allows it (T-001); inventory caps; locked-versus-wrapped monitoring. Parity is bounded, not guaranteed.
 
 ## MVP
 1. Fresh-wallet testnet bridge: Sepolia USDC -> Arc testnet with `useForwarder: true`.
-2. Mock provider token `mAAPL` on Sepolia, registered ownerless (LOCK_UNLOCK); `wAAPL` deployed on Arc; non-zero rate limit.
+2. Mock provider token `mNVDA` on Sepolia, registered ownerless (LOCK_UNLOCK); `wNVDA` deployed on Arc; non-zero rate limit.
 3. Price oracle on Arc with guards and session awareness (Pyth Pro or Stork if access works, else a labelled relayer).
 4. Terminal UI: balance, price, session status, buy and sell against USDC on Arc from inventory.
-5. Bridge `wAAPL` Arc -> Sepolia with Bridge Kit as a visible step; raw contract calls as fallback.
+5. Bridge `wNVDA` Arc -> Sepolia with Bridge Kit as a visible step; raw contract calls as fallback.
 
 Nov 6: the MVP is broken into tasks in [TASKS.md](TASKS.md). The first plan (own token, ADR 0002) was superseded the same day by ADRs 0012 to 0017 after the user's decision not to issue a token.
 
@@ -63,3 +65,4 @@ CCIP route (Chainlink CCIP track), Stablecoin FX for EUR users, ENS names, Defin
 - 2026-11-06: noted indexer (holdings, trades, history) as a post-MVP item.
 - 2026-11-06: first ADRs 0001-0011 written ([docs/adr/README.md](docs/adr/README.md)), and task list T-001..T-021 added to [TASKS.md](TASKS.md). Open questions 2, 3, 5 and 6 resolved; Q4 and part of Q5 remain open.
 - 2026-11-06: user decided arcusa issues no token: provider tokens are locked on their home chain and wrapped on Arc, with pre-positioned inventory and the bridge shown as a demo step. ADRs 0012 to 0017 supersede 0001, 0002, 0004, 0005, 0007 and 0009; new tasks T-022 to T-032; price parity policy in ADR 0015.
+- 2026-11-06: demo stock set to NVDA; Ondo API is the first-choice price source ([ADR 0015](docs/adr/0015-price-parity-and-off-hours-policy.md), T-025); off-hours demo mode approved.

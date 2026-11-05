@@ -16,7 +16,7 @@ Facts (fetched 2026-11-05/06, see ADR 0001 for links):
 
 ## Decision
 - User path: Bridge Kit by token id, with the raw `CrossChainTokenService` calls as a fallback (same as ADR 0001).
-- **Direction shown in the demo: Arc to Sepolia** (`wAAPL` burned on Arc, `mAAPL` unlocked on Sepolia). Arc as source settles in about 0.5s on Standard. This is the redeem direction and it is fast.
+- **Direction shown in the demo: Arc to Sepolia** (`wNVDA` burned on Arc, `mNVDA` unlocked on Sepolia). Arc as source settles in about 0.5s on Standard. This is the redeem direction and it is fast.
 - **Sepolia to Arc** (lock and mint) is slow on Standard and may or may not have Fast. It is used only for **pre-positioning inventory before the demo** (ADR 0014), not live.
 - The demo shows the bridge as its own step (ADR 0017), not hidden inside a trade.
 

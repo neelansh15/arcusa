@@ -23,15 +23,15 @@ Mechanism (Circle CCTP for non-USDC assets, sources in ADR 0001, fetched 2026-11
    - None found on Arc as of 2026-11-05. Out of our control.
 
 ## Decision
-- Real design: home-chain provider token (for example AAPLx on Ethereum), locked in an ownerless LOCK_UNLOCK manager; wrapped token `wAAPL` on Arc.
-- Testnet demo: no provider has tokens on Sepolia, so we deploy a **mock provider token** `mAAPL` on Sepolia as a fixture. It stands in for the provider token, is labelled as a mock everywhere, and is not our product. `wAAPL` is its wrapped version on Arc.
+- Real design: home-chain provider token (for example Ondo NVDAon on Ethereum), locked in an ownerless LOCK_UNLOCK manager; wrapped token `wNVDA` on Arc.
+- Testnet demo: no provider has tokens on Sepolia, so we deploy a **mock provider token** `mNVDA` on Sepolia as a fixture. It stands in for the provider token, is labelled as a mock everywhere, and is not our product. `wNVDA` is its wrapped version on Arc.
 - 18 decimals on both sides unless the real provider token differs; the wrapped token copies the home token's decimals.
 - Spikes: T-022 proves the mock flow on testnet. T-023 checks whether real provider tokens can be locked at all (read-only research).
 
 ## Consequences
-- arcusa never mints stock exposure by itself. All `wAAPL` supply comes from lock-and-mint.
+- arcusa never mints stock exposure by itself. All `wNVDA` supply comes from lock-and-mint.
 - If real provider tokens cannot be held by the manager, the real-token claim drops to "design for production", and the demo still runs on the mock. The README must say so.
-- Redeeming `wAAPL` for the home token means bridging back (ADR 0013).
+- Redeeming `wNVDA` for the home token means bridging back (ADR 0013).
 
 ## Not verified
 - Whether the ownerless LOCK_UNLOCK manager can hold permissioned provider tokens.

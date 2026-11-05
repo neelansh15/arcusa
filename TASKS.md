@@ -26,13 +26,13 @@ One block per task, newest at the bottom. Do not reuse IDs.
 1. T-002 Repo skeleton
 2. T-003 Arc Studio app
 3. T-022 Mock provider token, lock-and-mint on Arc (spike)
-4. T-024 Bridge Kit for wAAPL, both directions, timings (spike)
+4. T-024 Bridge Kit for wNVDA, both directions, timings (spike)
 5. T-032 ADR review
 6. T-026 PriceOracle with guards, and relayer
 7. T-027 InventoryMarket
 8. T-028 Seed inventory
 9. T-011 Terminal UI
-10. T-013 Bridge wAAPL in the UI
+10. T-013 Bridge wNVDA in the UI
 11. T-014 End-to-end run
 12. T-016 README and diagram
 13. T-018 Demo video
@@ -49,7 +49,7 @@ These run in parallel and feed into the path:
 - T-015: draft architecture diagram; needed by T-016.
 - T-017: fact re-check; needed by T-018.
 
-Superseded on 2026-11-06: T-005, T-006, T-007, T-008, T-009, T-010 (replaced by T-022, T-024, T-025, T-032, T-026, T-027). Tasks T-001 and T-011 to T-019 now say `wAAPL` where they said `tAAPL`; read them with ADRs 0012 to 0017.
+Superseded on 2026-11-06: T-005, T-006, T-007, T-008, T-009, T-010 (replaced by T-022, T-024, T-025, T-032, T-026, T-027). Tasks T-001 and T-011 to T-019 now say `wNVDA` where they said `tAAPL`; read them with ADRs 0012 to 0017.
 
 Post-MVP: T-020 and T-021. Do not start these before T-019 is done.
 
@@ -66,13 +66,13 @@ Spikes check items that are not verified in proposed ADRs. A spike may use a pro
 - Acceptance criteria:
   - [ ] Repo visibility for judging is decided: make public at submission, or grant judge access. The Arc tracks ask for a GitHub repo link and the repo is private.
   - [ ] The track or tracks are confirmed: primary "Best Use of Bridge Kit for Non-USDC Assets, Built in Arc Studio", and whether the DeFi track is also entered, if allowed.
-  - [ ] Off-hours trading for the demo is decided: `offHoursTrading` on with a wider spread, or trading paused while the US market is closed.
+  - [x] Off-hours trading decided 2026-11-06: demo mode on, demo stock NVDA.
   - [ ] It is confirmed who owns the Arc Studio account and who logs in on the laptop.
   - [ ] The submission deadline and judging time are recorded.
   - [ ] All answers are recorded in the PLAN.md Log with a date.
 - Notes: US regular hours are 20:00-02:30 IST after the US DST change, so daytime judging will probably fall when the market is closed.
 - Result:
-- Added 2026-11-06: ask the user whether demo mode (trade off-hours at the last price with a wide spread, ADR 0015) is allowed, and whether the real provider tokens claim stays in the pitch if T-023 says no.
+- Decided 2026-11-06 by the user: demo mode is on (trade off-hours at the last price with a wide spread, labelled indicative), and the demo stock is NVDA (Ondo lists NVDAon for 24/7 mint and redeem). Still to ask: whether the real provider tokens claim stays in the pitch if T-023 says no.
 
 ### T-002: Create repo skeleton per ADR 0010
 - Owner: laptop
@@ -98,7 +98,7 @@ Spikes check items that are not verified in proposed ADRs. A spike may use a pro
 - Acceptance criteria:
   - [ ] `@circle-fin/arc-studio-cli` is installed. `arc-studio whoami` shows the user's account. The user approves the device-link login.
   - [ ] `arc-studio skills install --tool claude-code` is done.
-  - [ ] A Studio app is created with a first prompt (Plan mode) that describes arcusa: a terminal UI on Arc testnet, USDC settlement, an oracle-priced market, and Bridge Kit for tAAPL. The app ID and the shareable project URL are recorded in Result.
+  - [ ] A Studio app is created with a first prompt (Plan mode) that describes arcusa: a terminal UI on Arc testnet, USDC settlement, an oracle-priced market, and Bridge Kit for wNVDA. The app ID and the shareable project URL are recorded in Result.
   - [ ] `arc-studio pull --out app/` works, and the pulled scaffold is committed. The framework and folder layout are noted in Result for ADR 0008.
   - [ ] The Result notes what a judge sees when opening the shareable URL (code, preview, or both).
   - [ ] The Result notes how "Push to GitHub" behaves: does it target a new repo or an existing one? Do not push to a new public repo without the user's OK.
@@ -222,11 +222,11 @@ Spikes check items that are not verified in proposed ADRs. A spike may use a pro
 - Status: todo
 - ADR: docs/adr/0008-frontend-stack-and-wallet.md (must be accepted), docs/adr/0016-compliance-provider-tokens.md
 - Depends on: T-003, T-027
-- Goal: A user connects a wallet and trades wAAPL against USDC on Arc from the terminal UI.
+- Goal: A user connects a wallet and trades wNVDA against USDC on Arc from the terminal UI.
 - Acceptance criteria:
   - [ ] Wallet connect works for Arc testnet (5042002) and Ethereum Sepolia.
-  - [ ] The UI shows the AAPL price, the age of the price, and market open or closed.
-  - [ ] The UI shows USDC and wAAPL balances on Arc and Sepolia.
+  - [ ] The UI shows the NVDA price, the age of the price, and market open or closed.
+  - [ ] The UI shows USDC and wNVDA balances on Arc and Sepolia.
   - [ ] Buy and sell work from the UI on Arc testnet, with a tx link shown.
   - [ ] Every screen shows the testnet disclaimer from ADR 0009.
   - [ ] The UI changes are made through Studio or synced back to it. The Result notes which.
@@ -246,14 +246,14 @@ Spikes check items that are not verified in proposed ADRs. A spike may use a pro
 - Notes:
 - Result:
 
-### T-013: Add wAAPL bridge flow to the UI
+### T-013: Add wNVDA bridge flow to the UI
 - Owner: laptop
 - Status: todo
 - ADR: docs/adr/0013-wrapped-token-bridging-path.md (must be accepted)
 - Depends on: T-024, T-011
-- Goal: A user moves wAAPL from Arc to Sepolia, and back, from the terminal with Bridge Kit, or the fallback from ADR 0001.
+- Goal: A user moves wNVDA from Arc to Sepolia, and back, from the terminal with Bridge Kit, or the fallback from ADR 0001.
 - Acceptance criteria:
-  - [ ] The "Send wAAPL to Sepolia" and "Bring wAAPL to Arc" flows work. The UI shows the states PENDING, SENT, CONFIRMED, COMPLETE and FAILED.
+  - [ ] The "Send wNVDA to Sepolia" and "Bring wNVDA to Arc" flows work. The UI shows the states PENDING, SENT, CONFIRMED, COMPLETE and FAILED.
   - [ ] The expected wait is shown, with SLOW for the Sepolia-source direction.
   - [ ] Balances on both chains update after COMPLETE.
 - Notes:
@@ -266,7 +266,7 @@ Spikes check items that are not verified in proposed ADRs. A spike may use a pro
 - Depends on: T-012, T-013
 - Goal: Prove the demo scope in ADR 0007 works from a clean state.
 - Acceptance criteria:
-  - [ ] Starting from a fresh wallet, complete ADR 0007 MVP steps 1-4: deposit USDC, view price, buy wAAPL, bridge wAAPL to Sepolia.
+  - [ ] Starting from a fresh wallet, complete ADR 0007 MVP steps 1-4: deposit USDC, view price, buy wNVDA, bridge wNVDA to Sepolia.
   - [ ] Step 5 (bridge back and sell) is either done or marked skipped with the reason.
   - [ ] The Result has every tx hash, the timings and any manual step.
   - [ ] `docs/demo/demo-script.md` exists, with the click-by-click order and fallback steps, including what to do if Sepolia finality is slow.
@@ -285,7 +285,7 @@ Spikes check items that are not verified in proposed ADRs. A spike may use a pro
     - the Sepolia USDC and Forwarding path;
     - Arc USDC;
     - the market contract, PriceOracle and relayer with Pyth Hermes;
-    - wAAPL and its TokenManagers on both chains;
+    - wNVDA and its TokenManagers on both chains;
     - CCTS and Iris;
     - Bridge Kit;
     - Arc Studio.
@@ -353,11 +353,11 @@ Spikes check items that are not verified in proposed ADRs. A spike may use a pro
 - Status: todo
 - ADR: docs/adr/0012-provider-token-lock-and-wrap.md
 - Depends on: T-003
-- Goal: Prove that a mock provider token `mAAPL` on Sepolia can be registered as an ownerless LOCK_UNLOCK token and wrapped as `wAAPL` on Arc testnet.
+- Goal: Prove that a mock provider token `mNVDA` on Sepolia can be registered as an ownerless LOCK_UNLOCK token and wrapped as `wNVDA` on Arc testnet.
 - Acceptance criteria:
-  - [ ] `mAAPL` is deployed on Sepolia (clearly named as a mock).
+  - [ ] `mNVDA` is deployed on Sepolia (clearly named as a mock).
   - [ ] `registerOwnerlessToken` succeeds with LOCK_UNLOCK; the Iris quote is fetched; `deployRemoteOwnerlessToken` succeeds on Arc.
-  - [ ] Remote rate limit is set above 0 and a transfer lock-and-mint works; locked amount on Sepolia equals `wAAPL` supply on Arc.
+  - [ ] Remote rate limit is set above 0 and a transfer lock-and-mint works; locked amount on Sepolia equals `wNVDA` supply on Arc.
   - [ ] Result lists tx hashes, addresses, the token id, and any revert or doc discrepancy.
 - Notes: Replaces T-005. Record whether anyone can register a token they do not control.
 - Result:
@@ -374,31 +374,33 @@ Spikes check items that are not verified in proposed ADRs. A spike may use a pro
   - [ ] Unverified items listed.
 - Result:
 
-### T-024: Spike: Bridge Kit transfer of wAAPL by token id, both directions, with measured timing (ADR 0013)
+### T-024: Spike: Bridge Kit transfer of wNVDA by token id, both directions, with measured timing (ADR 0013)
 - Owner: laptop
 - Status: todo
 - ADR: docs/adr/0013-wrapped-token-bridging-path.md
 - Depends on: T-022
 - Goal: Prove the user bridge path and measure it.
 - Acceptance criteria:
-  - [ ] Bridge Kit moves `wAAPL` Arc → Sepolia (unlock) and `mAAPL` Sepolia → Arc (mint), or the raw-contract fallback is proven.
+  - [ ] Bridge Kit moves `wNVDA` Arc → Sepolia (unlock) and `mNVDA` Sepolia → Arc (mint), or the raw-contract fallback is proven.
   - [ ] Elapsed time of each leg is recorded, and whether Fast Transfer exists for this token.
   - [ ] The zero-address versus `TokenNotRegistered` discrepancy is confirmed or not.
 - Notes: Replaces T-006.
 - Result:
 
-### T-025: Spike: AAPL oracle, access terms and behaviour by market session (ADR 0015)
+### T-025: Spike: NVDA price source (Ondo API first), access and behaviour by market session (ADR 0015)
 - Owner: alle
 - Status: todo
 - ADR: docs/adr/0015-price-parity-and-off-hours-policy.md
 - Depends on: none
-- Goal: Pick the oracle source and learn what it publishes in each session.
+- Goal: Confirm the Ondo API as the demo's price source for NVDAon and learn what it publishes in each session.
 - Acceptance criteria:
-  - [ ] Pyth Pro (id 922) and Stork `AAPL_24_5`: key or token needs, testnet availability, whether session and confidence are readable onchain.
-  - [ ] What each feed returns pre-market, post-market, overnight, weekend. Use real payloads if a key is available; otherwise say not observed.
-  - [ ] RedStone and Chronicle equity coverage checked.
-  - [ ] A recommendation, or the fallback relayer if no key is available.
-- Notes: Replaces T-007. Needs a key from the user if the vendors require one.
+  - [ ] Ondo API key obtained (user emails onboarding@ondo.finance; the key is added through the gateway link, never in chat). Without it, mark the Ondo checks "not observed" and use demo mode with a labelled fallback price.
+  - [ ] `GET /v1/assets/NVDAon/prices/latest`, `/v1/assets/NVDAon/market`, `/v1/status/market`, `/v1/status/assets` and `/v1/limits/sessions` (check exact path in the docs) read with real payloads: price fields, `marketStatus`, `tradableSessions`, `sharesMultiplier`, off-hours `isOpen` and limits for NVDAon.
+  - [ ] Whether NVDAon is on the 24/7 mint and redeem list (the June 25, 2026 announcement lists NVDAon) and what the weekend and overnight prices look like.
+  - [ ] The "display only" limit is read against the Soft Attestation Quote API docs, and the decision recorded: relay the display price with spread, or use quotes.
+  - [ ] Cross-check source: Pyth Pro and Stork NVDA feeds (ids, key needs, testnet availability), and RedStone and Chronicle coverage.
+  - [ ] Recommendation, or the fallback relayer if no key is available.
+- Notes: Replaces T-007. Ondo's docs say prices are display only and that an official oracle is in development; Chainlink feeds exist on Ethereum for SPYon, QQQon, TSLAon (Feb 11, 2026), nothing found for Arc.
 - Result:
 
 ### T-026: Build PriceOracle with guards, and the relayer (ADR 0015)
@@ -419,7 +421,7 @@ Spikes check items that are not verified in proposed ADRs. A spike may use a pro
 - Status: todo
 - ADR: docs/adr/0014-trading-against-pre-positioned-inventory.md
 - Depends on: T-026
-- Goal: Buy and sell `wAAPL` for USDC at oracle price ± spread from held inventory, with the caps and session rules from ADR 0015.
+- Goal: Buy and sell `wNVDA` for USDC at oracle price ± spread from held inventory, with the caps and session rules from ADR 0015.
 - Acceptance criteria:
   - [ ] Parameters: `maxAge`, per-session `spreadBps`, `maxTradeUsdc`, `maxExposureUsdc`, `minInventory`, `offHoursTrading`, pause.
   - [ ] Reverts cleanly on stale price, closed session, short inventory, failed USDC transfer.
@@ -428,14 +430,14 @@ Spikes check items that are not verified in proposed ADRs. A spike may use a pro
 - Notes: Replaces T-010.
 - Result:
 
-### T-028: Pre-position wAAPL inventory and document refills
+### T-028: Pre-position wNVDA inventory and document refills
 - Owner: laptop
 - Status: todo
 - ADR: docs/adr/0014-trading-against-pre-positioned-inventory.md
 - Depends on: T-024, T-027
-- Goal: Seed the market with `wAAPL` and USDC before the demo, and write how to refill.
+- Goal: Seed the market with `wNVDA` and USDC before the demo, and write how to refill.
 - Acceptance criteria:
-  - [ ] A script bridges `mAAPL` Sepolia → Arc and funds the market.
+  - [ ] A script bridges `mNVDA` Sepolia → Arc and funds the market.
   - [ ] Inventory and elapsed bridge time are logged in the Result.
   - [ ] A short refill note exists in the README draft.
 - Result:
@@ -495,7 +497,7 @@ Spikes check items that are not verified in proposed ADRs. A spike may use a pro
 - Depends on: T-020
 - Goal: POST-MVP. Users see holdings across chains, trade history and bridge history, and these survive page reloads.
 - Acceptance criteria:
-  - [ ] The indexer ingests `Bought`, `Sold`, tAAPL `Transfer` on both chains, and CCTS transfer events.
+  - [ ] The indexer ingests `Bought`, `Sold`, wNVDA `Transfer` on both chains, and CCTS transfer events.
   - [ ] The UI has a holdings and history page that matches onchain state for a test wallet. The comparison is in Result.
   - [ ] Native USDC and ERC-20 USDC events are not double counted.
 - Notes: Post-MVP.
