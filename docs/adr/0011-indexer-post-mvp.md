@@ -31,7 +31,7 @@ Proposed and not decided. Spike T-020 (post-MVP) checks whether option 1 support
 
 Events to index:
 - `Bought` and `Sold` (market contract).
-- tAAPL `Transfer` on both chains.
+- wNVDA `Transfer` on both chains.
 - CCTS transfer events (sent and received) for bridge history.
 
 ## Consequences

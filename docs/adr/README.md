@@ -23,4 +23,4 @@ One file per decision: `NNNN-short-title.md`, copied from `0000-template.md`. St
 | [0016](0016-compliance-provider-tokens.md) | Compliance and legal stance with provider tokens | proposed |
 | [0017](0017-demo-scope-with-wrapped-token.md) | Demo scope with the wrapped token | proposed |
 
-Note: ADRs 0008, 0010 and 0011 still say `tAAPL`. Read it as the wrapped token `wNVDA` (ADR 0012).
+Note: ADR 0010 (accepted, immutable) still says `tAAPL`. Read it as the wrapped token `wNVDA` (ADR 0012).
