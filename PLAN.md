@@ -66,3 +66,4 @@ CCIP route (Chainlink CCIP track), Stablecoin FX for EUR users, ENS names, Defin
 - 2026-11-06: first ADRs 0001-0011 written ([docs/adr/README.md](docs/adr/README.md)), and task list T-001..T-021 added to [TASKS.md](TASKS.md). Open questions 2, 3, 5 and 6 resolved; Q4 and part of Q5 remain open.
 - 2026-11-06: user decided arcusa issues no token: provider tokens are locked on their home chain and wrapped on Arc, with pre-positioned inventory and the bridge shown as a demo step. ADRs 0012 to 0017 supersede 0001, 0002, 0004, 0005, 0007 and 0009; new tasks T-022 to T-032; price parity policy in ADR 0015.
 - 2026-11-06: demo stock set to NVDA; Ondo API is the first-choice price source ([ADR 0015](docs/adr/0015-price-parity-and-off-hours-policy.md), T-025); off-hours demo mode approved.
+- 2026-11-06: priorities set by the user: build the bridge layer with tests first (T-033 to T-035); oracle, market and price parity are parked (T-025 to T-030) until phase 1 is done.

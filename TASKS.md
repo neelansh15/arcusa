@@ -2,7 +2,7 @@
 
 Shared task list between **alle** (primary agent) and **laptop** (Claude Code on the user's laptop). See `CLAUDE.md` for the rules.
 
-Statuses: `todo`, `doing`, `blocked`, `done`, `superseded`. Owners: `alle`, `laptop`.
+Statuses: `todo`, `doing`, `blocked`, `done`, `superseded`, `parked` (agreed to do later; do not start). Owners: `alle`, `laptop`.
 One block per task, newest at the bottom. Do not reuse IDs.
 
 ## Template
@@ -10,7 +10,7 @@ One block per task, newest at the bottom. Do not reuse IDs.
 ```
 ### T-000: Short imperative title
 - Owner: alle | laptop
-- Status: todo | doing | blocked | done | superseded
+- Status: todo | doing | blocked | done | superseded | parked
 - ADR: docs/adr/NNNN-... (optional)
 - Depends on: T-xxx (optional)
 - Goal: one or two sentences.
@@ -21,33 +21,27 @@ One block per task, newest at the bottom. Do not reuse IDs.
 - Result: (filled when done) what changed, links, how to reproduce, what was NOT verified.
 ```
 
-## Critical path to the MVP (revised 2026-11-06)
+## Priorities (decided 2026-11-06)
+
+**Phase 1: the bridge layer, with tests.** Price parity and the oracle come later (the user's decision).
 
 1. T-002 Repo skeleton
 2. T-003 Arc Studio app
 3. T-022 Mock provider token, lock-and-mint on Arc (spike)
 4. T-024 Bridge Kit for wNVDA, both directions, timings (spike)
-5. T-032 ADR review
-6. T-026 PriceOracle with guards, and relayer
-7. T-027 InventoryMarket
-8. T-028 Seed inventory
-9. T-011 Terminal UI
-10. T-013 Bridge wNVDA in the UI
-11. T-014 End-to-end run
-12. T-016 README and diagram
-13. T-018 Demo video
-14. T-019 Submission
+5. T-033 Bridge layer module with unit tests
+6. T-034 Contract tests for the mock token and the lock-and-mint accounting
+7. T-035 Testnet integration tests for the bridge layer
+8. T-032 ADR review for the bridge ADRs (0012, 0013, 0016, 0017, 0008)
 
-These run in parallel and feed into the path:
-- T-001: user decisions (now includes the off-hours demo mode); needed by T-019 and T-032.
-- T-004: USDC bridge-in spike; needed by T-012.
+Parallel in phase 1:
+- T-001: user decisions; needed by T-019.
+- T-004: USDC bridge-in spike; feeds T-033.
 - T-023: real provider token research (alle); needed by T-032.
-- T-025: oracle and market-session spike (alle); needed by T-026.
-- T-029: parity tests; needed by T-014.
-- T-030: parity panel in the UI; needed by T-014.
-- T-012: USDC bridge-in in the UI; needed by T-014.
-- T-015: draft architecture diagram; needed by T-016.
-- T-017: fact re-check; needed by T-018.
+
+**Phase 2 (parked until phase 1 is done):** oracle and market, then the UI and the end-to-end run.
+- Parked: T-025, T-026, T-027, T-028, T-029, T-030.
+- Then: T-011 Terminal UI, T-012, T-013 (UI on top of the T-033 module), T-014 end-to-end, T-015, T-016, T-017, T-018, T-019.
 
 Superseded on 2026-11-06: T-005, T-006, T-007, T-008, T-009, T-010 (replaced by T-022, T-024, T-025, T-032, T-026, T-027). Tasks T-001 and T-011 to T-019 now say `wNVDA` where they said `tAAPL`; read them with ADRs 0012 to 0017.
 
@@ -389,7 +383,7 @@ Spikes check items that are not verified in proposed ADRs. A spike may use a pro
 
 ### T-025: Spike: NVDA price source (Ondo API first), access and behaviour by market session (ADR 0015)
 - Owner: alle
-- Status: todo
+- Status: parked
 - ADR: docs/adr/0015-price-parity-and-off-hours-policy.md
 - Depends on: none
 - Goal: Confirm the Ondo API as the demo's price source for NVDAon and learn what it publishes in each session.
@@ -405,7 +399,7 @@ Spikes check items that are not verified in proposed ADRs. A spike may use a pro
 
 ### T-026: Build PriceOracle with guards, and the relayer (ADR 0015)
 - Owner: laptop
-- Status: todo
+- Status: parked
 - ADR: docs/adr/0015-price-parity-and-off-hours-policy.md
 - Depends on: T-025, T-032
 - Goal: An oracle contract on Arc with the guards in ADR 0015, fed by the chosen source.
@@ -418,7 +412,7 @@ Spikes check items that are not verified in proposed ADRs. A spike may use a pro
 
 ### T-027: Build InventoryMarket (ADR 0014)
 - Owner: laptop
-- Status: todo
+- Status: parked
 - ADR: docs/adr/0014-trading-against-pre-positioned-inventory.md
 - Depends on: T-026
 - Goal: Buy and sell `wNVDA` for USDC at oracle price ± spread from held inventory, with the caps and session rules from ADR 0015.
@@ -432,7 +426,7 @@ Spikes check items that are not verified in proposed ADRs. A spike may use a pro
 
 ### T-028: Pre-position wNVDA inventory and document refills
 - Owner: laptop
-- Status: todo
+- Status: parked
 - ADR: docs/adr/0014-trading-against-pre-positioned-inventory.md
 - Depends on: T-024, T-027
 - Goal: Seed the market with `wNVDA` and USDC before the demo, and write how to refill.
@@ -444,7 +438,7 @@ Spikes check items that are not verified in proposed ADRs. A spike may use a pro
 
 ### T-029: Parity tests and scenarios (ADR 0015)
 - Owner: laptop
-- Status: todo
+- Status: parked
 - ADR: docs/adr/0015-price-parity-and-off-hours-policy.md
 - Depends on: T-027
 - Goal: Show the controls work with tests, not claims.
@@ -455,7 +449,7 @@ Spikes check items that are not verified in proposed ADRs. A spike may use a pro
 
 ### T-030: Parity panel in the UI (ADR 0015)
 - Owner: laptop
-- Status: todo
+- Status: parked
 - ADR: docs/adr/0015-price-parity-and-off-hours-policy.md
 - Depends on: T-011
 - Goal: Show oracle price, session, age, spread, inventory, and locked versus wrapped supply.
@@ -468,13 +462,55 @@ Spikes check items that are not verified in proposed ADRs. A spike may use a pro
 - Owner: alle
 - Status: todo
 - ADR: docs/adr/0012-provider-token-lock-and-wrap.md, docs/adr/0013-wrapped-token-bridging-path.md, docs/adr/0014-trading-against-pre-positioned-inventory.md, docs/adr/0015-price-parity-and-off-hours-policy.md, docs/adr/0016-compliance-provider-tokens.md, docs/adr/0017-demo-scope-with-wrapped-token.md, docs/adr/0008-frontend-stack-and-wallet.md
-- Depends on: T-001, T-003, T-022, T-023, T-024, T-025
+- Depends on: T-001, T-003, T-022, T-023, T-024
 - Goal: Turn the proposed ADRs into accepted ones, or supersede them, so the build tasks have rules to follow.
 - Acceptance criteria:
   - [ ] Each ADR is `accepted`, or replaced by a new ADR linking the spike Result it is based on.
   - [ ] The off-hours demo mode decision from T-001 is in ADR 0015.
   - [ ] `docs/adr/README.md` is updated.
-- Notes: Replaces T-008. Re-fetch fast-moving facts on the day.
+- Notes: Replaces T-008. Phase 1 scope: accept or supersede ADRs 0012, 0013, 0016, 0017 and 0008. ADRs 0014 and 0015 are reviewed after phase 2 starts (price parity and oracle are parked). Re-fetch fast-moving facts on the day.
+- Result:
+
+### T-033: Build the bridge layer module with unit tests
+- Owner: laptop
+- Status: todo
+- ADR: docs/adr/0013-wrapped-token-bridging-path.md, docs/adr/0003-usdc-bridge-in-with-forwarding.md
+- Depends on: T-022, T-024
+- Goal: One typed TypeScript module (`packages/bridge`) that the UI and scripts call for every bridge action, with no UI code in it.
+- Acceptance criteria:
+  - [ ] API: `quote`, `send`, `status`, `resume` for (a) USDC Sepolia → Arc with Forwarding, (b) wNVDA Arc → Sepolia, (c) mNVDA Sepolia → Arc. Chain and token config in one place (token id, addresses, decimals).
+  - [ ] Bridge Kit is used first, and the raw `CrossChainTokenService` path is the fallback behind the same interface (ADR 0013).
+  - [ ] A state machine with PENDING, SENT, CONFIRMED, COMPLETE, FAILED, persisted so a reload or restart resumes a transfer.
+  - [ ] Typed errors for the known failures: rate limit 0, `TokenNotRegistered` (`0x5d0028cf`), insufficient gas on the source chain, amount above the limit, user rejection.
+  - [ ] Unit tests with a mocked kit and mocked RPC (no network): each state transition, resume after a crash, each error, amount and decimals handling, fallback switch. Tests run with one command and in CI.
+- Notes: Keep it independent of the oracle and market. Do not hardcode secrets.
+- Result:
+
+### T-034: Contract tests for the mock token and lock-and-mint accounting
+- Owner: laptop
+- Status: todo
+- ADR: docs/adr/0012-provider-token-lock-and-wrap.md
+- Depends on: T-022
+- Goal: Foundry tests that prove the fixture and the accounting rule: locked mNVDA on Sepolia equals wNVDA supply on Arc.
+- Acceptance criteria:
+  - [ ] `MockProviderToken` (mNVDA) is clearly named as a mock and has a faucet or mint for testnet use only.
+  - [ ] Tests for transfers, decimals and the lock-and-unlock round trip, using a local stand-in for the manager if the real service cannot run locally.
+  - [ ] A script `check-supply` reads both chains and fails if locked ≠ wrapped supply.
+  - [ ] Deploy and registration scripts are re-runnable and print addresses and the token id.
+- Result:
+
+### T-035: Testnet integration tests for the bridge layer
+- Owner: laptop
+- Status: todo
+- ADR: docs/adr/0013-wrapped-token-bridging-path.md
+- Depends on: T-033, T-034
+- Goal: Prove the bridge layer on real testnets and record timings.
+- Acceptance criteria:
+  - [ ] Opt-in test command (`test:integration`) with funded testnet wallets from env, never committed. Skipped by default.
+  - [ ] Round trip: USDC in; mNVDA Sepolia → Arc; wNVDA Arc → Sepolia. After each leg, balances match and `check-supply` passes.
+  - [ ] Failure cases against the real contracts: rate limit 0, unregistered token, amount above the limit, too little gas.
+  - [ ] Resume test: kill the process mid-transfer and complete it.
+  - [ ] Timings per leg are in the Result, and whether Fast Transfer exists for this token.
 - Result:
 
 ### T-020: (post-MVP) Spike: indexer options on Arc testnet and Sepolia
