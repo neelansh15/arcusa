@@ -38,7 +38,7 @@ Goal: take a token on a source chain (testnet: Sepolia) and get its wrapped twin
 ## Record the addresses
 
 - `deployments/arc-testnet.json`: add the wrapper address, tokenId, source token and its deploy tx.
-- `app/src/lib/config.ts` and `app/src/app/docs/docs-contracts.ts`: add the asset (and the Docs contract pages).
+- `app/src/lib/config.ts` and `app/src/lib/docs-contracts.ts`: add the asset (and the Docs contract pages).
 - `LOG.md`: dated entry with tx hashes and timings.
 
 ## Make it tradable
