@@ -1,0 +1,11 @@
+{
+  "name": "arcusa",
+  "private": true,
+  "packageManager": "pnpm@12.16.1",
+  "engines": {
+    "node": ">=22.12"
+  },
+  "scripts": {
+    "test": "pnpm -r --if-present test"
+  }
+}
