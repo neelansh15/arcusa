@@ -19,6 +19,7 @@ export function Nav() {
           <a href="#features">Product</a>
           <a href="#how">How it works</a>
           <a href="#bridge">Bridge</a>
+          <Link href="/docs">Docs</Link>
         </nav>
         <div className="lp-nav-right">
           <span className="lp-testnet">Arc testnet demo</span>
@@ -311,6 +312,7 @@ export function Footer() {
         </div>
         <nav className="lp-footer-links" aria-label="Footer">
           <Link href="/trade">Terminal</Link>
+          <Link href="/docs">Docs</Link>
           <a href="#features">Product</a>
           <a href="#how">How it works</a>
           <a href="https://www.arc.network" target="_blank" rel="noreferrer">

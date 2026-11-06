@@ -17,6 +17,7 @@ export default function BridgePage() {
               Traders only need USDC on Arc and never have to bridge.
             </p>
             <p className="bridge-links">
+              <Link href="/docs/bridge">How the bridge works</Link>
               <Link href="/trade">Back to trading</Link>
             </p>
           </div>

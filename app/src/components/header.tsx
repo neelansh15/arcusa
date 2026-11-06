@@ -58,6 +58,7 @@ export function Header() {
           <Link href="/">Home</Link>
           <Link href="/trade" className={path === "/trade" ? "on" : ""}>Trade</Link>
           <Link href="/bridge" className={path === "/bridge" ? "on" : ""}>Bridge</Link>
+          <Link href="/docs">Docs</Link>
         </nav>
         <span className="badge net">Arc Testnet</span>
         <span className="badge warn" title="Off-hours demo mode: indicative price, testnet only">DEMO</span>
