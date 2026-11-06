@@ -502,3 +502,5 @@ button.asset-row:focus-visible { outline: 2px solid var(--accent); outline-offse
 .tk-alert div { display: flex; flex-direction: column; gap: 2px; min-width: 0; } .tk-alert b { font-size: 14px; } .tk-alert span { font-size: 13px; color: var(--text-2); line-height: 1.4; }
 .tk-alert.err { background: var(--neg-soft); } .tk-alert.err i { background: var(--neg); }
 .tk-alert.info { background: var(--panel2); } .tk-alert.info i { background: var(--muted); }
+.logo svg { flex: none; display: block; }
+@media (max-width: 420px) { .logo svg { width: 26px; height: 26px; } }

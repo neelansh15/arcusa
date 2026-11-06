@@ -5,6 +5,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import { useChainId, useConnection } from "wagmi";
 import { arcTestnet } from "@/lib/config";
 import { isRejection, useSwitchToArc } from "@/lib/use-switch-to-arc";
+import { Logo } from "./landing/graphics";
 import { NavMenu } from "./nav-menu";
 import { SiteNav } from "./site-nav";
 import { ThemeToggle } from "./theme-toggle";
@@ -45,7 +46,7 @@ export function Header({ extra }: { extra?: ReactNode }) {
   return (
     <header className="header">
       <div className="brand">
-        <Link href="/" className="logo"><i />arcusa</Link>
+        <Link href="/" className="logo" aria-label="arcusa home"><Logo size={30} /><span>arcusa</span></Link>
       </div>
       <SiteNav className="nav" />
       <div className="header-right">
