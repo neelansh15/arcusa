@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useAccount } from "wagmi";
+import { erc20Abi, formatUnits } from "viem";
+import { useAccount, useReadContract } from "wagmi";
 import {
   BRIDGE_ETA,
   BRIDGE_STEP_ORDER,
@@ -12,23 +13,48 @@ import {
   type BridgeLeg,
   type BridgeStep,
 } from "@/lib/bridge";
-import { SEPOLIA_MNVDA } from "@/lib/config";
+import { ARC_CHAIN_ID, SEPOLIA_CHAIN_ID, SEPOLIA_MNVDA, WNVDA, explorerTx } from "@/lib/config";
 
-const chainName = (id: number) => (id === 5042002 ? "Arc" : "Sepolia");
+const chainName = (id: number) => (id === ARC_CHAIN_ID ? "Arc" : "Sepolia");
 const LABEL: Record<string, string> = {
   approve: "Approve",
   burn: "Burn / lock",
   attestation: "Attestation",
   mint: "Mint / release",
 };
+const STATE_TEXT: Record<string, string> = {
+  pending: "Waiting",
+  active: "In progress",
+  done: "Done",
+  error: "Failed",
+};
+const DIRECTION_TEXT: Record<BridgeDirection, string> = {
+  "sepolia-to-arc": "Sepolia → Arc",
+  "arc-to-sepolia": "Arc → Sepolia",
+};
+
+const short = (h: string) => `${h.slice(0, 8)}…${h.slice(-6)}`;
 
 function Timeline({ steps }: { steps: BridgeStep[] }) {
   return (
-    <ol className="timeline">
+    <ol className="bridge-steps">
       {steps.map((s) => (
         <li key={s.name} className={s.state}>
           <i />
-          <span>{LABEL[s.name]}</span>
+          <div className="bridge-step-body">
+            <span className="bridge-step-name">{LABEL[s.name]}</span>
+            <span className="bridge-step-meta">
+              {STATE_TEXT[s.state]}
+              {s.txHash && s.chainId !== undefined && (
+                <>
+                  {" · "}
+                  <a href={explorerTx(s.chainId, s.txHash)} target="_blank" rel="noreferrer">
+                    {short(s.txHash)}
+                  </a>
+                </>
+              )}
+            </span>
+          </div>
         </li>
       ))}
     </ol>
@@ -42,6 +68,20 @@ export function BridgePanel() {
   const [legs, setLegs] = useState<BridgeLeg[]>([]);
   const [err, setErr] = useState<string | null>(null);
   const { from, to } = chainsFor(direction);
+
+  // Read-only balance of the token on the source chain, for the max hint.
+  const token = direction === "sepolia-to-arc" ? SEPOLIA_MNVDA.address : WNVDA.address;
+  const { data: rawBalance } = useReadContract({
+    chainId: from as typeof ARC_CHAIN_ID | typeof SEPOLIA_CHAIN_ID,
+    address: token,
+    abi: erc20Abi,
+    functionName: "balanceOf",
+    args: address ? [address] : undefined,
+    query: { enabled: !!address, refetchInterval: 10_000 },
+  });
+  const balance = rawBalance === undefined ? null : formatUnits(rawBalance, 18);
+  const balanceText = balance === null ? "—" : Number(balance).toLocaleString(undefined, { maximumFractionDigits: 6 });
+  const sourceSymbol = direction === "sepolia-to-arc" ? SEPOLIA_MNVDA.symbol : WNVDA.symbol;
 
   async function start() {
     if (!address) return;
@@ -62,39 +102,103 @@ export function BridgePanel() {
   }
 
   return (
-    <section className="panel">
-      <h2>Bridge (CCTP)</h2>
-      <div className="row"><span className="muted">Token</span><span>{SEPOLIA_MNVDA.symbol} ↔ wNVDA</span></div>
-      <div className="seg full">
-        <button className={direction === "sepolia-to-arc" ? "on" : ""} onClick={() => setDirection("sepolia-to-arc")}>Sepolia → Arc</button>
-        <button className={direction === "arc-to-sepolia" ? "on" : ""} onClick={() => setDirection("arc-to-sepolia")}>Arc → Sepolia</button>
-      </div>
-      <label className="field">
-        <span>Amount</span>
-        <input inputMode="decimal" value={amount} onChange={(e) => setAmount(e.target.value)} />
-      </label>
-      <div className="row small muted"><span>{chainName(from)} → {chainName(to)}</span><span>Slow · forwarder · ETA {BRIDGE_ETA[direction]}</span></div>
-      <button className="submit" disabled={!isConnected || !(Number(amount) > 0)} onClick={start}>
-        {isConnected ? "Bridge" : "Connect wallet"}
-      </button>
-      {err && <div className="neg small note">{err}</div>}
-      <div className="legs">
+    <>
+      <section className="bridge-card">
+        <div className="bridge-card-head">
+          <h2>Bridge {SEPOLIA_MNVDA.symbol} ↔ wNVDA</h2>
+          <span className="bridge-pill">CCTP · Bridge Kit</span>
+        </div>
+
+        <div className="bridge-seg" role="tablist" aria-label="Direction">
+          {(Object.keys(DIRECTION_TEXT) as BridgeDirection[]).map((d) => (
+            <button
+              key={d}
+              role="tab"
+              aria-selected={direction === d}
+              className={direction === d ? "on" : ""}
+              onClick={() => setDirection(d)}
+            >
+              {DIRECTION_TEXT[d]}
+            </button>
+          ))}
+        </div>
+
+        <div className="bridge-route">
+          <span>{chainName(from)}</span>
+          <i aria-hidden="true">→</i>
+          <span>{chainName(to)}</span>
+        </div>
+
+        <label className="bridge-field">
+          <span className="bridge-field-top">
+            <span>Amount</span>
+            <span className="bridge-balance">
+              Balance {balanceText}{" "}
+              <button
+                type="button"
+                className="bridge-max"
+                disabled={balance === null}
+                onClick={() => balance !== null && setAmount(balance)}
+              >
+                Max
+              </button>
+            </span>
+          </span>
+          <span className="bridge-input">
+            <input inputMode="decimal" placeholder="0.0" value={amount} onChange={(e) => setAmount(e.target.value)} />
+            <b>{sourceSymbol}</b>
+          </span>
+        </label>
+
+        <dl className="bridge-meta">
+          <div>
+            <dt>Estimated time</dt>
+            <dd>{BRIDGE_ETA[direction]}</dd>
+          </div>
+          <div>
+            <dt>Transfer</dt>
+            <dd>Standard (slow) · forwarder</dd>
+          </div>
+          <div>
+            <dt>Network fee</dt>
+            <dd>Gas on {chainName(from)}</dd>
+          </div>
+        </dl>
+
+        <button className="bridge-submit" disabled={!isConnected || !(Number(amount) > 0)} onClick={start}>
+          {isConnected ? "Bridge" : "Connect wallet to bridge"}
+        </button>
+        {err && <div className="bridge-error">{err}</div>}
+
+        <div className="bridge-preview">
+          <div className="bridge-label">What happens</div>
+          <Timeline steps={emptySteps()} />
+        </div>
+      </section>
+
+      <section className="bridge-card">
+        <div className="bridge-card-head">
+          <h2>Recent legs</h2>
+        </div>
         {legs.length === 0 ? (
-          <>
-            <div className="small muted">Preview of a leg:</div>
-            <Timeline steps={emptySteps()} />
-          </>
+          <p className="bridge-empty">No bridge legs yet. Legs you start show up here with a transaction link per step.</p>
         ) : (
-          legs.map((l) => (
-            <div key={l.id} className="leg">
-              <div className="small">
-                {l.request.amount} · {l.request.direction === "sepolia-to-arc" ? "Sepolia → Arc" : "Arc → Sepolia"}
-              </div>
-              <Timeline steps={BRIDGE_STEP_ORDER.map((n) => l.steps.find((s) => s.name === n)!)} />
-            </div>
-          ))
+          <ul className="bridge-legs">
+            {legs.map((l) => (
+              <li key={l.id} className="bridge-leg">
+                <div className="bridge-leg-head">
+                  <b>
+                    {l.request.amount} {l.request.direction === "sepolia-to-arc" ? SEPOLIA_MNVDA.symbol : WNVDA.symbol}
+                  </b>
+                  <span>{DIRECTION_TEXT[l.request.direction]}</span>
+                  <time>{new Date(l.createdAt).toLocaleTimeString()}</time>
+                </div>
+                <Timeline steps={BRIDGE_STEP_ORDER.map((n) => l.steps.find((s) => s.name === n)!)} />
+              </li>
+            ))}
+          </ul>
         )}
-      </div>
-    </section>
+      </section>
+    </>
   );
 }
