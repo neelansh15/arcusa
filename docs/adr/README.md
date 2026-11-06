@@ -22,6 +22,7 @@ One file per decision: `NNNN-short-title.md`, copied from `0000-template.md`. St
 | [0015](0015-price-parity-and-off-hours-policy.md) | Price parity and off-hours policy | proposed (spike T-025) |
 | [0016](0016-compliance-provider-tokens.md) | Compliance and legal stance with provider tokens | proposed |
 | [0017](0017-demo-scope-with-wrapped-token.md) | Demo scope with the wrapped token | proposed |
+| [0018](0018-terminal-layout-assets-and-issuers.md) | Terminal layout: assets list, issuer comparison, bridge as a liquidity-provider page | proposed |
 
 Note: ADR 0010 (accepted, immutable) still says `tAAPL`. Read it as the wrapped token `wNVDA` (ADR 0012).
 
