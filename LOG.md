@@ -42,7 +42,7 @@ Newest entries at the bottom. Times are IST (UTC+5:30). Testnet only. Every addr
 - Locked mNVDA is 0 and wNVDA totalSupply is 0, so locked >= wrapped trivially holds. It must be re-checked after the first bridge in T-024.
 - The getters were probed by name (`owner`, `operator`, `rateLimit` and so on) and answered; they are not in Circle's reference page, so they could change.
 
-## 2026-11-06 13:08 T-024 in progress: lock and mint works, timings
+## 2026-11-06 13:08 T-024 (see 13:12 correction): lock and mint works, timings
 - Bridge Kit accepts the mNVDA tokenId as `token` (`kit.bridge({from, to:{useForwarder:true}, amount, token: tokenId, config:{feePayment:'source', transferSpeed:'SLOW'}})`).
 - The default transfer speed is FAST. With FAST the approve step passed but the `transfer` step reverted in simulation on both chains (`ONCHAIN_SIMULATION_FAILED`, no revert reason). Likely cause, not proven: FAST needs a PRE_FINALITY quote item that is not configured for this token. `transferSpeed: 'SLOW'` works.
 - Sepolia to Arc, 10 mNVDA (lock and mint): approve, transfer, fetchAttestation, forward all `success`. 965 s (about 16 min), dominated by Sepolia finality. After it, locked mNVDA 10 and wNVDA supply 10 (before the return leg).
@@ -50,6 +50,12 @@ Newest entries at the bottom. Times are IST (UTC+5:30). Testnet only. Every addr
 - What took ~23 min in T-022 was the wrapper contract creation on Arc (DeployTokenMessage, Sepolia finality). It is a one-time cost per token. A transfer into Arc costs about 16 min in SLOW mode.
 - Demo implication: pre-bridge the tokens and show the live bridge as a status view, not a wait.
 - Script: contracts/scripts/spikes/t024.ts (to be pushed).
+
+## 2026-11-06 13:12 T-024 done: correction, both directions work
+- Correction to the 13:08 entry: Arc to Sepolia (5 mNVDA, burn and unlock) is complete. Approve, transfer, fetchAttestation and forward all `success`, in 28 s (the 13:08 entry wrongly called the unlock pending).
+- Final state: wNVDA totalSupply 5 and locked mNVDA 5 on Sepolia, so locked equals wrapped (lock-and-mint accounting holds after a round trip).
+- Timings: into Arc about 16 min (Sepolia finality), back to Sepolia 28 s (Arc finality is fast).
+- Still unverified: Fast Transfer (FAST reverts in simulation; reason unknown), and Bridge Kit in a browser bundle.
 
 ## Not verified yet
 - Whether Bridge Kit can move mNVDA by token id (T-024).
