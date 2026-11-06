@@ -904,7 +904,7 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 
 ### T-057: Switch the app, relayer and docs to the Studio deployments (ADR 0025)
 - Owner: laptop
-- Status: todo
+- Status: doing
 - ADR: docs/adr/0025-contracts-built-and-deployed-in-arc-studio.md
 - Depends on: T-056
 - Prep done (laptop, 2026-11-07): all app addresses now come from `app/src/lib/contracts.ts` (sets `current` and `studio`, with deploy blocks). Switching is `NEXT_PUBLIC_CONTRACT_SET=studio` at build time (e.g. a Vercel env var) or changing `DEFAULT_SET`. Checked in dev with the env var: the app calls the Studio NVDA oracle and market. The docs contract page lists the Studio set too. Still to do after T-056: flip the set, run a real buy and sell on NVDA and TSLA, update `deployments/arc-testnet.json` (move the old set under `superseded`), the relayer env on the server, and the README status line.
