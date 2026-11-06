@@ -5,6 +5,7 @@ export type BridgeErrorCode =
   | "CONFIG_INVALID"
   | "UNSUPPORTED_ROUTE"
   | "INVALID_AMOUNT"
+  | "INVALID_ADDRESS"
   | "INVALID_TRANSITION"
   | "TOKEN_NOT_REGISTERED"
   | "QUOTE_REJECTED"
@@ -50,6 +51,14 @@ export class UnsupportedRouteError extends BridgeError {
 /** Amount is not a positive value representable at the token's decimals. */
 export class InvalidAmountError extends BridgeError {
   readonly code = "INVALID_AMOUNT" as const;
+}
+
+/** Sender or recipient is not a 20-byte hex address. */
+export class InvalidAddressError extends BridgeError {
+  readonly code = "INVALID_ADDRESS" as const;
+  constructor(readonly field: "sender" | "recipient", value: string) {
+    super(`invalid ${field} address: ${value}`);
+  }
 }
 
 /** The state machine was asked for a move it does not allow. */
