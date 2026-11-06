@@ -27,7 +27,15 @@ Newest entries at the bottom. Times are IST (UTC+5:30). Testnet only. Every addr
 - Iris quote for the DeployTokenMessage (domain 0 to 26) cost 142720395729835 wei (0.00014272 ETH). `deployRemoteOwnerlessToken(token, 26, {signedQuote, refundAddress: 0x0})` succeeded on Sepolia: 0x4fd4052e56e5b9d38a178cc0d612715a4770db311195e1daaf71cec552b58cc0.
 - Iris `GET /v2/messages/0?transactionHash=...` showed `pending_confirmations` about 10 minutes after the call (sent 12:16). `resolveTokenAddress` on Arc reverted during that time, so the Arc wrapper is waiting on Sepolia finality, not on the relayer. Next: wait for it and read the wrapper's name, symbol and decimals.
 
+## 2026-11-06 12:40 T-022 done: wrapper live on Arc
+- Iris message status `complete`. The Arc wrapper appeared about 1370s (~23 min) after the quote at 12:16 IST, so the wait was Sepolia finality, not the relayer.
+- wNVDA on Arc testnet: 0x5ad2862787d5C7F42a09014CE4C973d162878a16. Arc TokenManager: 0x276fACA17FA1C19A0d9B4f1B190C89c2d28C601b (same address as the Sepolia manager).
+- Wrapper metadata mirrors the source token: name "Mock NVIDIA (testnet)", symbol mNVDA, decimals 18. totalSupply 0 and locked mNVDA 0 so far, since nothing has been bridged yet.
+- `registerOwnerlessToken` is permissionless: an EOA that does not control the token registered it. Cost of the remote deploy: 0.00014272 ETH.
+- Next: T-024 (Bridge Kit transfer by token id, both directions, timing, Fast Transfer), then rate limit, max transfer and operator reads on both managers.
+
 ## Not verified yet
 - Whether Bridge Kit can move mNVDA by token id (T-024).
+- Rate limit, max transfer amount and operator on both managers (T-022 read pending).
 - Fast Transfer availability for mNVDA (T-024; the docs expect `FX_SYMBOL_NOT_CONFIGURED`).
 - Itemised forwarding fee for USDC.
