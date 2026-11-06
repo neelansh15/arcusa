@@ -495,3 +495,10 @@ button.asset-row:focus-visible { outline: 2px solid var(--accent); outline-offse
   .header { padding: 0 12px; column-gap: 6px; } .logo { font-size: 18px; } .logo i { width: 14px; height: 14px; }
   button.wallet { padding: 7px 11px; font-size: 13px; } .header .primary { padding: 8px 14px; font-size: 13px; }
 }
+
+/* Friendly trade errors */
+.tk-alert { display: flex; gap: 12px; align-items: flex-start; margin-top: 12px; padding: 12px 14px; border-radius: 18px; background: var(--warn-soft); color: var(--text); }
+.tk-alert i { flex: none; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-style: normal; font-weight: 800; font-size: 13px; background: var(--warn); color: var(--on-accent); }
+.tk-alert div { display: flex; flex-direction: column; gap: 2px; min-width: 0; } .tk-alert b { font-size: 14px; } .tk-alert span { font-size: 13px; color: var(--text-2); line-height: 1.4; }
+.tk-alert.err { background: var(--neg-soft); } .tk-alert.err i { background: var(--neg); }
+.tk-alert.info { background: var(--panel2); } .tk-alert.info i { background: var(--muted); }

@@ -8,6 +8,7 @@ import { usePublicClient } from "wagmi";
 import { ARC_CHAIN_ID, ARC_USDC, WNVDA, explorerTx } from "@/lib/config";
 import { ARC_FEES, MARKET_ADDRESS, marketAbi } from "@/lib/market";
 import { Toast, type ToastMsg } from "@/components/toast";
+import { friendlyMarketError } from "@/lib/market-errors";
 import { useQuote, type MarketState } from "@/lib/use-market";
 import type { ReactNode } from "react";
 
@@ -41,7 +42,7 @@ export function OrderTicket({ market, usdcBal, nvdaBal, onDone, initialSide = "b
   const outText = q.out !== null ? Number(formatUnits(q.out, outDec)).toLocaleString(undefined, { maximumFractionDigits: side === "buy" ? 6 : 4 }) : "—";
   const px = q.out && q.parsed ? (side === "buy" ? Number(formatUnits(q.parsed, 6)) / Number(formatUnits(q.out, 18)) : Number(formatUnits(q.out, 6)) / Number(formatUnits(q.parsed, 18))) : null;
   const overBal = bal !== null && Number(amount) > bal;
-  const quoteErr = q.error ? "Outside session cap or inventory" : null;
+  const quoteErr = q.error ? friendlyMarketError(q.error) : null;
   const canSubmit = isConnected && q.parsed !== null && q.out !== null && !overBal && !busy && !market.inventory?.paused;
 
   async function submit() {
@@ -72,8 +73,8 @@ export function OrderTicket({ market, usdcBal, nvdaBal, onDone, initialSide = "b
         ? { id: Date.now(), kind: "ok", title: "Transaction confirmed", text: `${side === "buy" ? "Bought" : "Sold"} ${outText} ${side === "buy" ? "wNVDA" : "USDC"}`, href }
         : { id: Date.now(), kind: "err", title: "Transaction reverted", text: "The market rejected this order.", href });
     } catch (e) {
-      const m = e instanceof Error ? e.message : String(e);
-      setMsg({ id: Date.now(), kind: "err", title: "Transaction failed", text: m.split("\n")[0].slice(0, 120) });
+      const f = friendlyMarketError(e);
+      setMsg({ id: Date.now(), kind: "err", title: f.title, text: f.text });
     } finally {
       setBusy(null);
     }
@@ -94,7 +95,7 @@ export function OrderTicket({ market, usdcBal, nvdaBal, onDone, initialSide = "b
   const spreadFrac = market.spreadBps !== null ? market.spreadBps / 10_000 : null;
   const outUsdc = q.out !== null && side === "sell" ? Number(formatUnits(q.out, 6)) : null;
   const notional = side === "buy" ? (Number(amount) > 0 ? Number(amount) : null) : outUsdc !== null && spreadFrac !== null ? outUsdc / (1 - spreadFrac) : null;
-  const spreadCost = notional !== null && spreadFrac !== null ? notional * spreadFrac : null;
+  const spreadCost = !quoteErr && notional !== null && spreadFrac !== null ? notional * spreadFrac : null;
 
   let label: string;
   let action: (() => void) | undefined;
@@ -144,7 +145,7 @@ export function OrderTicket({ market, usdcBal, nvdaBal, onDone, initialSide = "b
 
       <button className="tk-submit" disabled={disabled} onClick={action}>{label}</button>
       {overBal && <div className="tk-msg neg">Amount exceeds your balance.</div>}
-      {quoteErr && !overBal && <div className="tk-msg warn">{quoteErr}.</div>}
+      {quoteErr && !overBal && <div className={`tk-alert ${quoteErr.tone}`} role="alert"><i aria-hidden="true">{quoteErr.tone === "info" ? "i" : "!"}</i><div><b>{quoteErr.title}</b><span>{quoteErr.text}</span></div></div>}
       {market.oracle?.stale && <div className="tk-msg warn">Oracle price is stale; off-hours demo mode is on.</div>}
 
       <div className="tk-sum">
