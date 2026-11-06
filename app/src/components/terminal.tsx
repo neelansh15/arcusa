@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { Balances, useBalances } from "./balances";
-import { BridgePanel } from "./bridge-panel";
 import { PriceChart } from "./chart";
 import { Header } from "./header";
 import { MarketInfo } from "./market-info";
@@ -11,7 +10,7 @@ import { Trades } from "./trades";
 import { useMarket } from "@/lib/use-market";
 import { usePrice } from "@/lib/use-price";
 
-type Tab = "balances" | "trades" | "bridge";
+type Tab = "balances" | "trades";
 
 export function Terminal() {
   const p = usePrice();
@@ -41,14 +40,13 @@ export function Terminal() {
         </aside>
         <section className="panel bottom">
           <div className="seg tabs-b">
-            {(["balances", "trades", "bridge"] as Tab[]).map((t) => (
+            {(["balances", "trades"] as Tab[]).map((t) => (
               <button key={t} className={tab === t ? "on" : ""} onClick={() => setTab(t)}>{t[0].toUpperCase() + t.slice(1)}</button>
             ))}
           </div>
           <div className="tab-body">
             {tab === "balances" && <Balances usdc={bal.usdc} nvda={bal.nvda} quote={p.quote} />}
             {tab === "trades" && <Trades />}
-            {tab === "bridge" && <BridgePanel />}
           </div>
         </section>
       </main>
