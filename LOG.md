@@ -80,7 +80,12 @@ Newest entries at the bottom. Times are IST (UTC+5:30). Testnet only. Every addr
 - tokenId 0x7f1c9fb53db47fd1c05448f8551ce0db9d2a30cdd4836c55ab890597f278f930. Sepolia manager 0xc49A72ceF1c4cDA64A4a12aBA9859a0E3BFE877f, which equals the Arc manager but differs from the mNVDA manager 0x276f...601b. The runbook's fixed-address table lists the NVDA manager only; the manager is per token.
 - Register worked first time, quote returned 200, no TokenNotRegistered retry was needed.
 - Arc wrapper wTSLA 0xD6bB2FFfCc37845fe44767E40569b801c9F9afd5 appeared 1168 s (about 19.5 min) after the deploy tx. Verified on Arc: name "Mock Tesla (testnet)", symbol mTSLA, decimals 18, totalSupply 0. Manager token() is the wrapper on Arc and mTSLA on Sepolia; locked 0.
-- NOT done yet: first bridge, locked == supply check after it, oracle and market.
+- Market: TSLA PriceOracle 0xf17f5449be304de315e48eee44cf889e8e47867d (tx 0xd8b694e1...fb59) and InventoryMarket 0x7872ad4bb1a18b63140d4df0fe31af451470f0f3 (tx 0xff278d02...908b4), same sources and compile settings as NVDA. First price 360.674 from xStocks TSLAx (tx 0xb59157a5...19934), demoMode and offHoursTrading on, relayer 0xB496...faE0 authorised (tx 0xbf9a66fc...577b3). No trade made yet.
+- First bridge: 10 mTSLA Sepolia to Arc with Bridge Kit, tokenId as token, SLOW, completed in 1139 s (approve, transfer 0x7746bbbd...a22d, attestation, forward all success). Accounting: locked on Sepolia 10, wTSLA totalSupply 10 on Arc, equal.
+- Inventory: deposited 5 wTSLA (0xb9a06452...0781) and 8 USDC (0xff1ba387...867e) into the TSLA market.
+- Wrapper creation took 1168 s (about 19.5 min), the bridge about 19 min.
+- Scripts (parametrised, read the key from ~/.arcusa): contracts/scripts/second-token/.
+- NOT done: server price service and relayer are not configured for TSLA (oracle goes stale after 300 s); no TSLA trade, pause, withdraw or cap tests; the app UI is still NVDA only.
 
 ## Not verified yet
 - Whether Bridge Kit can move mNVDA by token id (T-024).

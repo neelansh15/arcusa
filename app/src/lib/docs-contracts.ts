@@ -56,6 +56,24 @@ export const ARC_CONTRACTS: ContractRow[] = [
     note: "Deployed at block 71030220 (app/src/lib/market.ts).",
   },
   {
+    name: "PriceOracle (TSLA)",
+    address: "0xf17f5449be304de315e48eee44cf889e8e47867d",
+    purpose: "Stores the relayed TSLA price (8 decimals), publish time and session. Same contract as the NVDA oracle, separate instance.",
+    owner: "arcusa",
+    deployTx: "0xd8b694e1680fe544a2a84b14606751a420341b30329cbf9cdb1ffa07a665fb59",
+    source: "deployments/arc-testnet.json (tsla), LOG.md",
+    note: "First price 360.674 pushed by hand (xStocks TSLAx). The server relayer and price service are not yet configured for TSLA, so the price goes stale after 300 s.",
+  },
+  {
+    name: "InventoryMarket (TSLA)",
+    address: "0x7872ad4bb1a18b63140d4df0fe31af451470f0f3",
+    purpose: "Swaps USDC and wTSLA at the TSLA oracle price plus or minus a spread, against pre-positioned inventory (5 wTSLA and 8 USDC deposited).",
+    owner: "arcusa",
+    deployTx: "0xff278d0295f5da914392d4a4900611eed1cf63b623eb4096f21a83b361c908b4",
+    source: "deployments/arc-testnet.json (tsla), LOG.md",
+    note: "No trade has been made on it yet and it is not wired into the app.",
+  },
+  {
     name: "wNVDA",
     address: "0x5ad2862787d5C7F42a09014CE4C973d162878a16",
     purpose: "Wrapped mock NVDA on Arc (18 decimals). Minted when mNVDA is locked on Sepolia, burned when it is released.",
@@ -69,7 +87,7 @@ export const ARC_CONTRACTS: ContractRow[] = [
     purpose: "Wrapped mock TSLA on Arc (18 decimals, name \"Mock Tesla (testnet)\", symbol mTSLA). Minted when mTSLA is locked on Sepolia, burned when it is released.",
     owner: "wrapper",
     source: "LOG.md (2026-11-06 mTSLA entry)",
-    note: "Created by Circle's cross-chain token service from a Sepolia message, so there is no Arc deploy tx. totalSupply 0, no bridge done yet. Its manager is 0xc49A72ceF1c4cDA64A4a12aBA9859a0E3BFE877f.",
+    note: "Created by Circle's cross-chain token service from a Sepolia message, so there is no Arc deploy tx. 10 mTSLA bridged in, supply 10 and 10 locked on Sepolia. Its manager is 0xc49A72ceF1c4cDA64A4a12aBA9859a0E3BFE877f.",
   },
   {
     name: "USDC (ERC-20 interface)",
@@ -145,6 +163,8 @@ export interface TxRow {
 export const ARC_TXS: TxRow[] = [
   { label: "Sample buy: 5 USDC for 0.025972 wNVDA", hash: "0xccbfdfa863c4cc2b962b2c40202b80ec4c5799f7b715240b7a8dfeddd3c600c6", source: "deployments/arc-testnet.json, LOG.md" },
   { label: "Sample sell: wNVDA back for 4.803921 USDC", hash: "0xf089a3b0117ddea968bb429dff8c6d35193e51f2227aabd4187d6106c54082ba", source: "deployments/arc-testnet.json, LOG.md" },
+  { label: "Deposit 5 wTSLA into the TSLA market", hash: "0xb9a06452a4718f74dc5f200cf27562db133c9d9f575c57d5a5b9dc9e5d0d0781", source: "LOG.md" },
+  { label: "Deposit 8 USDC into the TSLA market", hash: "0xff1ba387438fb2e90d8fb14c66e7a52026b7f9a47bb21089aea8c649b400867e", source: "LOG.md" },
   { label: "First oracle update from the relayer", hash: "0xfa4cadbd36d40f343d50f7ed68e775e0c2ae86a19e88038a3c8e68d611cffe7f", source: "LOG.md" },
 ];
 
@@ -178,6 +198,7 @@ export const SEPOLIA_CONTRACTS: ContractRow[] = [
 
 export const SEPOLIA_TXS: TxRow[] = [
   { label: "deployRemoteOwnerlessToken (creates wNVDA on Arc)", hash: "0x4fd4052e56e5b9d38a178cc0d612715a4770db311195e1daaf71cec552b58cc0", source: "LOG.md" },
+  { label: "Bridge 10 mTSLA to Arc (Sepolia transfer step, SLOW, 1139 s)", hash: "0x7746bbbd6cfe7dc84668b5f95182a9ab90e0386ac640dae943333b3eeb04a22d", source: "LOG.md" },
   { label: "registerOwnerlessToken (mTSLA)", hash: "0x88b72ca6d3fba249b967356c55673b296f06ca317d01e0dc050b8acdca06c1f7", source: "LOG.md" },
   { label: "deployRemoteOwnerlessToken (requests the mTSLA wrapper on Arc)", hash: "0xd4d0e7bae2699c651e80716035804c64d52e4c6244b1178878856fe67cd596f1", source: "LOG.md" },
   { label: "USDC bridge-in burn, 1 USDC to Arc with Forwarding (test T-004)", hash: "0x0fe962146b1f35f881d462196b6c94c47e317d5437448ceb1cc8a7883f77a899", source: "LOG.md" },
