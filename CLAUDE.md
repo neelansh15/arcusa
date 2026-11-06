@@ -23,13 +23,14 @@ The repo is the only channel between them. There is no live messaging.
 ## ADRs
 - One file per decision in `docs/adr/`, numbered `NNNN-short-title.md`, from `docs/adr/0000-template.md`.
 - Statuses: `proposed`, `accepted`, `rejected`, `superseded by NNNN`.
-- Do not edit an accepted ADR to change the decision. Write a new ADR that supersedes it.
+- Do not edit an accepted ADR to change the decision. Write a new ADR that supersedes it. Dated amendments appended at the end (for example a corrected fact) are allowed.
 - Only follow `accepted` ADRs. A `proposed` one is a question, not a rule.
 
 ## Editing rules
 - Edit only your own tasks in `TASKS.md` (plus status of tasks you are assigned). Keep one block per task to avoid merge conflicts.
 - Small commits, plain messages that say what changed. Pull with rebase before pushing: `git pull --rebase`.
 - Never force push. Never rewrite history.
+- Commit and push your work as you go, in small steps, so nothing is lost if a session ends or the usage limit runs out. Do not hold finished work back until the end of a task.
 - Do NOT add Claude or Anthropic branding anywhere: no Co-Authored-By trailers, no "Generated with" lines, in commits, PRs or files.
 - Use "track" or "problem statement", never "prize", in repo docs.
 - No secrets in the repo. Use `.env` (gitignored) and document variable names only.

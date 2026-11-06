@@ -537,7 +537,7 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 - Owner: laptop
 - Status: todo
 - ADR: docs/adr/0013-wrapped-token-bridging-path.md, docs/adr/0003-usdc-bridge-in-with-forwarding.md
-- Depends on: T-022, T-024, T-004
+- Depends on: T-022, T-024, T-004 (early start allowed on 2026-11-06: the types, config, state machine and mocked unit tests need none of them; the real Bridge Kit wiring waits for T-024)
 - Goal: One typed TypeScript module (`packages/bridge`) that the UI and scripts call for every bridge action, with no UI code in it.
 - Acceptance criteria:
   - [ ] API: `quote`, `send`, `status`, `resume` for (a) USDC Sepolia → Arc with Forwarding, (b) wNVDA Arc → Sepolia, (c) mNVDA Sepolia → Arc. Chain and token config in one place (token id, addresses, decimals).
@@ -552,7 +552,7 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 - Owner: laptop
 - Status: todo
 - ADR: docs/adr/0012-provider-token-lock-and-wrap.md
-- Depends on: T-022
+- Depends on: T-022 (early start allowed on 2026-11-06: the mock token and its local tests need no testnet; `check-supply` and the deploy scripts need the T-022 addresses and token id)
 - Goal: Foundry tests that prove the fixture and the accounting rule: locked mNVDA on Sepolia is at least the wNVDA supply on Arc (equal when nothing is in flight).
 - Acceptance criteria:
   - [ ] `MockProviderToken` (mNVDA) is clearly named as a mock and has a faucet or mint for testnet use only.
