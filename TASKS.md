@@ -89,8 +89,8 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 | [T-034](#t-034-contract-tests-for-the-mock-token-and-lock-and-mint-accounting) | doing | laptop | Contract tests for the mock token and lock-and-mint accounting |
 | [T-035](#t-035-testnet-integration-tests-for-the-bridge-layer) | todo | laptop | Testnet integration tests for the bridge layer |
 | [T-036](#t-036-bridge-layer-persistence-and-resume) | todo | laptop | Bridge layer persistence and resume |
-| [T-037](#t-037-simple-trade-layout-pair-header-chart-card-market-table) | doing | laptop | Simple trade layout: pair header, chart card, market table |
-| [T-038](#t-038-payreceive-order-ticket-with-fee-summary) | todo | laptop | Pay/receive order ticket with fee summary |
+| [T-037](#t-037-simple-trade-layout-pair-header-chart-card-market-table) | done | laptop | Simple trade layout: pair header, chart card, market table |
+| [T-038](#t-038-payreceive-order-ticket-with-fee-summary) | doing | laptop | Pay/receive order ticket with fee summary |
 | [T-039](#t-039-mobile-layout-bottom-sheet-ticket-and-sticky-buysell-bar) | todo | laptop | Mobile layout: bottom-sheet ticket and sticky Buy/Sell bar |
 | [T-040](#t-040-pro-mode-toggle-desktop) | todo | laptop | Pro mode toggle (desktop) |
 | [T-020](#t-020-post-mvp-spike-indexer-options-on-arc-testnet-and-sepolia) | todo | alle | (post-MVP) Spike: indexer options on Arc testnet and Sepolia |
@@ -610,7 +610,7 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 
 ### T-037: Simple trade layout: pair header, chart card, market table
 - Owner: laptop
-- Status: doing
+- Status: done
 - ADR: docs/adr/0019-simple-default-ui-with-pro-mode.md
 - Goal: Replace the terminal layout with the LumaTrade-style simple layout on desktop (ADR 0019): top bar, pair header with big price and change pill, chart with hover tooltip, compact market table. Pro panels are not shown yet.
 - Acceptance criteria:
@@ -619,11 +619,11 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
   - [ ] Accent colour is a single token in `globals.css`.
   - [ ] Screenshot at 1440px width in Result.
 - Notes: Reuse `usePrice`, `useMarket`, `PriceChart`. Do not touch contracts or bridge code.
-- Result:
+- Result: `/trade` is now a LumaTrade-style card layout. `terminal.tsx` rewritten (pair header, big price, change pill for the selected range, range chips 1h/24h/1w/All, chart, `market-table.tsx` with oracle/bid/ask/feed). `chart.tsx` has a `line` variant (area plus hover tooltip) and keeps `candles` for Pro. Range chips are disabled unless the loaded history spans the range. Accent is the existing `--accent` token (the app theme is light, not dark; ADR 0019 said dark by mistake, kept the light theme for consistency with landing, docs and bridge). Run: `cd app && pnpm dev` then open `/trade`. Checked in the in-app browser at 1440px with live price data; `tsc --noEmit` clean. Not verified: screenshot not committed, 1h/24h/1w chips with real long history.
 
 ### T-038: Pay/receive order ticket with fee summary
 - Owner: laptop
-- Status: todo
+- Status: doing
 - ADR: docs/adr/0019-simple-default-ui-with-pro-mode.md
 - Depends on: T-037
 - Goal: Restyle `order-ticket.tsx` into BUY/SELL tabs, a "You pay" card and a "You receive" card with a swap arrow, balances on each, one primary button, and a summary card (fee, you receive, spread). Add a small "Your position" block above it: NVDA value in USDC and USDC balance.

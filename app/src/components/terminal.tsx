@@ -1,54 +1,63 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Balances, useBalances } from "./balances";
 import { PriceChart } from "./chart";
 import { Header } from "./header";
-import { MarketInfo } from "./market-info";
+import { MarketTable } from "./market-table";
 import { OrderTicket } from "./order-ticket";
-import { Trades } from "./trades";
 import { useMarket } from "@/lib/use-market";
 import { usePrice } from "@/lib/use-price";
 
-type Tab = "balances" | "trades";
+const RANGES = { "1h": 3600, "24h": 86_400, "1w": 604_800, All: 0 } as const;
+type Range = keyof typeof RANGES;
 
 export function Terminal() {
   const p = usePrice();
   const m = useMarket();
   const bal = useBalances();
-  const [tab, setTab] = useState<Tab>("balances");
-  const first = p.history[0]?.value;
+  const [range, setRange] = useState<Range>("All");
+
+  // A range chip is enabled only when the price history actually spans it; no fabricated history.
+  const span = p.history.length > 1 ? p.history[p.history.length - 1].time - p.history[0].time : 0;
+  const enabled = (r: Range) => r === "All" || span >= RANGES[r] * 0.9;
+  const active: Range = enabled(range) ? range : "All";
+
+  const view = useMemo(() => {
+    if (!p.history.length) return [];
+    const last = p.history[p.history.length - 1].time;
+    return active === "All" ? p.history : p.history.filter((h) => h.time >= last - RANGES[active]);
+  }, [p.history, active]);
+
+  const first = view[0]?.value;
   const chg = p.quote && first ? ((p.quote - first) / first) * 100 : null;
+  const down = chg !== null && chg < 0;
 
   return (
-    <div className="terminal">
+    <div className="trade-app">
       <Header />
-      <div className="stats">
-        <div className="pair"><b>NVDA</b><span className="muted">/ USDC</span></div>
-        <div className="stat big"><span>Last</span><b className={chg !== null && chg < 0 ? "neg" : "pos"}>{p.quote ? p.quote.toFixed(2) : "—"}</b></div>
-        <div className="stat"><span>Session change</span><b className={chg !== null && chg < 0 ? "neg" : "pos"}>{chg === null ? "—" : `${chg >= 0 ? "+" : ""}${chg.toFixed(2)}%`}</b></div>
-        <div className="stat"><span>Bid</span><b>{m.bid ? m.bid.toFixed(2) : "—"}</b></div>
-        <div className="stat"><span>Ask</span><b>{m.ask ? m.ask.toFixed(2) : "—"}</b></div>
-        <div className="stat"><span>Oracle</span><b>{m.oracle ? m.oracle.price.toFixed(2) : "—"}</b></div>
-        <div className="stat"><span>Feed</span><b className={p.stale ? "warn" : "pos"}>{p.stale ? "STALE" : "LIVE"}</b></div>
-      </div>
-      <main className="layout">
-        <section className="panel chart-panel"><PriceChart history={p.history} /></section>
-        <aside className="col">
-          <OrderTicket market={m} usdcBal={bal.usdc} nvdaBal={bal.nvda} />
-          <MarketInfo m={m} indicative={p.quote} />
-        </aside>
-        <section className="panel bottom">
-          <div className="seg tabs-b">
-            {(["balances", "trades"] as Tab[]).map((t) => (
-              <button key={t} className={tab === t ? "on" : ""} onClick={() => setTab(t)}>{t[0].toUpperCase() + t.slice(1)}</button>
-            ))}
+      <main className="trade">
+        <section className="card chart-card">
+          <div className="pair-head">
+            <div className="pair-icons"><i className="ic nvda">N</i><i className="ic usdc">$</i></div>
+            <h1>NVDA <span className="muted">/ USDC</span></h1>
           </div>
-          <div className="tab-body">
-            {tab === "balances" && <Balances usdc={bal.usdc} nvda={bal.nvda} quote={p.quote} />}
-            {tab === "trades" && <Trades />}
+          <div className="price-row">
+            <span className="price">${p.quote ? p.quote.toFixed(2) : "—"}</span>
+            {chg !== null && <span className={`pill ${down ? "down" : "up"}`}>{chg >= 0 ? "+" : ""}{chg.toFixed(2)}%{active === "All" ? " session" : ` ${active}`}</span>}
+            <div className="chips" role="tablist" aria-label="Range">
+              {(Object.keys(RANGES) as Range[]).map((r) => (
+                <button key={r} className={active === r ? "on" : ""} disabled={!enabled(r)} onClick={() => setRange(r)}>{r}</button>
+              ))}
+            </div>
           </div>
+          <div className="chart-slot"><PriceChart history={view} /></div>
+          <MarketTable m={m} stale={p.stale} />
         </section>
+        <aside className="side">
+          <OrderTicket market={m} usdcBal={bal.usdc} nvdaBal={bal.nvda} />
+          <Balances usdc={bal.usdc} nvda={bal.nvda} quote={p.quote} />
+        </aside>
       </main>
     </div>
   );

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, type ReactNode } from "react";
 import { useAccount, useChainId, useConnect, useDisconnect, useSwitchChain } from "wagmi";
 import { injected } from "wagmi/connectors";
 import { arcTestnet } from "@/lib/config";
@@ -9,7 +9,7 @@ import { SiteNav } from "./site-nav";
 
 const short = (a: string) => `${a.slice(0, 6)}…${a.slice(-4)}`;
 
-export function Header() {
+export function Header({ extra }: { extra?: ReactNode }) {
   const { address, isConnected, chainId: walletChainId } = useAccount();
   const chainId = useChainId();
   const { connect, isPending, error } = useConnect();
@@ -58,6 +58,7 @@ export function Header() {
         <span className="badge warn" title="Off-hours demo mode: indicative price, testnet only">DEMO</span>
       </div>
       <div className="header-right">
+        {extra}
         {msg && <span className="neg small">{msg.slice(0, 80)}</span>}
         {isConnected && !onArc && <button onClick={() => switchTo(arcTestnet.id).catch(() => {})}>Switch to Arc</button>}
         {isConnected && address ? (
