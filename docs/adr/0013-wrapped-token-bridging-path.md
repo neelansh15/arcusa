@@ -1,6 +1,6 @@
 # 0013. Bridging path for the wrapped stock token
 
-- Status: proposed
+- Status: accepted (2026-11-06, by the user)
 - Date: 2026-11-06
 - Deciders: alle, user
 - Supersedes: 0001
@@ -15,7 +15,7 @@ Facts (fetched 2026-11-05/06, see ADR 0001 for links):
 - Fees for non-USDC are paid in native gas (USDC on Arc). The source chain still needs its own gas.
 
 ## Decision
-- User path: Bridge Kit by token id, with the raw `CrossChainTokenService` calls as a fallback (same as ADR 0001).
+- User path: **Bridge Kit by token id is required** (the track needs Bridge Kit). Raw `CrossChainTokenService` calls are a debugging aid only, not a shipped path.
 - **Direction shown in the demo: Arc to Sepolia** (`wNVDA` burned on Arc, `mNVDA` unlocked on Sepolia). Arc as source settles in about 0.5s on Standard. This is the redeem direction and it is fast.
 - **Sepolia to Arc** (lock and mint) is slow on Standard and may or may not have Fast. It is used only for **pre-positioning inventory before the demo** (ADR 0014), not live.
 - The demo shows the bridge as its own step (ADR 0017), not hidden inside a trade.
@@ -23,7 +23,7 @@ Facts (fetched 2026-11-05/06, see ADR 0001 for links):
 ## Consequences
 - A trade never waits for a bridge. Trades settle against inventory already on Arc.
 - Timing numbers shown in the UI or video must be measured in T-024, not quoted from docs.
-- If Bridge Kit rejects the token, the UI calls the contracts directly and the README says so.
+- If Bridge Kit rejects the token, T-024 reports it as a blocker with the revert and doc evidence. We do not switch to raw calls without a new decision from the user.
 
 ## Not verified
 - Fast Transfer for non-USDC tokens, in either direction.

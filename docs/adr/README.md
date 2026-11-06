@@ -16,8 +16,8 @@ One file per decision: `NNNN-short-title.md`, copied from `0000-template.md`. St
 | [0009](0009-compliance-stance-testnet-demo.md) | Compliance and legal stance for the testnet demo | superseded by 0016 |
 | [0010](0010-repo-structure.md) | Repo structure | accepted |
 | [0011](0011-indexer-post-mvp.md) | Indexer for holdings, trades and history (post-MVP) | proposed (spike T-020, post-MVP) |
-| [0012](0012-provider-token-lock-and-wrap.md) | Asset model: provider tokens locked on their home chain, wrapped on Arc | proposed (spikes T-022, T-023) |
-| [0013](0013-wrapped-token-bridging-path.md) | Bridging path for the wrapped stock token | proposed (spike T-024) |
+| [0012](0012-provider-token-lock-and-wrap.md) | Asset model: provider tokens locked on their home chain, wrapped on Arc | accepted (spikes T-022, T-023) |
+| [0013](0013-wrapped-token-bridging-path.md) | Bridging path for the wrapped stock token | accepted (spike T-024) |
 | [0014](0014-trading-against-pre-positioned-inventory.md) | Trading: oracle-priced market against pre-positioned inventory | proposed (review T-032) |
 | [0015](0015-price-parity-and-off-hours-policy.md) | Price parity and off-hours policy | proposed (spike T-025) |
 | [0016](0016-compliance-provider-tokens.md) | Compliance and legal stance with provider tokens | proposed |

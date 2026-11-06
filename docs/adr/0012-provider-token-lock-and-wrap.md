@@ -1,6 +1,6 @@
 # 0012. Asset model: provider tokens locked on their home chain, wrapped on Arc
 
-- Status: proposed
+- Status: accepted (2026-11-06, by the user)
 - Date: 2026-11-06
 - Deciders: alle, user
 - Supersedes: 0002
@@ -25,7 +25,7 @@ Mechanism (Circle CCTP for non-USDC assets, sources in ADR 0001, fetched 2026-11
 ## Decision
 - Real design: home-chain provider token (for example Ondo NVDAon on Ethereum), locked in an ownerless LOCK_UNLOCK manager; wrapped token `wNVDA` on Arc.
 - Testnet demo: no provider has tokens on Sepolia, so we deploy a **mock provider token** `mNVDA` on Sepolia as a fixture. It stands in for the provider token, is labelled as a mock everywhere, and is not our product. `wNVDA` is its wrapped version on Arc.
-- 18 decimals on both sides unless the real provider token differs; the wrapped token copies the home token's decimals.
+- The mock `mNVDA` uses the same decimals as the real Ondo tokens (18 per Ondo's token docs; T-023 confirms against the NVDAon contract). The wrapped token copies the home token's decimals.
 - Spikes: T-022 proves the mock flow on testnet. T-023 checks whether real provider tokens can be locked at all (read-only research).
 
 ## Consequences
@@ -36,4 +36,4 @@ Mechanism (Circle CCTP for non-USDC assets, sources in ADR 0001, fetched 2026-11
 ## Not verified
 - Whether the ownerless LOCK_UNLOCK manager can hold permissioned provider tokens.
 - Whether an ownerless token can be registered by anyone for a token we do not control, and what Circle's registry (Iris `GET /v2/cctpx/tokens`) lists for it.
-- Whether the wrapped token decimals follow the home token.
+- Whether the wrapped token decimals follow the home token (T-022 checks), and the NVDAon decimals on chain (T-023).

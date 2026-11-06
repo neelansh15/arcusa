@@ -351,6 +351,7 @@ Spikes check items that are not verified in proposed ADRs. A spike may use a pro
 - Acceptance criteria:
   - [ ] `mNVDA` is deployed on Sepolia (clearly named as a mock).
   - [ ] `registerOwnerlessToken` succeeds with LOCK_UNLOCK; the Iris quote is fetched; `deployRemoteOwnerlessToken` succeeds on Arc.
+  - [ ] `mNVDA` uses the same decimals as Ondo's real tokens (18); `wNVDA` decimals are recorded.
   - [ ] Remote rate limit is set above 0 and a transfer lock-and-mint works; locked amount on Sepolia equals `wNVDA` supply on Arc.
   - [ ] Result lists tx hashes, addresses, the token id, and any revert or doc discrepancy.
 - Notes: Replaces T-005. Record whether anyone can register a token they do not control.
@@ -375,7 +376,7 @@ Spikes check items that are not verified in proposed ADRs. A spike may use a pro
 - Depends on: T-022
 - Goal: Prove the user bridge path and measure it.
 - Acceptance criteria:
-  - [ ] Bridge Kit moves `wNVDA` Arc → Sepolia (unlock) and `mNVDA` Sepolia → Arc (mint), or the raw-contract fallback is proven.
+  - [ ] Bridge Kit (required, no raw-contract fallback) moves `wNVDA` Arc → Sepolia (unlock) and `mNVDA` Sepolia → Arc (mint). If it rejects the token, report the evidence as a blocker.
   - [ ] Elapsed time of each leg is recorded, and whether Fast Transfer exists for this token.
   - [ ] The zero-address versus `TokenNotRegistered` discrepancy is confirmed or not.
 - Notes: Replaces T-006.
