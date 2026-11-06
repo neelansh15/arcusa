@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { PRICE } from "./config";
+import { PRICE, PRICE_API } from "./config";
 
 export interface PricePoint {
   time: number; // unix seconds
@@ -27,17 +27,32 @@ export function usePrice(): PriceState {
 
   useEffect(() => {
     let alive = true;
+    // Seed history from the ingest service so the chart isn't empty on load.
+    fetch(`${PRICE_API}/api/ticks?limit=5000`, { cache: "no-store" })
+      .then((r) => r.json())
+      .then((b: { ticks: PricePoint[] }) => {
+        if (alive && b.ticks?.length) setState((s) => ({ ...s, history: [...b.ticks, ...s.history.filter((p) => p.time > b.ticks[b.ticks.length - 1].time)] }));
+      })
+      .catch(() => {});
     async function tick() {
       try {
-        const res = await fetch(PRICE.route, { cache: "no-store" });
-        const body = await res.json();
-        if (!res.ok) throw new Error(body.error ?? `HTTP ${res.status}`);
+        let body: { quote: number; fetchedAt: number };
+        try {
+          const r = await fetch(`${PRICE_API}/api/price`, { cache: "no-store" });
+          const j = await r.json();
+          if (!r.ok) throw new Error("ingest down");
+          body = { quote: j.quote, fetchedAt: j.time * 1000 };
+        } catch {
+          const res = await fetch(PRICE.route, { cache: "no-store" });
+          body = await res.json();
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        }
         if (!alive) return;
         const time = Math.floor(body.fetchedAt / 1000);
         setState((s) => {
           const last = s.history[s.history.length - 1];
           const history =
-            last && last.time >= time ? s.history : [...s.history, { time, value: body.quote }].slice(-500);
+            last && last.time >= time ? s.history : [...s.history, { time, value: body.quote }].slice(-5000);
           return { quote: body.quote, fetchedAt: body.fetchedAt, stale: false, error: null, history };
         });
       } catch (e) {
