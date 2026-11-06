@@ -1,6 +1,6 @@
 :root {
   --bg: #070b14; --panel: #0d1424; --panel2: #131c30; --line: #1f2b45; --text: #dbe5f5; --muted: #7f93b2;
-  --pos: #2dd4a7; --neg: #f0616d; --warn: #f5b942; --accent: #3b82f6; --accent2: #60a5fa;
+  --pos: #22d3ee; --neg: #f0616d; --warn: #f5b942; --accent: #3b82f6; --accent2: #60a5fa;
   color-scheme: dark;
 }
 * { box-sizing: border-box; }
@@ -43,7 +43,7 @@ a { color: var(--accent); text-decoration: none; } a:hover { text-decoration: un
 .seg.tabs button, .seg.pct button { background: var(--panel2); border-color: var(--line); color: var(--text); }
 .seg.tabs button { padding: 8px; font-weight: 600; }
 .seg.pct { margin: 6px 0 10px; } .seg.pct button { padding: 3px; font-size: 11px; color: var(--muted); }
-.seg.tabs button.on.buy { background: rgba(45,212,167,.18); border-color: var(--pos); color: var(--pos); }
+.seg.tabs button.on.buy { background: rgba(34,211,238,.18); border-color: var(--pos); color: var(--pos); }
 .seg.tabs button.on.sell { background: rgba(240,97,109,.18); border-color: var(--neg); color: var(--neg); }
 
 .ticket .field { display: block; margin: 12px 0 0; }
@@ -56,7 +56,7 @@ a { color: var(--accent); text-decoration: none; } a:hover { text-decoration: un
 .est b { font-size: 17px; } .est small { color: var(--muted); font-weight: 400; }
 .kv { display: flex; justify-content: space-between; padding: 2px 0; } .kv span:first-child { color: var(--muted); }
 .submit { width: 100%; margin-top: 12px; padding: 11px; font-weight: 700; font-size: 14px; border-radius: 6px; }
-.submit.buy { background: var(--pos); color: #04110c; border-color: var(--pos); }
+.submit.buy { background: var(--pos); color: #031318; border-color: var(--pos); }
 .submit.sell { background: var(--neg); color: #1a0508; border-color: var(--neg); }
 .note { margin-top: 8px; word-break: break-word; }
 
