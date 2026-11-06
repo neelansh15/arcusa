@@ -19,7 +19,6 @@
 | | |
 | --- | --- |
 | Arc Studio project | https://studio.arc.io/app/efb4a3b8-92a8-41d3-993a-5d254dc32258 |
-| Demo video | [add link] |
 | Live app | https://arcusa-alpha.vercel.app/ |
 | Presentation | [add link] |
 | Architecture diagram | [below](#architecture) |
