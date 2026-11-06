@@ -227,7 +227,7 @@ button.primary:hover:not(:disabled) { background: var(--accent2); border-color: 
 .tk-submit:hover:not(:disabled) { background: var(--accent2); border-color: var(--accent2); }
 .tk-msg { font-size: 12px; margin-top: 8px; text-align: center; }
 .tk-sum { margin-top: 14px; border: 1px solid var(--line); border-radius: 16px; padding: 12px 16px; display: flex; flex-direction: column; gap: 6px; font-size: 12px; }
-.tk-sum > div { display: flex; justify-content: space-between; } .tk-sum span { color: var(--muted); } .tk-sum b { font-family: var(--font-num); font-weight: 600; }
+.tk-sum span { color: var(--muted); } .tk-sum b { font-family: var(--font-num); font-weight: 600; }
 
 /* Mobile (T-039): Kraken-style single column, sticky Buy/Sell bar, ticket in a bottom sheet. */
 .mdetails summary { cursor: pointer; font-weight: 600; padding: 6px 0; list-style: none; display: flex; justify-content: space-between; }
@@ -387,3 +387,12 @@ button.wallet i { background: var(--accent-fill); }
 .toast { background: var(--card); border: 1px solid var(--line2); border-left: 3px solid var(--pos); border-radius: var(--r-inner); }
 .toast-body b { color: var(--text); }
 @media (max-width: 767px) { .bridge-card { padding: 20px; } .bridge-intro h1 { font-size: 32px; } .bridge-input input { font-size: 28px; } }
+
+/* Summary head: stack the position block (an older .tk-sum > div rule made it a row) */
+.tk-sum > .tk-sum-head { display: block; padding-bottom: 16px; border-bottom: 1px solid var(--line); margin-bottom: 16px; }
+.tk-sum-head .pos-label { display: block; font-size: 13px; margin-bottom: 2px; }
+.tk-sum-head .pos-big { display: block; line-height: 1.1; margin: 0 0 6px; }
+.tk-sum-head .pos-sub { display: block; line-height: 1.5; }
+.tk-sum > .tk-cols { display: grid; }
+.tk-cols > div { margin: 0; }
+.tk-sub { row-gap: 8px; }
