@@ -86,7 +86,7 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 | [T-030](#t-030-parity-panel-in-the-ui-adr-0015) | parked | laptop | Parity panel in the UI (ADR 0015) |
 | [T-032](#t-032-review-spikes-and-accept-or-supersede-adrs-0008-0012-to-0017) | todo | alle | Review spikes and accept or supersede ADRs 0008, 0012 to 0017 |
 | [T-033](#t-033-build-the-bridge-layer-module-with-unit-tests) | doing | laptop | Build the bridge layer module with unit tests |
-| [T-034](#t-034-contract-tests-for-the-mock-token-and-lock-and-mint-accounting) | todo | laptop | Contract tests for the mock token and lock-and-mint accounting |
+| [T-034](#t-034-contract-tests-for-the-mock-token-and-lock-and-mint-accounting) | doing | laptop | Contract tests for the mock token and lock-and-mint accounting |
 | [T-035](#t-035-testnet-integration-tests-for-the-bridge-layer) | todo | laptop | Testnet integration tests for the bridge layer |
 | [T-036](#t-036-bridge-layer-persistence-and-resume) | todo | laptop | Bridge layer persistence and resume |
 | [T-020](#t-020-post-mvp-spike-indexer-options-on-arc-testnet-and-sepolia) | todo | alle | (post-MVP) Spike: indexer options on Arc testnet and Sepolia |
@@ -556,16 +556,26 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 
 ### T-034: Contract tests for the mock token and lock-and-mint accounting
 - Owner: laptop
-- Status: todo
+- Status: doing
 - ADR: docs/adr/0012-provider-token-lock-and-wrap.md
 - Depends on: T-022 (early start allowed on 2026-11-06: the mock token and its local tests need no testnet; `check-supply` and the deploy scripts need the T-022 addresses and token id)
 - Goal: Foundry tests that prove the fixture and the accounting rule: locked mNVDA on Sepolia is at least the wNVDA supply on Arc (equal when nothing is in flight).
 - Acceptance criteria:
-  - [ ] `MockProviderToken` (mNVDA) is clearly named as a mock and has a faucet or mint for testnet use only.
-  - [ ] Tests for transfers, decimals and the lock-and-unlock round trip, using a local stand-in for the manager if the real service cannot run locally.
+  - [x] `MockProviderToken` (mNVDA) is clearly named as a mock and has a faucet or mint for testnet use only.
+  - [x] Tests for transfers, decimals and the lock-and-unlock round trip, using a local stand-in for the manager if the real service cannot run locally.
   - [ ] A script `check-supply` reads both chains and fails if locked mNVDA is less than the total wNVDA supply across every deployment. It tolerates in-flight transfers (retry or report pending) and does not fail when extra mNVDA was sent straight to the manager (that only raises locked).
   - [ ] Deploy and registration scripts are re-runnable and print addresses and the token id.
 - Result:
+- 2026-11-06, early start done by alle from the server container (not the laptop). Status stays doing: the Sepolia deploy, the registration script and `check-supply` against real chains wait for T-022.
+- Commits: c3ee7cb (`MockProviderToken`, `contracts/sepolia/foundry.toml`, forge-std v1.17.0 `f3dae6e` and OpenZeppelin v5.7.0 `cab1993` as git submodules, root `.gitmodules`), 461474d (token tests), 672901e (local manager test double, accounting and invariant tests), a33c500 (`check-supply` and its unit tests), 6b7f401 (deploy script skeleton), e238c48 (`forge fmt`).
+- mNVDA (`contracts/sepolia/src/MockProviderToken.sol`): OpenZeppelin ERC-20, name "Mock NVIDIA (testnet)", symbol `mNVDA` (the Arc wrapper copies both), 18 decimals like NVDAon. Testnet-only faucet: 100 mNVDA per call, once per 24 h per address. Owner `mint`: at most 1,000,000 per call. Total cap 1,000,000,000 for both. The constructor reverts outside Sepolia (11155111) and a local chain (31337). No pause or deny-list (NVDAon has both); this is deliberate, so the accounting is tested alone.
+- Test double (`contracts/sepolia/test/doubles/LockUnlockManagerTestDouble.sol`): `LockUnlockManagerTestDouble` and `WrappedTokenTestDouble` are local stand-ins, not Circle's contracts. They simulate both chains in one EVM with a two-step lock then mint, and burn then release, so in-flight transfers are tested.
+- Run the Foundry tests (laptop): `git pull && git submodule update --init contracts/sepolia/lib/forge-std contracts/sepolia/lib/openzeppelin-contracts`, then `cd contracts/sepolia && arc-forge test` (plain `forge test` also works).
+- Run the check-supply tests: `node --test contracts/scripts/test/check-supply.test.mjs` from the repo root (no dependencies, no network).
+- Verified in the container: `forge test` passed 35 of 35 with forge 1.9.0 (official linux_amd64 release tarball, sha256 checked, run from /tmp, not installed) and solc 0.8.30. That is 22 token tests (metadata, decimals, transfers, allowance, faucet amount, cooldown and cap, owner-mint limits, chain guard, a no-fee transfer fuzz), 12 accounting tests (lock in flight, lock then mint equal, direct send only raises locked, unlock burns and releases the same amount, full round trip, double delivery, fuzz round trip), and 4 invariants (128 runs, depth 64): locked >= wrapped supply; locked = supply + in flight + direct sends; equal after all deliveries apart from direct sends; mNVDA supply conserved. A deliberate bug (minting amount + 1 in the double) made all 4 invariants fail; it was then reverted. `forge fmt --check` is clean. `node --test` passed 29 of 29 (node 22.23.3). `check-supply` with no config exits 78 and lists every missing item.
+- check-supply (`contracts/scripts/check-supply/check-supply.mjs`, logic in `lib.mjs`, dependency-free node ESM): reads `mNVDA.balanceOf(manager)` on Sepolia and `wNVDA.totalSupply()` on every network in `CHECK_SUPPLY_WRAPPED_NETWORKS` (default `arc-testnet`). RPC URLs come from env only (`SEPOLIA_RPC_URL`, `ARC_TESTNET_RPC_URL`). Addresses come from env (`MNVDA_ADDRESS`, `MNVDA_TOKEN_MANAGER_ADDRESS`, `ARC_TESTNET_WNVDA_ADDRESS`) or from `deployments/sepolia.json` (`mNVDA.address`, `mNVDA.tokenManager`) and `deployments/arc-testnet.json` (`wNVDA.address`). An optional `chainId` is checked. T-022 must write these keys. Exit codes: 0 ok (a surplus from in-flight transfers or direct sends passes); 1 deficit (the shortfall stays the same on every read); 2 pending (a shortfall whose numbers keep changing; rerun); 3 read error; 78 config error. Retries are set with `CHECK_SUPPLY_RETRIES` (default 5) and `CHECK_SUPPLY_RETRY_DELAY_MS` (default 15000).
+- Deploy (`contracts/sepolia/script/DeployMockProviderToken.s.sol`): Sepolia only; the key comes from `DEPLOYER_PRIVATE_KEY`. If `deployments/sepolia.json` has `mNVDA.address` with code, it checks the token and prints the address. Otherwise it deploys and prints the address, name, symbol and decimals. It writes `chainId` and `mNVDA` only with `--broadcast` and keeps other keys. Usage is in the file header.
+- NOT verified: nothing has been run on the laptop or with arc-forge 1.7.1. The deploy script was never run, not even as a dry run; only its JSON-write helper was exercised, in a throwaway test against temp files on forge 1.9.0 (inserting keeps other keys). Whether 1.7.1 behaves the same is unchecked. `check-supply` was never run against real RPCs. Whether Circle's real managers match the double (for example, that Arc `totalSupply` is the whole wrapped supply) is unchecked. The registration script (`registerOwnerlessToken`, `deployRemoteOwnerlessToken`, print the token id) is not written; it belongs with T-022. CI runs neither the forge tests nor the check-supply tests, because neither is in the pnpm workspace; adding a CI step is a follow-up.
 
 ### T-035: Testnet integration tests for the bridge layer
 - Owner: laptop
