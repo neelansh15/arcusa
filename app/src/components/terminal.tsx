@@ -1,11 +1,12 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Balances, useBalances } from "./balances";
+import { useBalances } from "./balances";
 import { PriceChart } from "./chart";
 import { Header } from "./header";
 import { MarketTable } from "./market-table";
 import { OrderTicket } from "./order-ticket";
+import { Position } from "./position";
 import { useMarket } from "@/lib/use-market";
 import { usePrice } from "@/lib/use-price";
 
@@ -55,8 +56,8 @@ export function Terminal() {
           <MarketTable m={m} stale={p.stale} />
         </section>
         <aside className="side">
+          <Position usdc={bal.usdc} nvda={bal.nvda} quote={p.quote} />
           <OrderTicket market={m} usdcBal={bal.usdc} nvdaBal={bal.nvda} />
-          <Balances usdc={bal.usdc} nvda={bal.nvda} quote={p.quote} />
         </aside>
       </main>
     </div>

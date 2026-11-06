@@ -206,3 +206,31 @@ button.primary:hover:not(:disabled) { background: var(--accent2); border-color: 
 .tag.ok { background: #eaf0fd; color: var(--accent); } .tag.warn { background: #f6efdc; color: var(--warn); }
 .side { display: flex; flex-direction: column; gap: 16px; }
 .side .panel { border: 1px solid var(--line); border-radius: 20px; padding: 20px; }
+
+/* Pay/receive ticket (T-038) */
+.position { padding: 18px 20px; }
+.pos-label { font-size: 12px; color: var(--muted); }
+.pos-big { font-size: 34px; font-weight: 700; letter-spacing: -.03em; font-family: var(--font-mono), monospace; margin: 2px 0; }
+.pos-sub { font-size: 12px; color: var(--muted); }
+.pos-row { display: flex; justify-content: space-between; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line); }
+.pos-row b { font-family: var(--font-mono), monospace; }
+.ticket { display: flex; flex-direction: column; gap: 0; padding: 16px; }
+.tk-head { margin-bottom: 12px; }
+.tk-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; padding: 3px; background: var(--panel2); border-radius: 999px; }
+.tk-tabs button { border: 0; background: transparent; border-radius: 999px; padding: 8px; font-weight: 600; color: var(--muted); font-size: 14px; }
+.tk-tabs button.on { background: var(--accent); color: #fff; }
+.tk-card { background: var(--panel2); border-radius: 16px; padding: 14px 16px; }
+.tk-top { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); }
+.tk-main { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 8px 0 4px; }
+.tk-main input, .tk-out { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; font-size: 28px; font-weight: 600; font-family: var(--font-mono), monospace; font-variant-numeric: tabular-nums; padding: 0; }
+.tk-token { display: inline-flex; align-items: center; gap: 6px; background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 4px 12px 4px 4px; font-weight: 600; font-size: 13px; }
+.tk-token i { width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font-style: normal; font-size: 12px; color: #fff; }
+.tk-token.usdc i { background: var(--accent); } .tk-token.nvda i { background: #76b900; }
+.tk-pct { display: flex; gap: 6px; margin-top: 6px; }
+.tk-pct button { padding: 2px 10px; font-size: 11px; border-radius: 999px; background: var(--panel); color: var(--muted); }
+.tk-swap { align-self: center; width: 34px; height: 34px; margin: -10px 0; z-index: 1; border-radius: 50%; padding: 0; background: var(--panel); border: 3px solid var(--panel); box-shadow: 0 0 0 1px var(--line); font-size: 16px; }
+.tk-submit { margin-top: 12px; padding: 14px; border-radius: 999px; font-size: 15px; font-weight: 700; background: var(--accent); border-color: var(--accent); color: #fff; }
+.tk-submit:hover:not(:disabled) { background: var(--accent2); border-color: var(--accent2); }
+.tk-msg { font-size: 12px; margin-top: 8px; text-align: center; }
+.tk-sum { margin-top: 14px; border: 1px solid var(--line); border-radius: 16px; padding: 12px 16px; display: flex; flex-direction: column; gap: 6px; font-size: 12px; }
+.tk-sum > div { display: flex; justify-content: space-between; } .tk-sum span { color: var(--muted); } .tk-sum b { font-family: var(--font-mono), monospace; font-weight: 600; }

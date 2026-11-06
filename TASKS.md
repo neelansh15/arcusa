@@ -90,8 +90,8 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 | [T-035](#t-035-testnet-integration-tests-for-the-bridge-layer) | todo | laptop | Testnet integration tests for the bridge layer |
 | [T-036](#t-036-bridge-layer-persistence-and-resume) | todo | laptop | Bridge layer persistence and resume |
 | [T-037](#t-037-simple-trade-layout-pair-header-chart-card-market-table) | done | laptop | Simple trade layout: pair header, chart card, market table |
-| [T-038](#t-038-payreceive-order-ticket-with-fee-summary) | doing | laptop | Pay/receive order ticket with fee summary |
-| [T-039](#t-039-mobile-layout-bottom-sheet-ticket-and-sticky-buysell-bar) | todo | laptop | Mobile layout: bottom-sheet ticket and sticky Buy/Sell bar |
+| [T-038](#t-038-payreceive-order-ticket-with-fee-summary) | done | laptop | Pay/receive order ticket with fee summary |
+| [T-039](#t-039-mobile-layout-bottom-sheet-ticket-and-sticky-buysell-bar) | doing | laptop | Mobile layout: bottom-sheet ticket and sticky Buy/Sell bar |
 | [T-040](#t-040-pro-mode-toggle-desktop) | todo | laptop | Pro mode toggle (desktop) |
 | [T-020](#t-020-post-mvp-spike-indexer-options-on-arc-testnet-and-sepolia) | todo | alle | (post-MVP) Spike: indexer options on Arc testnet and Sepolia |
 | [T-021](#t-021-post-mvp-build-indexer-and-holdingshistory-view) | todo | laptop | (post-MVP) Build indexer and holdings/history view |
@@ -623,7 +623,7 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 
 ### T-038: Pay/receive order ticket with fee summary
 - Owner: laptop
-- Status: doing
+- Status: done
 - ADR: docs/adr/0019-simple-default-ui-with-pro-mode.md
 - Depends on: T-037
 - Goal: Restyle `order-ticket.tsx` into BUY/SELL tabs, a "You pay" card and a "You receive" card with a swap arrow, balances on each, one primary button, and a summary card (fee, you receive, spread). Add a small "Your position" block above it: NVDA value in USDC and USDC balance.
@@ -633,11 +633,11 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
   - [ ] Summary figures match the on-chain quote.
   - [ ] No PnL shown unless computed from real trades.
 - Notes: Swap arrow flips side.
-- Result:
+- Result: `order-ticket.tsx` restyled: Buy/Sell pill tabs, "You pay" and "You receive" cards with balances and a flip arrow, one primary button (Connect wallet, Switch to Arc, Approve & Buy/Sell, pending, disabled on bad input), and a summary card (estimated spread cost, you receive, spread, execution price, slippage, max per trade). New `position.tsx` shows NVDA value in USDC and USDC available; no PnL (no cost basis is tracked). Trade logic (approve, buy/sell, slippage 1%) is unchanged. Estimated spread cost is notional times the quoted spread, computed client side. Checked: `tsc` clean and the layout renders at 1440px. NOT verified: no wallet was available in the in-app browser, so no on-chain buy or sell was run and there is no tx hash; the connected states of the button were not exercised.
 
 ### T-039: Mobile layout: bottom-sheet ticket and sticky Buy/Sell bar
 - Owner: laptop
-- Status: todo
+- Status: doing
 - ADR: docs/adr/0019-simple-default-ui-with-pro-mode.md
 - Depends on: T-038
 - Goal: Kraken-style mobile at widths below 768px.

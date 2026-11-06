@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { erc20Abi, formatUnits, parseUnits } from "viem";
-import { useAccount, useReadContract, useSwitchChain, useWriteContract } from "wagmi";
+import { useAccount, useConnect, useReadContract, useSwitchChain, useWriteContract } from "wagmi";
+import { injected } from "wagmi/connectors";
 import { usePublicClient } from "wagmi";
 import { ARC_CHAIN_ID, ARC_USDC, WNVDA, explorerTx } from "@/lib/config";
 import { ARC_FEES, MARKET_ADDRESS, marketAbi } from "@/lib/market";
@@ -11,9 +12,10 @@ import { useQuote, type MarketState } from "@/lib/use-market";
 
 const SLIPPAGE_BPS = 100n;
 
-export function OrderTicket({ market, usdcBal, nvdaBal }: { market: MarketState; usdcBal: number | null; nvdaBal: number | null }) {
+export function OrderTicket({ market, usdcBal, nvdaBal, onDone }: { market: MarketState; usdcBal: number | null; nvdaBal: number | null; onDone?: () => void }) {
   const { address, isConnected, chainId } = useAccount();
   const { switchChainAsync } = useSwitchChain();
+  const { connect, isPending: connecting } = useConnect();
   const { writeContractAsync } = useWriteContract();
   const client = usePublicClient({ chainId: ARC_CHAIN_ID });
   const [side, setSide] = useState<"buy" | "sell">("buy");
@@ -65,6 +67,7 @@ export function OrderTicket({ market, usdcBal, nvdaBal }: { market: MarketState;
       });
       const r = await client.waitForTransactionReceipt({ hash });
       const href = explorerTx(ARC_CHAIN_ID, hash);
+      if (r.status === "success") onDone?.();
       setMsg(r.status === "success"
         ? { id: Date.now(), kind: "ok", title: "Transaction confirmed", text: `${side === "buy" ? "Bought" : "Sold"} ${outText} ${side === "buy" ? "wNVDA" : "USDC"}`, href }
         : { id: Date.now(), kind: "err", title: "Transaction reverted", text: "The market rejected this order.", href });
@@ -82,41 +85,68 @@ export function OrderTicket({ market, usdcBal, nvdaBal }: { market: MarketState;
     setAmount(side === "buy" ? v.toFixed(2) : v.toFixed(6));
   };
 
+  const wrongNet = isConnected && chainId !== ARC_CHAIN_ID;
+  const needsApproval = q.parsed !== null && ((allowance.data as bigint | undefined) ?? 0n) < q.parsed;
+  const word = side === "buy" ? "Buy" : "Sell";
+  const outSym = side === "buy" ? "wNVDA" : "USDC";
+  const inSym = side === "buy" ? "USDC" : "wNVDA";
+  // Estimated spread cost in USDC: notional * spread. Notional is the pay amount (buy) or the proceeds grossed up (sell).
+  const spreadFrac = market.spreadBps !== null ? market.spreadBps / 10_000 : null;
+  const outUsdc = q.out !== null && side === "sell" ? Number(formatUnits(q.out, 6)) : null;
+  const notional = side === "buy" ? (Number(amount) > 0 ? Number(amount) : null) : outUsdc !== null && spreadFrac !== null ? outUsdc / (1 - spreadFrac) : null;
+  const spreadCost = notional !== null && spreadFrac !== null ? notional * spreadFrac : null;
+
+  let label: string;
+  let action: (() => void) | undefined;
+  let disabled = false;
+  if (!isConnected) { label = connecting ? "Connecting…" : "Connect wallet"; action = () => connect({ connector: injected() }); disabled = connecting; }
+  else if (wrongNet) { label = "Switch to Arc"; action = () => { switchChainAsync({ chainId: ARC_CHAIN_ID }).catch(() => {}); }; }
+  else if (busy) { label = busy; disabled = true; }
+  else { label = `${needsApproval ? "Approve & " : ""}${word} NVDA`; action = submit; disabled = !canSubmit; }
+
   return (
-    <section className="panel ticket">
-      <div className="seg full tabs">
-        <button className={side === "buy" ? "on buy" : ""} onClick={() => setSide("buy")}>Buy</button>
-        <button className={side === "sell" ? "on sell" : ""} onClick={() => setSide("sell")}>Sell</button>
-      </div>
-      <label className="field">
-        <span>
-          <em>{side === "buy" ? "Pay" : "Sell"}</em>
-          <em>Bal {bal === null ? "—" : bal.toLocaleString(undefined, { maximumFractionDigits: 4 })}</em>
-        </span>
-        <div className="input">
-          <input inputMode="decimal" value={amount} onChange={(e) => setAmount(e.target.value)} />
-          <b>{side === "buy" ? "USDC" : "wNVDA"}</b>
+    <section className="card ticket">
+      <div className="tk-head">
+        <div className="tk-tabs">
+          <button className={side === "buy" ? "on" : ""} onClick={() => setSide("buy")}>Buy</button>
+          <button className={side === "sell" ? "on" : ""} onClick={() => setSide("sell")}>Sell</button>
         </div>
-      </label>
-      <div className="seg full pct">
-        {[25, 50, 75, 100].map((p) => (
-          <button key={p} onClick={() => setPct(p)}>{p === 100 ? "Max" : `${p}%`}</button>
-        ))}
       </div>
-      <div className="est">
-        <span className="muted">You receive</span>
-        <b>{outText} <small>{side === "buy" ? "wNVDA" : "USDC"}</small></b>
+
+      <div className="tk-card">
+        <div className="tk-top"><span>You pay</span><span className="tk-bal">Balance {bal === null ? "—" : bal.toLocaleString(undefined, { maximumFractionDigits: 4 })}</span></div>
+        <div className="tk-main">
+          <input aria-label="Amount to pay" inputMode="decimal" value={amount} onChange={(e) => setAmount(e.target.value)} />
+          <span className={`tk-token ${side === "buy" ? "usdc" : "nvda"}`}><i>{side === "buy" ? "$" : "N"}</i>{inSym}</span>
+        </div>
+        <div className="tk-pct">
+          {[25, 50, 75, 100].map((p) => (<button key={p} onClick={() => setPct(p)}>{p === 100 ? "Max" : `${p}%`}</button>))}
+        </div>
       </div>
-      <div className="kv"><span>Exec. price</span><span>{px ? `$${px.toFixed(2)}` : "—"}</span></div>
-      <div className="kv"><span>Spread</span><span>{market.spreadBps !== null ? `${market.spreadBps / 100}%` : "—"}</span></div>
-      <div className="kv"><span>Slippage tolerance</span><span>1%</span></div>
-      <div className="kv"><span>Max per trade</span><span>{market.maxTradeUsdc !== null ? `${market.maxTradeUsdc} USDC` : "—"}</span></div>
-      {overBal && <div className="neg small">Amount exceeds balance.</div>}
-      {quoteErr && !overBal && <div className="warn small">{quoteErr}.</div>}
-      {market.oracle?.stale && <div className="warn small">Oracle price is stale; off-hours demo mode is on.</div>}
-      <button className={`submit ${side}`} disabled={isConnected && !canSubmit} onClick={isConnected ? submit : undefined}>
-        {!isConnected ? "Connect wallet to trade" : busy ?? `${side === "buy" ? "Buy" : "Sell"} NVDA`}
-      </button>
+
+      <button className="tk-swap" aria-label="Flip buy and sell" onClick={() => { setSide(side === "buy" ? "sell" : "buy"); setAmount(""); }}>⇅</button>
+
+      <div className="tk-card">
+        <div className="tk-top"><span>You receive</span><span className="tk-bal">Balance {(side === "buy" ? nvdaBal : usdcBal) === null ? "—" : (side === "buy" ? nvdaBal : usdcBal)!.toLocaleString(undefined, { maximumFractionDigits: 4 })}</span></div>
+        <div className="tk-main">
+          <output className="tk-out">{outText}</output>
+          <span className={`tk-token ${side === "buy" ? "nvda" : "usdc"}`}><i>{side === "buy" ? "N" : "$"}</i>{outSym}</span>
+        </div>
+      </div>
+
+      <button className="tk-submit" disabled={disabled} onClick={action}>{label}</button>
+      {overBal && <div className="tk-msg neg">Amount exceeds your balance.</div>}
+      {quoteErr && !overBal && <div className="tk-msg warn">{quoteErr}.</div>}
+      {market.oracle?.stale && <div className="tk-msg warn">Oracle price is stale; off-hours demo mode is on.</div>}
+
+      <div className="tk-sum">
+        <div><span>Estimated spread cost</span><b>{spreadCost !== null ? `${spreadCost.toFixed(2)} USDC` : "—"}</b></div>
+        <div><span>You will receive</span><b>{outText} {outSym}</b></div>
+        <div><span>Spread</span><b>{market.spreadBps !== null ? `${market.spreadBps / 100}%` : "—"}</b></div>
+        <div><span>Execution price</span><b>{px ? `$${px.toFixed(2)}` : "—"}</b></div>
+        <div><span>Slippage tolerance</span><b>{Number(SLIPPAGE_BPS) / 100}%</b></div>
+        <div><span>Max per trade</span><b>{market.maxTradeUsdc !== null ? `${market.maxTradeUsdc} USDC` : "—"}</b></div>
+      </div>
       <Toast toast={msg} onClose={() => setMsg(null)} />
     </section>
   );
