@@ -1,37 +1,71 @@
 "use client";
 
-import { AreaSeries, ColorType, createChart, type ISeriesApi, type UTCTimestamp } from "lightweight-charts";
-import { useEffect, useRef } from "react";
+import {
+  CandlestickSeries,
+  ColorType,
+  CrosshairMode,
+  createChart,
+  type IChartApi,
+  type ISeriesApi,
+  type UTCTimestamp,
+} from "lightweight-charts";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { INTERVALS, toCandles, type Interval } from "@/lib/candles";
 import type { PricePoint } from "@/lib/use-price";
 
 export function PriceChart({ history }: { history: PricePoint[] }) {
   const el = useRef<HTMLDivElement>(null);
-  const series = useRef<ISeriesApi<"Area"> | null>(null);
+  const chartRef = useRef<IChartApi | null>(null);
+  const series = useRef<ISeriesApi<"Candlestick"> | null>(null);
+  const [interval, setIntervalKey] = useState<Interval>("1m");
+  const candles = useMemo(() => toCandles(history, interval), [history, interval]);
 
   useEffect(() => {
     if (!el.current) return;
     const chart = createChart(el.current, {
       autoSize: true,
-      layout: { background: { type: ColorType.Solid, color: "transparent" }, textColor: "#8b95a5" },
-      grid: { vertLines: { color: "#1a212b" }, horzLines: { color: "#1a212b" } },
-      rightPriceScale: { borderColor: "#262e3a" },
-      timeScale: { borderColor: "#262e3a", timeVisible: true, secondsVisible: true },
+      layout: { background: { type: ColorType.Solid, color: "transparent" }, textColor: "#7d8795", fontSize: 11 },
+      grid: { vertLines: { color: "#161c25" }, horzLines: { color: "#161c25" } },
+      crosshair: { mode: CrosshairMode.Normal },
+      rightPriceScale: { borderColor: "#232b36", scaleMargins: { top: 0.1, bottom: 0.1 } },
+      timeScale: { borderColor: "#232b36", timeVisible: true, secondsVisible: false, rightOffset: 6 },
     });
-    series.current = chart.addSeries(AreaSeries, {
-      lineColor: "#2dd4a7",
-      topColor: "rgba(45,212,167,0.25)",
-      bottomColor: "rgba(45,212,167,0)",
-      lineWidth: 2,
+    chartRef.current = chart;
+    series.current = chart.addSeries(CandlestickSeries, {
+      upColor: "#2dd4a7",
+      downColor: "#f0616d",
+      borderUpColor: "#2dd4a7",
+      borderDownColor: "#f0616d",
+      wickUpColor: "#2dd4a7",
+      wickDownColor: "#f0616d",
+      priceFormat: { type: "price", precision: 2, minMove: 0.01 },
     });
     return () => {
       chart.remove();
+      chartRef.current = null;
       series.current = null;
     };
   }, []);
 
   useEffect(() => {
-    series.current?.setData(history.map((p) => ({ time: p.time as UTCTimestamp, value: p.value })));
-  }, [history]);
+    series.current?.setData(
+      candles.map((c) => ({ ...c, time: c.time as UTCTimestamp })),
+    );
+  }, [candles]);
 
-  return <div ref={el} className="chart" />;
+  return (
+    <div className="chart-wrap">
+      <div className="chart-tools">
+        <div className="seg">
+          {(Object.keys(INTERVALS) as Interval[]).map((k) => (
+            <button key={k} className={interval === k ? "on" : ""} onClick={() => setIntervalKey(k)}>
+              {k}
+            </button>
+          ))}
+        </div>
+        <span className="muted small">{history.length} ticks · NVDA indicative (xstocks.fi)</span>
+      </div>
+      <div ref={el} className="chart" />
+    </div>
+  );
 }
