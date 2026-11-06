@@ -99,6 +99,11 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 | [T-044](#t-044-bridge-page-and-toast-on-the-new-theme) | done | laptop | Bridge page and toast on the new theme |
 | [T-045](#t-045-docs-and-landing-theme-tokens-only) | done | laptop | Docs and landing theme (tokens only) |
 | [T-046](#t-046-redesign-verification-both-themes-contrast-mobile) | done | laptop | Redesign verification: both themes, contrast, mobile |
+| [T-047](#t-047-landing-foundation-hero-and-ticker-strip) | todo | laptop | Landing foundation, hero and ticker strip |
+| [T-048](#t-048-landing-how-it-works-story-and-bento-grid) | todo | laptop | Landing: how-it-works story and bento grid |
+| [T-049](#t-049-landing-interactive-calculator-and-phone-showcase) | todo | laptop | Landing: interactive calculator and phone showcase |
+| [T-050](#t-050-landing-faq-final-cta-footer-and-copy-audit) | todo | laptop | Landing: FAQ, final CTA, footer and copy audit |
+| [T-051](#t-051-landing-verification-themes-devices-motion-performance) | todo | laptop | Landing verification: themes, devices, motion, performance |
 | [T-020](#t-020-post-mvp-spike-indexer-options-on-arc-testnet-and-sepolia) | todo | alle | (post-MVP) Spike: indexer options on Arc testnet and Sepolia |
 | [T-021](#t-021-post-mvp-build-indexer-and-holdingshistory-view) | todo | laptop | (post-MVP) Build indexer and holdings/history view |
 
@@ -737,6 +742,68 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
   - [ ] Computed contrast table (text, muted, accent, pos, neg, warn on card and canvas) in Result, AA 4.5:1 for text and 3:1 for UI.
   - [ ] A comparison note against the LumaTrade reference listing remaining gaps.
 - Result: Checks run: `tsc`, `oxlint`, `pnpm build` pass. In the in-app browser: `/trade` dark and light at 1440, Pro mode in light at 1440, `/trade` dark at 375 with the buy/sell sheet, `/bridge` dark at 1440, `/docs/how-it-works` dark, `/` dark (reveal forced). No screenshot files committed. Contrast (computed with a script from the token values, WCAG ratio) after tuning: dark text 15.96, text-2 9.23, muted 5.68, accent 11.45, neg 6.34, warn 8.75 on card, lime CTA text 12.21; light text 19.18, text-2 10.12, muted 5.98, accent (olive) 5.89, neg 5.44, warn 6.47 on card; soft pills pos/neg/warn 8.80/5.37/6.74 dark and 5.13/4.75/5.45 light. `--dim` is 4.79 on dark card and 5.01 on light card but 4.34 on dark inner cards and 4.42 on light canvas; it is used only for inactive tab headings (large text) and landing sub nav. Gaps against the LumaTrade reference: line stroke is solid lime (no lime-to-amber gradient), the crosshair marker is a ring without glow, no refresh/settings/screenshot icon buttons, no per-row logos or coloured status pills in the market table (by decision), the tooltip shows price and time, the page is full-bleed dark rather than a framed shell on a lime page, delta pill on balance omitted (no cost basis). NOT verified: a real buy and sell, a real bridge run, light theme for bridge, docs and landing, mobile light.
+
+### T-047: Landing foundation, hero and ticker strip
+- Owner: laptop
+- Status: todo
+- ADR: docs/adr/0021-landing-page-redesign.md
+- Goal: Rebuild the landing shell (nav matching the app header, section rhythm, `copy.ts`, fail-safe reveal hook, `--glow` token), the giant hero with the animated trade-card mock and live indicative price, and the ticker strip.
+- Acceptance criteria:
+  - [ ] Hero headline at clamp(52px, 8vw, 112px); live indicative price with a labelled fallback when the feed is down; chart draw and count-up animations.
+  - [ ] Reveal is fail-safe: content is visible without JS, in-view elements reveal immediately, a safety timeout reveals the rest.
+  - [ ] Ticker: NVDA live tile, other tickers greyed and labelled Soon, not clickable; marquee off under reduced motion.
+  - [ ] Dark and light checked at 1440 and 375; `tsc`, `oxlint` pass.
+- Result:
+
+### T-048: Landing: how-it-works story and bento grid
+- Owner: laptop
+- Status: todo
+- ADR: docs/adr/0021-landing-page-redesign.md
+- Depends on: T-047
+- Goal: A three-step scroll story with a sticky changing visual, and a six-tile bento grid with small animated graphics and cursor-follow glow.
+- Acceptance criteria:
+  - [ ] Steps are Add USDC, Pick a stock, Tap Buy, in plain words, with one animation each; sticky on desktop, stacked on mobile.
+  - [ ] Six tiles with the promises in ADR 0021; the bridge tile says Sepolia demo only.
+  - [ ] Animations use transform and opacity (plus stroke-dashoffset); looping ones pause offscreen.
+  - [ ] No layout shift when animations start.
+- Result:
+
+### T-049: Landing: interactive calculator and phone showcase
+- Owner: laptop
+- Status: todo
+- ADR: docs/adr/0021-landing-page-redesign.md
+- Depends on: T-047
+- Goal: A no-wallet calculator using the live indicative quote, and a phone frame that cycles through the mobile screens as mocks.
+- Acceptance criteria:
+  - [ ] Typing or sliding USDC updates the NVDA estimate; labelled "estimate, testnet, not a quote"; empty and bad input handled.
+  - [ ] Button opens `/trade`; if the ticket prefill is added it is tested, otherwise Result says it is not.
+  - [ ] Phone showcase pauses offscreen and shows static final state under reduced motion.
+- Result:
+
+### T-050: Landing: FAQ, final CTA, footer and copy audit
+- Owner: laptop
+- Status: todo
+- ADR: docs/adr/0021-landing-page-redesign.md
+- Depends on: T-048, T-049
+- Goal: Plain-English FAQ with native details, the lime CTA panel, footer with Under the hood links and the full disclaimer, then a line-by-line check of every claim.
+- Acceptance criteria:
+  - [ ] FAQ answers match the docs and ADR 0016; keyboard operable.
+  - [ ] A claims table in Result: each claim on the page, its source (docs page, ADR, or live read), and any claim removed.
+  - [ ] No invented numbers; other chains and tickers only as Soon or Roadmap.
+- Result:
+
+### T-051: Landing verification: themes, devices, motion, performance
+- Owner: laptop
+- Status: todo
+- ADR: docs/adr/0021-landing-page-redesign.md
+- Depends on: T-050
+- Goal: Final pass on the landing.
+- Acceptance criteria:
+  - [ ] Dark and light at 1440, 768 and 375: screenshots reviewed, no horizontal scroll.
+  - [ ] Reduced motion on: no loops, content visible.
+  - [ ] Production build passes; page weight and layout shift measured and noted; contrast of new colours computed.
+  - [ ] Gaps against the brief listed in Result.
+- Result:
 
 ### T-020: (post-MVP) Spike: indexer options on Arc testnet and Sepolia
 - Owner: alle
