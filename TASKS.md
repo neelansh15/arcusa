@@ -57,7 +57,7 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 | ID | Status | Owner | Title |
 |---|---|---|---|
 | [T-001](#t-001-get-user-decisions-needed-for-submission-and-demo) | todo | alle | Get user decisions needed for submission and demo |
-| [T-002](#t-002-create-repo-skeleton-per-adr-0010) | todo | laptop | Create repo skeleton per ADR 0010 |
+| [T-002](#t-002-create-repo-skeleton-per-adr-0010) | doing | laptop | Create repo skeleton per ADR 0010 |
 | [T-003](#t-003-create-the-arc-studio-app-and-link-the-cli-adr-0006) | todo | laptop | Create the Arc Studio app and link the CLI (ADR 0006) |
 | [T-004](#t-004-spike-usdc-bridge-in-from-sepolia-to-arc-with-forwarding-adr-0003) | todo | laptop | Spike: USDC bridge-in from Sepolia to Arc with Forwarding (ADR 0003) |
 | [T-005](#t-005-spike-deploy-taapl-as-a-native-crosschaintoken-on-arc-and-sepolia-adr-0002) | superseded | laptop | Spike: deploy tAAPL as a native CrossChainToken on Arc and Sepolia (ADR 0002) |
@@ -113,20 +113,28 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 
 ### T-002: Create repo skeleton per ADR 0010
 - Owner: laptop
-- Status: todo
+- Status: doing
 - ADR: docs/adr/0010-repo-structure.md
 - Depends on: none
 - Goal: Create the folder layout, `.gitignore` and `.env.example` so later tasks have fixed paths.
 - Acceptance criteria:
-  - [ ] Folders exist: `app/`, `contracts/arc/`, `contracts/sepolia/`, `contracts/scripts/`, `packages/bridge/`, `services/oracle-relayer/`, `docs/architecture/`, `docs/demo/`, `deployments/`. Use a `.gitkeep` where a folder is empty.
-  - [ ] A package-manager workspace (pnpm) covers `packages/*` and `app/`, with one test runner configured (vitest for TypeScript) and one `test` command at the root.
-  - [ ] A CI stub (GitHub Actions) runs install and `test` on push. It may be a no-op until tests exist, but it must run green.
-  - [ ] `.gitignore` covers `.env*` except `.env.example`, `node_modules`, Foundry `out/` and `cache/`, and local Arc Studio CLI state.
-  - [ ] `.env.example` lists variable names only, for example `DEPLOYER_PRIVATE_KEY`, `RELAYER_PRIVATE_KEY`, `ARC_TESTNET_RPC_URL`, `SEPOLIA_RPC_URL`, `IRIS_API_URL`. No values.
+  - [x] Folders exist: `app/`, `contracts/arc/`, `contracts/sepolia/`, `contracts/scripts/`, `packages/bridge/`, `services/oracle-relayer/`, `docs/architecture/`, `docs/demo/`, `deployments/`. Use a `.gitkeep` where a folder is empty.
+  - [x] A package-manager workspace (pnpm) covers `packages/*` and `app/`, with one test runner configured (vitest for TypeScript) and one `test` command at the root.
+  - [x] A CI stub (GitHub Actions) runs install and `test` on push. It may be a no-op until tests exist, but it must run green.
+  - [x] `.gitignore` covers `.env*` except `.env.example`, `node_modules`, Foundry `out/` and `cache/`, and local Arc Studio CLI state.
+  - [x] `.env.example` lists variable names only, for example `DEPLOYER_PRIVATE_KEY`, `RELAYER_PRIVATE_KEY`, `ARC_TESTNET_RPC_URL`, `SEPOLIA_RPC_URL`, `IRIS_API_URL`. No values.
   - [ ] Arc Foundry is installed (`arc-forge --version` output pasted in Result). See https://docs.arc.io/arc/tutorials/install-arc-foundry.md.
-  - [ ] `git grep -nE '0x[0-9a-fA-F]{64}'` shows no private keys.
+  - [x] `git grep -nE '0x[0-9a-fA-F]{64}'` shows no private keys.
 - Notes: Extends ADR 0010 (accepted) with `packages/bridge/` (T-033) and `contracts/sepolia/` (mNVDA and the Sepolia scripts, T-022, T-034). `contracts/arc/` stays Studio-only. The raw CCTS fallback in ADR 0010 no longer applies (ADR 0013).
 - Result:
+- 2026-11-06, done by alle from the server container (not the laptop). Status stays doing until the Arc Foundry criterion is done on the laptop.
+- Commits: 7f9cff7 (folders with .gitkeep, .gitignore, .env.example), 5284770 (pnpm workspace, root `test` script, vitest, `packages/bridge` with one placeholder test, pnpm-lock.yaml), 53f95f4 (`.github/workflows/ci.yml`).
+- Workspace: `pnpm-workspace.yaml` covers `packages/*` and `app` (`app/` has no package.json yet, so pnpm skips it until Studio code is pulled). Root `package.json` pins `packageManager: pnpm@12.16.1`, node >=22.12 (vitest 5 needs it). `packages/bridge`: TypeScript, vitest 5.1.0, typescript 7.0.2, `src/index.ts` placeholder for T-033.
+- Run tests: `pnpm install && pnpm test` at the root (runs `vitest run` in every package that has a `test` script). Typecheck: `pnpm --filter @arcusa/bridge typecheck`.
+- Verified: `pnpm install --frozen-lockfile && pnpm test` passed in the container (1 file, 1 test, node 22, pnpm 12.16.1); `tsc --noEmit` clean. CI run on 53f95f4 green: https://github.com/neelansh15/arcusa/actions/runs/42136236925 (node 24, checkout@v7, pnpm/action-setup@v6, setup-node@v7).
+- `.gitignore`: `.env` and `.env.*` except `!.env.example`, `node_modules/`, Foundry `out/`, `cache/`, local-chain `broadcast/*/31337/`, and `.arc-studio/` (the project-local state dir used by @circle-fin/arc-studio-cli 1.2.2, which keeps `pull-manifest.json` there; credentials live in `~/.arc-studio/`). If T-003 shows the pull manifest should be committed so `arc-studio pull` stays clean, narrow that rule.
+- Key grep: only matches are the public Pyth AAPL/USD feed id in TASKS.md (T-007) and docs/adr/0004; no private keys.
+- NOT verified: Arc Foundry install (`arc-forge --version`) needs the laptop; that criterion is left unchecked. Laptop: run `git pull`, `pnpm install && pnpm test` once locally, install Arc Foundry, paste the version here, then set done.
 
 ### T-003: Create the Arc Studio app and link the CLI (ADR 0006)
 - Owner: laptop
