@@ -53,7 +53,7 @@ export default function RisksDocs() {
       <ul>
         <li>Fast transfers failed in simulation for the mock token. Only Standard has worked.</li>
         <li>The token managers are owned by an address we do not control and could not identify.</li>
-        <li>The /bridge page does not send transfers yet; the tested transfers were run with scripts.</li>
+        <li>The /bridge page is wired to Bridge Kit but untested in a browser; the tested transfers were run with scripts.</li>
       </ul>
 
       <h2>Not audited, not fully tested</h2>

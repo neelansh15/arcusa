@@ -29,11 +29,11 @@ export default function Roadmap() {
           <tbody>
             <tr>
               <td><b>Bridge page for liquidity providers</b></td>
-              <td><Tag status="roadmap" /> <span className="docs-sub">UI done, not wired</span></td>
+              <td><Tag status="roadmap" /> <span className="docs-sub">Wired, untested in a browser</span></td>
               <td>
                 Bridging has its own page at <Link href="/bridge">/bridge</Link>, framed for liquidity providers who top up inventory on
-                Arc, not in the trader&apos;s terminal. The interface is built, but its client is a stub that rejects, so the page does not
-                send transfers yet. Transfers were run with scripts; see <Link href="/docs/bridge">Bridge</Link>.
+                Arc, not in the trader&apos;s terminal. The client now calls Bridge Kit through a connected browser wallet, but it has not been
+                run in a browser yet. Transfers were proven with scripts; see <Link href="/docs/bridge">Bridge</Link>.
               </td>
             </tr>
             <tr>

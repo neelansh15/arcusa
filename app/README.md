@@ -20,7 +20,7 @@ Requires Node >= 22.12. No keys or secrets are used.
 - Chart: polls `/api/price`, which proxies the xstocks.fi NVDAx price-data endpoint. The upstream has no timestamp, so the server records `fetchedAt` and the UI flags the quote STALE after 60 s.
 - Order ticket: UI only. TODO stub for the InventoryMarket contract call (`src/components/order-ticket.tsx`).
 - Balances: real on-chain reads of Arc USDC (ERC-20, 6 dec) and wNVDA (18 dec).
-- Bridge: CCTP leg timeline UI for Sepolia mNVDA. `src/lib/bridge.ts` is a typed stub for later `@circle-fin/bridge-kit` use (`token: tokenId`, `useForwarder: true`, `transferSpeed: 'SLOW'`). Known timings: into Arc ~16 min, back ~28 s. FAST reverts for this token.
+- Bridge: CCTP leg timeline UI for Sepolia mNVDA. `src/lib/bridge.ts` calls `@circle-fin/bridge-kit` with the connected wallet via `@circle-fin/adapter-viem-v2` (`token: tokenId`, `useForwarder: true`, `transferSpeed: 'SLOW'`), loaded with a dynamic import. Legs are kept in localStorage. Untested in a browser. Known timings: into Arc ~16 min, back ~28 s. FAST reverts for this token.
 
 ## Layout
 
@@ -28,4 +28,4 @@ Requires Node >= 22.12. No keys or secrets are used.
 
 ## Stubbed
 
-Order submission, and the bridge client (it always rejects until Bridge Kit is wired).
+Order submission.

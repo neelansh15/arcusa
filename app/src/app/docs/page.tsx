@@ -73,7 +73,7 @@ export default function DocsOverview() {
             <tr>
               <td><b>Lock-and-mint of mock NVDA</b></td>
               <td><Tag status="testnet" /></td>
-              <td>Proven by script in both directions between Sepolia and Arc. The /bridge page in the app is not connected to it yet.</td>
+              <td>Proven by script in both directions between Sepolia and Arc. The /bridge page in the app now calls the same Bridge Kit flow from a browser wallet, but that path has not been tested in a browser yet.</td>
             </tr>
             <tr>
               <td><b>Fast bridge transfers</b></td>

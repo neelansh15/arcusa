@@ -70,7 +70,7 @@ export default function Architecture() {
       <p>
         Inventory moves between Sepolia and Arc through Circle&apos;s cross-chain token service (CCTPx) using Bridge Kit, by token id. The
         library in <code>packages/bridge</code> wraps Bridge Kit behind typed ports and is tested against mocks. The /bridge page in the
-        app has the full interface, but its client is still a stub that rejects, so it does not send transfers yet. See{" "}
+        app has the full interface and its client now calls Bridge Kit through a connected browser wallet. That path has not been tested in a browser yet. See{" "}
         <Link href="/docs/bridge">Bridge</Link>.
       </p>
 

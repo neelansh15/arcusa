@@ -16,7 +16,7 @@ export default function BridgeDocs() {
       <h2>Who it is for</h2>
       <p>
         The bridge is for <b>liquidity providers</b> moving inventory between Ethereum Sepolia and Arc. Traders do not need it: they
-        hold USDC on Arc and trade against the market. The <Link href="/bridge">/bridge page</Link> is the interface being built for providers; it is not wired to the bridge yet (see the status note below).
+        hold USDC on Arc and trade against the market. The <Link href="/bridge">/bridge page</Link> is the interface for providers. It is wired to Bridge Kit but untested in a browser (see the status note below).
       </p>
 
       <h2>Lock and mint</h2>
@@ -98,9 +98,11 @@ export default function BridgeDocs() {
 
       <Callout kind="roadmap" title="Status of the /bridge page">
         <p>
-          The page shows the direction control, amount, estimated time and a step timeline with transaction links. Its client is a stub
-          that rejects the request, so it does not send transfers yet and is not wired to the bridge. The transfers above were run with scripts in{" "}
-          <code>contracts/scripts/spikes</code>. Running Bridge Kit inside a browser bundle is also unverified.
+          The page shows the direction control, amount, estimated time and a step timeline with transaction links. Its client now calls
+          Bridge Kit with the connected browser wallet (switching the wallet to the source chain for each leg, with Arc&apos;s 20 gwei fee floor applied),
+          saves each leg in the browser so a reload during the wait picks it up again, and resumes the attestation and mint from the recorded burn.
+          It has <b>not been run in a browser</b>: running Bridge Kit inside a browser bundle, wallet chain switching and resume after a reload are all
+          unverified. The transfers above were proven with scripts in <code>contracts/scripts/spikes</code>.
         </p>
       </Callout>
 
