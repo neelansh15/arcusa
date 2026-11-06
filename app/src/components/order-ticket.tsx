@@ -12,13 +12,13 @@ import { useQuote, type MarketState } from "@/lib/use-market";
 
 const SLIPPAGE_BPS = 100n;
 
-export function OrderTicket({ market, usdcBal, nvdaBal, onDone }: { market: MarketState; usdcBal: number | null; nvdaBal: number | null; onDone?: () => void }) {
+export function OrderTicket({ market, usdcBal, nvdaBal, onDone, initialSide = "buy" }: { market: MarketState; usdcBal: number | null; nvdaBal: number | null; onDone?: () => void; initialSide?: "buy" | "sell" }) {
   const { address, isConnected, chainId } = useAccount();
   const { switchChainAsync } = useSwitchChain();
   const { connect, isPending: connecting } = useConnect();
   const { writeContractAsync } = useWriteContract();
   const client = usePublicClient({ chainId: ARC_CHAIN_ID });
-  const [side, setSide] = useState<"buy" | "sell">("buy");
+  const [side, setSide] = useState<"buy" | "sell">(initialSide);
   const [amount, setAmount] = useState("5");
   const [busy, setBusy] = useState<string | null>(null);
   const [msg, setMsg] = useState<ToastMsg | null>(null);

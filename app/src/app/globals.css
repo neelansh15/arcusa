@@ -176,7 +176,7 @@ button.primary:hover:not(:disabled) { background: var(--accent2); border-color: 
 
 /* Simple trade view (ADR 0019): rounded cards on a soft page, LumaTrade-style. */
 .trade-app { min-height: 100vh; display: flex; flex-direction: column; background: var(--panel2); }
-.trade { flex: 1; display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 16px; padding: 16px; max-width: 1280px; width: 100%; margin: 0 auto; align-items: start; }
+.trade { flex: 1; display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 16px; padding: 16px; max-width: 1280px; width: 100%; margin: 0 auto; align-items: start; align-content: start; }
 .card { background: var(--panel); border: 1px solid var(--line); border-radius: 20px; padding: 20px 24px; }
 .chart-card { display: flex; flex-direction: column; }
 .pair-head { display: flex; align-items: center; gap: 12px; }
@@ -234,3 +234,31 @@ button.primary:hover:not(:disabled) { background: var(--accent2); border-color: 
 .tk-msg { font-size: 12px; margin-top: 8px; text-align: center; }
 .tk-sum { margin-top: 14px; border: 1px solid var(--line); border-radius: 16px; padding: 12px 16px; display: flex; flex-direction: column; gap: 6px; font-size: 12px; }
 .tk-sum > div { display: flex; justify-content: space-between; } .tk-sum span { color: var(--muted); } .tk-sum b { font-family: var(--font-mono), monospace; font-weight: 600; }
+
+/* Mobile (T-039): Kraken-style single column, sticky Buy/Sell bar, ticket in a bottom sheet. */
+.mdetails summary { cursor: pointer; font-weight: 600; padding: 6px 0; list-style: none; display: flex; justify-content: space-between; }
+.mdetails summary::after { content: "+"; color: var(--muted); } .mdetails[open] summary::after { content: "–"; }
+.mdetails summary::-webkit-details-marker { display: none; }
+.buybar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 50; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); background: var(--panel); border-top: 1px solid var(--line); }
+.buybar button { padding: 14px; border-radius: 999px; font-weight: 700; font-size: 16px; }
+.buybar .buy { background: var(--accent); border-color: var(--accent); color: #fff; }
+.buybar .sell { background: var(--panel); border-color: var(--line2); color: var(--text); }
+.sheet-wrap { position: fixed; inset: 0; z-index: 60; display: flex; flex-direction: column; justify-content: flex-end; }
+.sheet-bg { position: absolute; inset: 0; background: rgba(11, 18, 32, .45); }
+.sheet { position: relative; max-height: 92vh; overflow-y: auto; background: var(--panel); border-radius: 24px 24px 0 0; padding: 8px 8px calc(12px + env(safe-area-inset-bottom)); animation: sheet-in .22s ease-out; }
+.sheet .card { border: 0; padding: 8px; }
+.sheet-grab { display: flex; justify-content: center; align-items: center; position: relative; height: 22px; }
+.sheet-grab span { width: 38px; height: 4px; border-radius: 4px; background: var(--line2); }
+.sheet-grab button { position: absolute; right: 8px; top: -2px; border: 0; background: transparent; font-size: 22px; line-height: 1; color: var(--muted); }
+@keyframes sheet-in { from { transform: translateY(40px); opacity: 0; } to { transform: none; opacity: 1; } }
+
+@media (max-width: 767px) {
+  .trade { grid-template-columns: minmax(0, 1fr); padding: 12px 12px 96px; gap: 12px; }
+  .card { border-radius: 18px; padding: 16px; }
+  .chart-slot { height: 220px; margin: 4px -6px 10px; }
+  .price { font-size: 32px; }
+  .chips { margin-left: 0; width: 100%; justify-content: space-between; }
+  .chips button { flex: 1; }
+  .header { padding: 0 12px; } .header .nav, .header .badge { display: none; }
+}
+.tag { white-space: nowrap; }

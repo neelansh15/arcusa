@@ -91,8 +91,8 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 | [T-036](#t-036-bridge-layer-persistence-and-resume) | todo | laptop | Bridge layer persistence and resume |
 | [T-037](#t-037-simple-trade-layout-pair-header-chart-card-market-table) | done | laptop | Simple trade layout: pair header, chart card, market table |
 | [T-038](#t-038-payreceive-order-ticket-with-fee-summary) | done | laptop | Pay/receive order ticket with fee summary |
-| [T-039](#t-039-mobile-layout-bottom-sheet-ticket-and-sticky-buysell-bar) | doing | laptop | Mobile layout: bottom-sheet ticket and sticky Buy/Sell bar |
-| [T-040](#t-040-pro-mode-toggle-desktop) | todo | laptop | Pro mode toggle (desktop) |
+| [T-039](#t-039-mobile-layout-bottom-sheet-ticket-and-sticky-buysell-bar) | done | laptop | Mobile layout: bottom-sheet ticket and sticky Buy/Sell bar |
+| [T-040](#t-040-pro-mode-toggle-desktop) | doing | laptop | Pro mode toggle (desktop) |
 | [T-020](#t-020-post-mvp-spike-indexer-options-on-arc-testnet-and-sepolia) | todo | alle | (post-MVP) Spike: indexer options on Arc testnet and Sepolia |
 | [T-021](#t-021-post-mvp-build-indexer-and-holdingshistory-view) | todo | laptop | (post-MVP) Build indexer and holdings/history view |
 
@@ -637,7 +637,7 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 
 ### T-039: Mobile layout: bottom-sheet ticket and sticky Buy/Sell bar
 - Owner: laptop
-- Status: doing
+- Status: done
 - ADR: docs/adr/0019-simple-default-ui-with-pro-mode.md
 - Depends on: T-038
 - Goal: Kraken-style mobile at widths below 768px.
@@ -645,11 +645,11 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
   - [ ] Single column: price header, chart, position card, "Market details" accordion.
   - [ ] Sticky bottom bar with Buy and Sell that open the ticket as a bottom sheet.
   - [ ] Checked at 375px and 768px with screenshots in Result; no horizontal scroll.
-- Result:
+- Result: Below 768px `/trade` is a single column: pair header and price, chip row, shorter chart, "Market details" accordion, position card, and a sticky Buy/Sell bar that opens the ticket as a bottom sheet (closes after a confirmed trade). One ticket instance is mounted at a time via `useMedia` (`lib/use-media.ts`). Checked in the in-app browser at 375px (sheet opens, no horizontal scroll: scrollWidth equals clientWidth) and 768px (desktop layout, no overflow). NOT verified: a real phone or the iOS simulator, safe-area insets, a trade completed from the sheet (no wallet available). The Next dev badge overlaps the Buy button in dev only.
 
 ### T-040: Pro mode toggle (desktop)
 - Owner: laptop
-- Status: todo
+- Status: doing
 - ADR: docs/adr/0019-simple-default-ui-with-pro-mode.md
 - Depends on: T-038
 - Goal: A header toggle, persisted in `localStorage`, off by default, hidden on mobile. When on it adds the stats strip, Balances and Trades tabs, slippage setting, oracle updated-at and staleness, pool inventory, fee tier and explorer links.

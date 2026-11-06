@@ -9,6 +9,7 @@ import { OrderTicket } from "./order-ticket";
 import { Position } from "./position";
 import { useMarket } from "@/lib/use-market";
 import { usePrice } from "@/lib/use-price";
+import { useMedia } from "@/lib/use-media";
 
 const RANGES = { "1h": 3600, "24h": 86_400, "1w": 604_800, All: 0 } as const;
 type Range = keyof typeof RANGES;
@@ -18,6 +19,8 @@ export function Terminal() {
   const m = useMarket();
   const bal = useBalances();
   const [range, setRange] = useState<Range>("All");
+  const mobile = useMedia("(max-width: 767px)");
+  const [sheet, setSheet] = useState<"buy" | "sell" | null>(null);
 
   // A range chip is enabled only when the price history actually spans it; no fabricated history.
   const span = p.history.length > 1 ? p.history[p.history.length - 1].time - p.history[0].time : 0;
@@ -53,13 +56,34 @@ export function Terminal() {
             </div>
           </div>
           <div className="chart-slot"><PriceChart history={view} /></div>
-          <MarketTable m={m} stale={p.stale} />
+          {mobile ? (
+            <details className="mdetails"><summary>Market details</summary><MarketTable m={m} stale={p.stale} /></details>
+          ) : (
+            <MarketTable m={m} stale={p.stale} />
+          )}
         </section>
         <aside className="side">
           <Position usdc={bal.usdc} nvda={bal.nvda} quote={p.quote} />
-          <OrderTicket market={m} usdcBal={bal.usdc} nvdaBal={bal.nvda} />
+          {!mobile && <OrderTicket market={m} usdcBal={bal.usdc} nvdaBal={bal.nvda} />}
         </aside>
       </main>
+      {mobile && (
+        <>
+          <div className="buybar">
+            <button className="buy" onClick={() => setSheet("buy")}>Buy</button>
+            <button className="sell" onClick={() => setSheet("sell")}>Sell</button>
+          </div>
+          {sheet && (
+            <div className="sheet-wrap" role="dialog" aria-modal="true" aria-label={`${sheet} NVDA`}>
+              <div className="sheet-bg" onClick={() => setSheet(null)} />
+              <div className="sheet">
+                <div className="sheet-grab"><span /><button aria-label="Close" onClick={() => setSheet(null)}>×</button></div>
+                <OrderTicket key={sheet} initialSide={sheet} market={m} usdcBal={bal.usdc} nvdaBal={bal.nvda} onDone={() => setSheet(null)} />
+              </div>
+            </div>
+          )}
+        </>
+      )}
     </div>
   );
 }
