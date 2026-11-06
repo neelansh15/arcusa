@@ -24,20 +24,20 @@ export function PriceChart({ history }: { history: PricePoint[] }) {
     if (!el.current) return;
     const chart = createChart(el.current, {
       autoSize: true,
-      layout: { background: { type: ColorType.Solid, color: "transparent" }, textColor: "#7d8795", fontSize: 11 },
-      grid: { vertLines: { color: "#161c25" }, horzLines: { color: "#161c25" } },
+      layout: { background: { type: ColorType.Solid, color: "transparent" }, textColor: "#5a6475", fontSize: 11 },
+      grid: { vertLines: { color: "#eef0f3" }, horzLines: { color: "#eef0f3" } },
       crosshair: { mode: CrosshairMode.Normal },
-      rightPriceScale: { borderColor: "#232b36", scaleMargins: { top: 0.1, bottom: 0.1 } },
-      timeScale: { borderColor: "#232b36", timeVisible: true, secondsVisible: false, rightOffset: 6 },
+      rightPriceScale: { borderColor: "#e6e8ec", scaleMargins: { top: 0.1, bottom: 0.1 } },
+      timeScale: { borderColor: "#e6e8ec", timeVisible: true, secondsVisible: false, rightOffset: 6 },
     });
     chartRef.current = chart;
     series.current = chart.addSeries(CandlestickSeries, {
-      upColor: "#22d3ee",
-      downColor: "#f0616d",
-      borderUpColor: "#22d3ee",
-      borderDownColor: "#f0616d",
-      wickUpColor: "#22d3ee",
-      wickDownColor: "#f0616d",
+      upColor: "#2563eb",
+      downColor: "#b4474d",
+      borderUpColor: "#2563eb",
+      borderDownColor: "#b4474d",
+      wickUpColor: "#2563eb",
+      wickDownColor: "#b4474d",
       priceFormat: { type: "price", precision: 2, minMove: 0.01 },
     });
     return () => {
