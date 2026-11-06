@@ -56,6 +56,12 @@ export default function ContractsIndex() {
       </p>
       <PlannedTable rows={PLANNED_CHAINS} />
 
+      <h2>Gas costs</h2>
+      <p>
+        Gas used by the wrapper creation, the bridging legs and the market contract transactions is on{" "}
+        <Link href="/docs/gas-costs">Gas costs</Link>.
+      </p>
+
       <h2>How addresses were checked</h2>
       <ul>
         <li>Each address was compared with <code>deployments/arc-testnet.json</code>, <code>app/src/lib/config.ts</code>, <code>app/src/lib/market.ts</code> and <code>LOG.md</code>. The source is shown next to every row.</li>

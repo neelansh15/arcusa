@@ -31,6 +31,7 @@ export const DOCS_NAV: DocSection[] = [
     links: [
       { title: "Bridge", href: "/docs/bridge", summary: "Moving inventory between Sepolia and Arc." },
       { title: "Oracle and price", href: "/docs/oracle", summary: "Price service, relayer, staleness and sessions." },
+      { title: "Gas costs", href: "/docs/gas-costs", summary: "Gas used by wrapper creation, bridging and market transactions." },
     ],
   },
   {
