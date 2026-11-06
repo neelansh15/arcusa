@@ -10,7 +10,7 @@ export function AssetSelector({ asset, onSelect }: { asset: Asset; onSelect: (a:
   return (
     <>
       <button type="button" className="asset-btn" aria-haspopup="dialog" aria-expanded={open} onClick={() => setOpen(true)}>
-        <span className="pair-icons" aria-hidden="true"><i className="ic nvda">N</i><i className="ic usdc">$</i></span>
+        <span className="pair-icons" aria-hidden="true"><i className="ic nvda">{asset.ticker[0]}</i><i className="ic usdc">$</i></span>
         <span className="asset-name">{asset.pair.split(" / ")[0]} <span className="muted">/ USDC</span></span>
         <span className="sr-only">, choose asset</span>
         <svg className="asset-chev" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M8 9.5l4-4 4 4M8 14.5l4 4 4-4" /></svg>
@@ -50,7 +50,7 @@ function AssetModal({ current, onClose, onSelect }: { current: Asset; onClose: (
           a.status === "live" ? (
             <li key={a.ticker}>
               <button type="button" className="asset-row" onClick={() => onSelect(a)}>
-                <span className="pair-icons" aria-hidden="true"><i className="ic nvda">N</i><i className="ic usdc">$</i></span>
+                <span className="pair-icons" aria-hidden="true"><i className="ic nvda">{a.ticker[0]}</i><i className="ic usdc">$</i></span>
                 <span className="asset-row-main"><b>{a.ticker}</b><small>{a.label}</small></span>
                 {a.ticker === current.ticker && <span className="asset-check" aria-label="Selected">✓</span>}
               </button>
@@ -65,7 +65,7 @@ function AssetModal({ current, onClose, onSelect }: { current: Asset; onClose: (
         )}
       </ul>
       {!list.length && <p className="asset-empty">No assets match.</p>}
-      <p className="asset-note">More stocks are planned. Only NVDA trades today. Testnet demo. Not a security, no real shares, no real value.</p>
+      <p className="asset-note">More stocks are planned. Only NVDA and TSLA trade today, as mock tokens. Testnet demo. Not a security, no real shares, no real value.</p>
     </Modal>
   );
 }

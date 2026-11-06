@@ -16,7 +16,7 @@ export interface PriceState {
   history: PricePoint[];
 }
 
-export function usePrice(): PriceState {
+export function usePrice(symbol = "NVDA"): PriceState {
   const [state, setState] = useState<PriceState>({
     quote: null,
     fetchedAt: null,
@@ -27,10 +27,13 @@ export function usePrice(): PriceState {
 
   useEffect(() => {
     let alive = true;
+    setState({ quote: null, fetchedAt: null, stale: true, error: null, history: [] });
     // Seed history from the ingest service so the chart isn't empty on load.
-    fetch(`${PRICE_API}/api/ticks?limit=5000`, { cache: "no-store" })
+    fetch(`${PRICE_API}/api/ticks?symbol=${symbol}&limit=5000`, { cache: "no-store" })
       .then((r) => r.json())
-      .then((b: { ticks: PricePoint[] }) => {
+      .then((b: { ticks: PricePoint[]; symbol?: string }) => {
+        // An older ingest service ignores ?symbol and answers NVDA ticks without a symbol field.
+        if ((b.symbol ?? "NVDA") !== symbol) return;
         if (alive && b.ticks?.length) setState((s) => ({ ...s, history: [...b.ticks, ...s.history.filter((p) => p.time > b.ticks[b.ticks.length - 1].time)] }));
       })
       .catch(() => {});
@@ -38,12 +41,12 @@ export function usePrice(): PriceState {
       try {
         let body: { quote: number; fetchedAt: number };
         try {
-          const r = await fetch(`${PRICE_API}/api/price`, { cache: "no-store" });
+          const r = await fetch(`${PRICE_API}/api/price?symbol=${symbol}`, { cache: "no-store" });
           const j = await r.json();
-          if (!r.ok) throw new Error("ingest down");
+          if (!r.ok || (j.symbol ?? "NVDA") !== symbol) throw new Error("ingest down or wrong symbol");
           body = { quote: j.quote, fetchedAt: j.time * 1000 };
         } catch {
-          const res = await fetch(PRICE.route, { cache: "no-store" });
+          const res = await fetch(`${PRICE.route}?symbol=${symbol}`, { cache: "no-store" });
           body = await res.json();
           if (!res.ok) throw new Error(`HTTP ${res.status}`);
         }
@@ -77,7 +80,7 @@ export function usePrice(): PriceState {
       clearInterval(id);
       clearInterval(staleId);
     };
-  }, []);
+  }, [symbol]);
 
   return state;
 }

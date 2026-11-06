@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { formatUnits, parseAbiItem } from "viem";
 import { usePublicClient } from "wagmi";
 import { ARC_CHAIN_ID, explorerTx } from "@/lib/config";
-import { MARKET_ADDRESS, MARKET_DEPLOY_BLOCK } from "@/lib/market";
+import type { LiveAsset } from "@/lib/assets";
 
 interface Trade {
   hash: string;
@@ -19,7 +19,9 @@ interface Trade {
 const bought = parseAbiItem("event Bought(address trader, uint256 usdcIn, uint256 wnvdaOut, uint256 price, uint256 spreadBps, uint8 session)");
 const sold = parseAbiItem("event Sold(address trader, uint256 wnvdaIn, uint256 usdcOut, uint256 price, uint256 spreadBps, uint8 session)");
 
-export function Trades() {
+export function Trades({ asset }: { asset: LiveAsset }) {
+  const MARKET_ADDRESS = asset.live.market;
+  const MARKET_DEPLOY_BLOCK = asset.live.marketDeployBlock;
   const client = usePublicClient({ chainId: ARC_CHAIN_ID });
   const [rows, setRows] = useState<Trade[] | null>(null);
   const [err, setErr] = useState<string | null>(null);
@@ -27,6 +29,8 @@ export function Trades() {
   useEffect(() => {
     if (!client) return;
     let alive = true;
+    setRows(null);
+    setErr(null);
     async function load() {
       try {
         const [b, s] = await Promise.all([
@@ -56,7 +60,7 @@ export function Trades() {
       alive = false;
       clearInterval(id);
     };
-  }, [client]);
+  }, [client, MARKET_ADDRESS, MARKET_DEPLOY_BLOCK]);
 
   if (err) return <div className="neg small">{err}</div>;
   if (!rows) return <div className="muted small">Loading trades…</div>;
@@ -64,7 +68,7 @@ export function Trades() {
   return (
     <table className="tbl">
       <thead>
-        <tr><th>Side</th><th className="r">Price</th><th className="r">wNVDA</th><th className="r">USDC</th><th>Trader</th><th>Tx</th></tr>
+        <tr><th>Side</th><th className="r">Price</th><th className="r">{asset.live.token.symbol}</th><th className="r">USDC</th><th>Trader</th><th>Tx</th></tr>
       </thead>
       <tbody>
         {rows.map((t) => (

@@ -106,6 +106,7 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 | [T-051](#t-051-landing-verification-themes-devices-motion-performance) | done | laptop | Landing verification: themes, devices, motion, performance |
 | [T-052](#t-052-asset-selector-button-and-modal-in-the-pair-header) | done | laptop | Asset selector button and modal in the pair header |
 | [T-053](#t-053-custom-wallet-connect-and-account-modals) | done | laptop | Custom wallet connect and account modals |
+| [T-054](#t-054-deploy-tsla-support-on-the-server-price-service-and-relayer) | todo | alle | Deploy TSLA support on the server: price service and relayer |
 | [T-020](#t-020-post-mvp-spike-indexer-options-on-arc-testnet-and-sepolia) | todo | alle | (post-MVP) Spike: indexer options on Arc testnet and Sepolia |
 | [T-021](#t-021-post-mvp-build-indexer-and-holdingshistory-view) | todo | laptop | (post-MVP) Build indexer and holdings/history view |
 
@@ -860,4 +861,16 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
   - [ ] The UI has a holdings and history page that matches onchain state for a test wallet. The comparison is in Result.
   - [ ] Native USDC and ERC-20 USDC events are not double counted.
 - Notes: Post-MVP.
+- Result:
+
+### T-054: Deploy TSLA support on the server: price service and relayer
+- Owner: alle
+- Status: todo
+- ADR: docs/adr/0024-second-live-asset-tsla.md
+- Goal: the server price service ingests TSLA and a second relayer keeps the TSLA oracle fresh, so the TSLA market quotes and the chart has history.
+- Acceptance criteria:
+  - [ ] `arcusa-price` runs the new `services/price/server.mjs` (`SYMBOLS=NVDA,TSLA`). `curl https://arcusa-api.superd.app/api/price?symbol=TSLA` returns `"symbol":"TSLA"`, and `/api/price` still returns NVDA. The existing `ticks.db` is kept.
+  - [ ] A unit `arcusa-relayer-tsla` runs `relayer.mjs` with `ORACLE=0xf17f5449be304de315e48eee44cf889e8e47867d` and `PRICE_URL=http://127.0.0.1:4301/api/price?symbol=TSLA`, using the existing relayer key (already authorised on that oracle, setRelayer tx in deployments/arc-testnet.json).
+  - [ ] `latestRound()` on the TSLA oracle shows a stale flag of false and age under a minute.
+- Notes: Written by laptop, which cannot reach the server. The relayer itself needs no code change. The working tree on the laptop had uncommitted edits to `services/price/relayer.mjs` (not mine), so check what is on main before restarting the NVDA relayer.
 - Result:

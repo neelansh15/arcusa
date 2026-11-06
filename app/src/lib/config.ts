@@ -50,10 +50,6 @@ export const SEPOLIA_MTSLA = {
   symbol: "mTSLA",
 } as const;
 
-// TSLA market (not wired into the UI yet; the app trades NVDA only).
-export const TSLA_PRICE_ORACLE_ADDRESS: Address = "0xf17f5449be304de315e48eee44cf889e8e47867d";
-export const TSLA_INVENTORY_MARKET_ADDRESS: Address = "0x7872ad4bb1a18b63140d4df0fe31af451470f0f3";
-
 // TODO: set once the Arc InventoryMarket (ADR 0014) is deployed.
 export const INVENTORY_MARKET_ADDRESS: Address | null = null;
 

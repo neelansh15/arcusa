@@ -5,7 +5,7 @@ import type { MarketState } from "@/lib/use-market";
 
 const f = (n: number | null | undefined, d = 2) => (n === null || n === undefined ? "—" : n.toLocaleString(undefined, { minimumFractionDigits: d, maximumFractionDigits: d }));
 
-export function MarketInfo({ m, indicative }: { m: MarketState; indicative: number | null }) {
+export function MarketInfo({ m, indicative, symbol }: { m: MarketState; indicative: number | null; symbol: string }) {
   const mid = m.bid && m.ask ? (m.bid + m.ask) / 2 : null;
   return (
     <section className="panel">
@@ -20,7 +20,7 @@ export function MarketInfo({ m, indicative }: { m: MarketState; indicative: numb
       <div className="kv"><span>Session</span><span>{m.oracle ? SESSIONS[m.oracle.session] : "—"}</span></div>
       <div className="kv"><span>Live indicative</span><span>${f(indicative)}</span></div>
       <h2 style={{ marginTop: 12 }}>Inventory</h2>
-      <div className="kv"><span>wNVDA</span><span>{f(m.inventory?.wnvda, 4)}</span></div>
+      <div className="kv"><span>{symbol}</span><span>{f(m.inventory?.wnvda, 4)}</span></div>
       <div className="kv"><span>USDC</span><span>{f(m.inventory?.usdc)}</span></div>
       <div className="kv"><span>Net USDC flow</span><span>{f(m.inventory?.flow)}</span></div>
       <div className="kv"><span>Status</span><span className={m.inventory?.paused ? "neg" : "pos"}>{m.inventory ? (m.inventory.paused ? "Paused" : "Active") : "—"}</span></div>

@@ -35,7 +35,7 @@ interface Hover {
 }
 
 /** Simple: a smooth area line with a hover tooltip. Pro: candlesticks with an interval picker. Colours come from the theme tokens. */
-export function PriceChart({ history, variant = "line" }: { history: PricePoint[]; variant?: "line" | "candles" }) {
+export function PriceChart({ history, variant = "line", ticker = "NVDA" }: { history: PricePoint[]; variant?: "line" | "candles"; ticker?: string }) {
   const el = useRef<HTMLDivElement>(null);
   const chartRef = useRef<IChartApi | null>(null);
   const area = useRef<ISeriesApi<"Area"> | null>(null);
@@ -131,7 +131,7 @@ export function PriceChart({ history, variant = "line" }: { history: PricePoint[
               <button key={k} className={interval === k ? "on" : ""} onClick={() => setIntervalKey(k)}>{k}</button>
             ))}
           </div>
-          <span className="muted small">{history.length} ticks · NVDA indicative (xstocks.fi)</span>
+          <span className="muted small">{history.length} ticks · {ticker} indicative (xstocks.fi)</span>
         </div>
       )}
       <div className="chart-box">

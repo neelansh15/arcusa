@@ -3,7 +3,8 @@
 import { formatUnits, parseUnits } from "viem";
 import { useReadContract, useReadContracts } from "wagmi";
 import { ARC_CHAIN_ID } from "./config";
-import { MARKET_ADDRESS, ORACLE_ADDRESS, marketAbi, oracleAbi } from "./market";
+import { marketAbi, oracleAbi } from "./market";
+import type { LiveAsset } from "./assets";
 
 export interface MarketState {
   oracle: { price: number; publishTime: number; session: number; age: number; stale: boolean } | null;
@@ -17,7 +18,9 @@ export interface MarketState {
 
 const POLL = { refetchInterval: 5_000 };
 
-export function useMarket(): MarketState {
+export function useMarket(asset: LiveAsset): MarketState {
+  const ORACLE_ADDRESS = asset.live.oracle;
+  const MARKET_ADDRESS = asset.live.market;
   const { data, isLoading } = useReadContracts({
     allowFailure: true,
     query: POLL,
@@ -52,7 +55,7 @@ export function useMarket(): MarketState {
   };
 }
 
-export function useQuote(side: "buy" | "sell", amount: string, decimals: number) {
+export function useQuote(asset: LiveAsset, side: "buy" | "sell", amount: string, decimals: number) {
   let parsed: bigint | null = null;
   try {
     parsed = amount && Number(amount) > 0 ? parseUnits(amount, decimals) : null;
@@ -61,7 +64,7 @@ export function useQuote(side: "buy" | "sell", amount: string, decimals: number)
   }
   const r = useReadContract({
     chainId: ARC_CHAIN_ID,
-    address: MARKET_ADDRESS,
+    address: asset.live.market,
     abi: marketAbi,
     functionName: side === "buy" ? "quoteBuy" : "quoteSell",
     args: [parsed ?? 0n],

@@ -87,6 +87,11 @@ Newest entries at the bottom. Times are IST (UTC+5:30). Testnet only. Every addr
 - Scripts (parametrised, read the key from ~/.arcusa): contracts/scripts/second-token/.
 - NOT done: server price service and relayer are not configured for TSLA (oracle goes stale after 300 s); no TSLA trade, pause, withdraw or cap tests; the app UI is still NVDA only.
 
+## 2026-11-07 TSLA in the app and the price service
+- services/price/server.mjs: multi-symbol (`SYMBOLS`, default NVDA,TSLA), `?symbol=` on all `/api/` routes, NVDA keeps the `ticks` table. Tested locally: NVDA 187.1, TSLA 358.2, unknown symbol gives 400, candles and ticks per symbol. Relayer unchanged, one instance per asset (README). Not deployed: needs T-054 on the server.
+- App: `lib/assets.ts` carries the per-asset market, oracle, token and deploy block. NVDA and TSLA are live in the picker and the trade page switches price, market quote, balances, trades and ticket (ADR 0024). `tsc` and `oxlint` pass. Checked in the in-app browser: picking TSLA shows wTSLA in the ticket, the TSLA price from the app's own fallback route (the production ingest still answers NVDA, so the UI rejects it by symbol), and "Oracle price is stale" because no relayer feeds the TSLA oracle yet.
+- NOT verified: a real TSLA buy or sell with a wallet, mobile layout of the switch, chart history for TSLA (needs the server).
+
 ## Not verified yet
 - Whether Bridge Kit can move mNVDA by token id (T-024).
 - Fast Transfer availability for mNVDA (T-024; the docs expect `FX_SYMBOL_NOT_CONFIGURED`).

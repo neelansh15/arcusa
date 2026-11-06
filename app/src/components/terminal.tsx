@@ -15,22 +15,23 @@ import { Trades } from "./trades";
 import { useMarket } from "@/lib/use-market";
 import { usePrice } from "@/lib/use-price";
 import { useMedia } from "@/lib/use-media";
-import { DEFAULT_ASSET, type Asset } from "@/lib/assets";
+import { DEFAULT_LIVE, type Asset, type LiveAsset } from "@/lib/assets";
 
 const RANGES = { "1h": 3600, "24h": 86_400, "1w": 604_800, All: 0 } as const;
 type Range = keyof typeof RANGES;
 
 export function Terminal() {
-  const p = usePrice();
-  const m = useMarket();
-  const bal = useBalances();
+  const [asset, setAsset] = useState<LiveAsset>(DEFAULT_LIVE);
+  const p = usePrice(asset.live.priceSymbol);
+  const m = useMarket(asset);
+  const bal = useBalances(asset);
+  const sym = asset.live.token.symbol;
   const [range, setRange] = useState<Range>("All");
   const mobile = useMedia("(max-width: 767px)");
   const [proPref, setPro] = usePro();
   const pro = proPref && !mobile; // Pro is desktop only
   const [slip, setSlip] = useState(100);
   const [tab, setTab] = useState<"balances" | "trades">("balances");
-  const [asset, setAsset] = useState<Asset>(DEFAULT_ASSET); // display only until per-asset market config exists (ADR 0022)
   const [sheet, setSheet] = useState<"buy" | "sell" | null>(null);
 
   // A range chip is enabled only when the price history actually spans it; no fabricated history.
@@ -54,7 +55,7 @@ export function Terminal() {
       <main className="trade">
         <section className="card chart-card">
           <div className="pair-head">
-            <h1><AssetSelector asset={asset} onSelect={setAsset} /></h1>
+            <h1><AssetSelector asset={asset} onSelect={(a: Asset) => { if (a.live) setAsset(a as LiveAsset); }} /></h1>
           </div>
           <div className="price-row">
             <span className="price">${p.quote ? p.quote.toFixed(2) : "—"}</span>
@@ -75,7 +76,7 @@ export function Terminal() {
               <div><span>Feed</span><b className={p.stale ? "warn" : "pos"}>{p.stale ? "STALE" : "LIVE"}</b></div>
             </div>
           )}
-          <div className="chart-slot"><PriceChart history={view} variant={pro ? "candles" : "line"} /></div>
+          <div className="chart-slot"><PriceChart history={view} variant={pro ? "candles" : "line"} ticker={asset.ticker} /></div>
           {mobile ? (
             <details className="mdetails"><summary>Market details</summary><MarketTable m={m} stale={p.stale} /></details>
           ) : !pro ? (
@@ -86,14 +87,14 @@ export function Terminal() {
               <div className="seg">
                 {(["balances", "trades"] as const).map((x) => (<button key={x} className={tab === x ? "on" : ""} onClick={() => setTab(x)}>{x[0].toUpperCase() + x.slice(1)}</button>))}
               </div>
-              <div className="pro-tab-body">{tab === "balances" ? <Balances usdc={bal.usdc} nvda={bal.nvda} quote={p.quote} /> : <Trades />}</div>
+              <div className="pro-tab-body">{tab === "balances" ? <Balances usdc={bal.usdc} nvda={bal.nvda} quote={p.quote} symbol={sym} /> : <Trades asset={asset} />}</div>
             </div>
           )}
         </section>
         <aside className="side">
-          {mobile && <Position usdc={bal.usdc} nvda={bal.nvda} quote={p.quote} />}
-          {!mobile && <OrderTicket market={m} usdcBal={bal.usdc} nvdaBal={bal.nvda} slippageBps={slip} onSlippage={pro ? setSlip : undefined} summaryHead={<PositionBody usdc={bal.usdc} nvda={bal.nvda} quote={p.quote} />} />}
-          {pro && <MarketInfo m={m} indicative={p.quote} />}
+          {mobile && <Position usdc={bal.usdc} nvda={bal.nvda} quote={p.quote} symbol={sym} />}
+          {!mobile && <OrderTicket key={asset.ticker} asset={asset} market={m} usdcBal={bal.usdc} nvdaBal={bal.nvda} slippageBps={slip} onSlippage={pro ? setSlip : undefined} summaryHead={<PositionBody usdc={bal.usdc} nvda={bal.nvda} quote={p.quote} symbol={sym} />} />}
+          {pro && <MarketInfo m={m} indicative={p.quote} symbol={sym} />}
         </aside>
       </main>
       {mobile && (
@@ -103,8 +104,8 @@ export function Terminal() {
             <button className="sell" onClick={() => setSheet("sell")}>Sell</button>
           </div>
           {sheet && (
-            <BottomSheet label={`${sheet} NVDA`} onClose={() => setSheet(null)}>
-              <OrderTicket key={sheet} initialSide={sheet} market={m} usdcBal={bal.usdc} nvdaBal={bal.nvda} onDone={() => setSheet(null)} />
+            <BottomSheet label={`${sheet} ${asset.ticker}`} onClose={() => setSheet(null)}>
+              <OrderTicket key={sheet + asset.ticker} asset={asset} initialSide={sheet} market={m} usdcBal={bal.usdc} nvdaBal={bal.nvda} onDone={() => setSheet(null)} />
             </BottomSheet>
           )}
         </>

@@ -5,15 +5,18 @@ import { erc20Abi, formatUnits } from "viem";
 import { useConnection, useReadContract, useSwitchChain, useWriteContract } from "wagmi";
 import { useWalletModal } from "./wallet-modal";
 import { usePublicClient } from "wagmi";
-import { ARC_CHAIN_ID, ARC_USDC, WNVDA, explorerTx } from "@/lib/config";
-import { ARC_FEES, MARKET_ADDRESS, marketAbi } from "@/lib/market";
+import { ARC_CHAIN_ID, ARC_USDC, explorerTx } from "@/lib/config";
+import { ARC_FEES, marketAbi } from "@/lib/market";
+import type { LiveAsset } from "@/lib/assets";
 import { Toast, type ToastMsg } from "@/components/toast";
 import { friendlyMarketError } from "@/lib/market-errors";
 import { useQuote, type MarketState } from "@/lib/use-market";
 import type { ReactNode } from "react";
 
 
-export function OrderTicket({ market, usdcBal, nvdaBal, onDone, initialSide = "buy", slippageBps = 100, onSlippage, summaryHead }: { market: MarketState; usdcBal: number | null; nvdaBal: number | null; onDone?: () => void; initialSide?: "buy" | "sell"; slippageBps?: number; onSlippage?: (bps: number) => void; summaryHead?: ReactNode }) {
+export function OrderTicket({ asset, market, usdcBal, nvdaBal, onDone, initialSide = "buy", slippageBps = 100, onSlippage, summaryHead }: { asset: LiveAsset; market: MarketState; usdcBal: number | null; nvdaBal: number | null; onDone?: () => void; initialSide?: "buy" | "sell"; slippageBps?: number; onSlippage?: (bps: number) => void; summaryHead?: ReactNode }) {
+  const MARKET_ADDRESS = asset.live.market;
+  const WNVDA = asset.live.token;
   const { address, isConnected, chainId } = useConnection();
   const { switchChainAsync } = useSwitchChain();
   const { openConnect } = useWalletModal();
@@ -27,7 +30,7 @@ export function OrderTicket({ market, usdcBal, nvdaBal, onDone, initialSide = "b
   const inDec = side === "buy" ? 6 : 18;
   const outDec = side === "buy" ? 18 : 6;
   const token = side === "buy" ? ARC_USDC.address : WNVDA.address;
-  const q = useQuote(side, amount, inDec);
+  const q = useQuote(asset, side, amount, inDec);
 
   const allowance = useReadContract({
     chainId: ARC_CHAIN_ID,
@@ -70,7 +73,7 @@ export function OrderTicket({ market, usdcBal, nvdaBal, onDone, initialSide = "b
       const href = explorerTx(ARC_CHAIN_ID, hash);
       if (r.status === "success") onDone?.();
       setMsg(r.status === "success"
-        ? { id: Date.now(), kind: "ok", title: "Transaction confirmed", text: `${side === "buy" ? "Bought" : "Sold"} ${outText} ${side === "buy" ? "wNVDA" : "USDC"}`, href }
+        ? { id: Date.now(), kind: "ok", title: "Transaction confirmed", text: `${side === "buy" ? "Bought" : "Sold"} ${outText} ${side === "buy" ? WNVDA.symbol : "USDC"}`, href }
         : { id: Date.now(), kind: "err", title: "Transaction reverted", text: "The market rejected this order.", href });
     } catch (e) {
       const f = friendlyMarketError(e);
@@ -89,8 +92,8 @@ export function OrderTicket({ market, usdcBal, nvdaBal, onDone, initialSide = "b
   const wrongNet = isConnected && chainId !== ARC_CHAIN_ID;
   const needsApproval = q.parsed !== null && ((allowance.data as bigint | undefined) ?? 0n) < q.parsed;
   const word = side === "buy" ? "Buy" : "Sell";
-  const outSym = side === "buy" ? "wNVDA" : "USDC";
-  const inSym = side === "buy" ? "USDC" : "wNVDA";
+  const outSym = side === "buy" ? WNVDA.symbol : "USDC";
+  const inSym = side === "buy" ? "USDC" : WNVDA.symbol;
   // Estimated spread cost in USDC: notional * spread. Notional is the pay amount (buy) or the proceeds grossed up (sell).
   const spreadFrac = market.spreadBps !== null ? market.spreadBps / 10_000 : null;
   const outUsdc = q.out !== null && side === "sell" ? Number(formatUnits(q.out, 6)) : null;
@@ -103,7 +106,7 @@ export function OrderTicket({ market, usdcBal, nvdaBal, onDone, initialSide = "b
   if (!isConnected) { label = "Connect wallet"; action = openConnect; }
   else if (wrongNet) { label = "Switch to Arc"; action = () => { switchChainAsync({ chainId: ARC_CHAIN_ID }).catch(() => {}); }; }
   else if (busy) { label = busy; disabled = true; }
-  else { label = `${needsApproval ? "Approve & " : ""}${word} NVDA`; action = submit; disabled = !canSubmit; }
+  else { label = `${needsApproval ? "Approve & " : ""}${word} ${asset.ticker}`; action = submit; disabled = !canSubmit; }
 
   const payBal = bal === null ? "—" : bal.toLocaleString(undefined, { maximumFractionDigits: 4 });
   const recvBalNum = side === "buy" ? nvdaBal : usdcBal;
@@ -118,7 +121,7 @@ export function OrderTicket({ market, usdcBal, nvdaBal, onDone, initialSide = "b
 
       <div className="tk-card">
         <div className="tk-top">
-          <span className={`tk-token ${side === "buy" ? "usdc" : "nvda"}`}><i>{side === "buy" ? "$" : "N"}</i>{inSym}</span>
+          <span className={`tk-token ${side === "buy" ? "usdc" : "nvda"}`}><i>{side === "buy" ? "$" : asset.ticker[0]}</i>{inSym}</span>
           <span className="tk-label">You pay</span>
         </div>
         <div className="tk-main">
@@ -134,7 +137,7 @@ export function OrderTicket({ market, usdcBal, nvdaBal, onDone, initialSide = "b
 
       <div className="tk-card">
         <div className="tk-top">
-          <span className={`tk-token ${side === "buy" ? "nvda" : "usdc"}`}><i>{side === "buy" ? "N" : "$"}</i>{outSym}</span>
+          <span className={`tk-token ${side === "buy" ? "nvda" : "usdc"}`}><i>{side === "buy" ? asset.ticker[0] : "$"}</i>{outSym}</span>
           <span className="tk-label">You receive</span>
         </div>
         <div className="tk-main">
