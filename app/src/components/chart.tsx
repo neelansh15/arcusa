@@ -32,11 +32,11 @@ export function PriceChart({ history }: { history: PricePoint[] }) {
     });
     chartRef.current = chart;
     series.current = chart.addSeries(CandlestickSeries, {
-      upColor: "#2dd4a7",
+      upColor: "#22d3ee",
       downColor: "#f0616d",
-      borderUpColor: "#2dd4a7",
+      borderUpColor: "#22d3ee",
       borderDownColor: "#f0616d",
-      wickUpColor: "#2dd4a7",
+      wickUpColor: "#22d3ee",
       wickDownColor: "#f0616d",
       priceFormat: { type: "price", precision: 2, minMove: 0.01 },
     });
