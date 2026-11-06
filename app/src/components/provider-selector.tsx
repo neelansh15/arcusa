@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import { Modal } from "./modal";
-import type { ProviderQuote } from "./provider-selector-types";
+import type { ProviderQuote } from "@/lib/providers";
 
 export interface ProviderSelectorProps {
   /** One entry per provider. Fewer than two renders nothing (ADR 0026). */
@@ -22,15 +22,18 @@ export interface ProviderSelectorProps {
   pro?: boolean;
 }
 
-const fmtAmount = (n: number, symbol?: string) => {
+// amountOut and effectivePrice arrive as decimal strings (lib/provider-rank.ts).
+const fmtAmount = (v: string | number, symbol?: string) => {
+  const n = Number(v);
+  if (!Number.isFinite(n)) return "—";
   const digits = symbol === "USDC" ? 2 : n < 1 ? 6 : 4;
   return n.toLocaleString(undefined, { maximumFractionDigits: digits });
 };
 const fmtPct = (n: number) => `${n > 0 ? "+" : n < 0 ? "−" : ""}${Math.abs(n).toFixed(2)}%`;
 
-function age(updatedAt: ProviderQuote["updatedAt"]): string {
-  const t = updatedAt instanceof Date ? updatedAt.getTime() : typeof updatedAt === "string" ? Date.parse(updatedAt) : updatedAt;
-  if (!Number.isFinite(t)) return "";
+function age(updatedAt: number): string {
+  const t = updatedAt;
+  if (!Number.isFinite(t) || t <= 0) return "";
   const s = Math.max(0, Math.round((Date.now() - t) / 1000));
   if (s < 60) return `${s}s ago`;
   if (s < 3600) return `${Math.round(s / 60)} min ago`;
@@ -129,7 +132,7 @@ function ProviderModal({ providers, selected, loading, error, onRetry, amountEmp
                       <span className="prov-out">{unavailable || !showAmounts ? "—" : fmtAmount(q.amountOut, receiveSymbol)}</span>
                       {pro && showAmounts && !unavailable && (
                         <span className="prov-sub">
-                          <span>${q.effectivePrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                          <span>${Number(q.effectivePrice).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                           <span>{(q.spreadBps / 100).toFixed(2)}% spread</span>
                         </span>
                       )}

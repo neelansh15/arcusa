@@ -9,6 +9,8 @@ import { Header } from "./header";
 import { MarketInfo } from "./market-info";
 import { MarketTable } from "./market-table";
 import { OrderTicket } from "./order-ticket";
+import { ProviderSelector } from "./provider-selector";
+import type { ProviderQuote } from "@/lib/providers";
 import { Position, PositionBody } from "./position";
 import { ProToggle, usePro } from "./pro-toggle";
 import { Trades } from "./trades";
@@ -34,7 +36,21 @@ export function Terminal() {
   const [tab, setTab] = useState<"balances" | "trades">("balances");
   // Provider chosen per asset (ADR 0026). Unset = the ticket follows the best quote.
   const [picked, setPicked] = useState<Record<string, string>>({});
-  const pickProps = { selectedProviderId: picked[asset.ticker], onProviderChange: (id: string) => setPicked((s) => ({ ...s, [asset.ticker]: id })) };
+  const pickProps = {
+    selectedProviderId: picked[asset.ticker],
+    onProviderChange: (id: string) => setPicked((s) => ({ ...s, [asset.ticker]: id })),
+    // The selector renders only with two or more providers (ADR 0026); the ticket also guards on that.
+    providerPicker: (ctx: { quotes: ProviderQuote[]; selectedId: string | undefined; onSelect: (id: string) => void; side: "buy" | "sell" }) => (
+      <ProviderSelector
+        providers={ctx.quotes}
+        selectedId={ctx.selectedId ?? ""}
+        onSelect={ctx.onSelect}
+        amountEmpty={ctx.quotes.every((q) => Number(q.amountOut) === 0)}
+        receiveSymbol={ctx.side === "buy" ? sym : "USDC"}
+        pro={pro}
+      />
+    ),
+  };
   const [sheet, setSheet] = useState<"buy" | "sell" | null>(null);
 
   // A range chip is enabled only when the price history actually spans it; no fabricated history.

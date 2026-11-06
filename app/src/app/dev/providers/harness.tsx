@@ -3,13 +3,13 @@
 import { useState } from "react";
 import { Header } from "@/components/header";
 import { ProviderSelector } from "@/components/provider-selector";
-import type { ProviderQuote } from "@/components/provider-selector-types";
+import type { ProviderQuote } from "@/lib/providers";
 
 const now = Date.now();
 const base: ProviderQuote[] = [
-  { providerId: "tslaon", label: "TSLAon", tokenSymbol: "wTSLA", amountOut: 4.8213, effectivePrice: 207.4, spreadBps: 30, deltaVsBestPct: 0, isBest: true, tradable: true, status: "ok", updatedAt: now - 4000 },
-  { providerId: "tslax", label: "TSLAx", tokenSymbol: "wTSLAx", amountOut: 4.7954, effectivePrice: 208.5, spreadBps: 45, deltaVsBestPct: -0.54, isBest: false, tradable: true, status: "ok", updatedAt: now - 9000 },
-  { providerId: "tslab", label: "TSLAb", tokenSymbol: "wTSLAb", amountOut: 4.7611, effectivePrice: 210.0, spreadBps: 90, deltaVsBestPct: -1.25, isBest: false, tradable: true, status: "ok", updatedAt: now - 15000 },
+  { providerId: "tslaon", label: "TSLAon", tokenSymbol: "wTSLA", amountOut: "4.8213", effectivePrice: "207.40", spreadBps: 30, deltaVsBestPct: 0, isBest: true, tradable: true, status: "ok", updatedAt: now - 4000 },
+  { providerId: "tslax", label: "TSLAx", tokenSymbol: "wTSLAx", amountOut: "4.7954", effectivePrice: "208.50", spreadBps: 45, deltaVsBestPct: -0.54, isBest: false, tradable: true, status: "ok", updatedAt: now - 9000 },
+  { providerId: "tslab", label: "TSLAb", tokenSymbol: "wTSLAb", amountOut: "4.7611", effectivePrice: "210.00", spreadBps: 90, deltaVsBestPct: -1.25, isBest: false, tradable: true, status: "ok", updatedAt: now - 15000 },
 ];
 
 type Scenario = "one" | "ok" | "stale" | "unavailable" | "quoteonly" | "loading" | "empty" | "error" | "bestnotselected";
