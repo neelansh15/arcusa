@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { Balances, useBalances } from "./balances";
 import { PriceChart } from "./chart";
+import { AssetSelector } from "./asset-selector";
 import { BottomSheet } from "./bottom-sheet";
 import { Header } from "./header";
 import { MarketInfo } from "./market-info";
@@ -14,6 +15,7 @@ import { Trades } from "./trades";
 import { useMarket } from "@/lib/use-market";
 import { usePrice } from "@/lib/use-price";
 import { useMedia } from "@/lib/use-media";
+import { DEFAULT_ASSET, type Asset } from "@/lib/assets";
 
 const RANGES = { "1h": 3600, "24h": 86_400, "1w": 604_800, All: 0 } as const;
 type Range = keyof typeof RANGES;
@@ -28,6 +30,7 @@ export function Terminal() {
   const pro = proPref && !mobile; // Pro is desktop only
   const [slip, setSlip] = useState(100);
   const [tab, setTab] = useState<"balances" | "trades">("balances");
+  const [asset, setAsset] = useState<Asset>(DEFAULT_ASSET); // display only until per-asset market config exists (ADR 0022)
   const [sheet, setSheet] = useState<"buy" | "sell" | null>(null);
 
   // A range chip is enabled only when the price history actually spans it; no fabricated history.
@@ -51,8 +54,7 @@ export function Terminal() {
       <main className="trade">
         <section className="card chart-card">
           <div className="pair-head">
-            <div className="pair-icons"><i className="ic nvda">N</i><i className="ic usdc">$</i></div>
-            <h1>NVDA <span className="muted">/ USDC</span></h1>
+            <h1><AssetSelector asset={asset} onSelect={setAsset} /></h1>
           </div>
           <div className="price-row">
             <span className="price">${p.quote ? p.quote.toFixed(2) : "—"}</span>
