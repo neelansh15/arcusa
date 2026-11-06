@@ -114,7 +114,7 @@ What was built where, plainly:
 | Mock stock tokens on Sepolia, wrapped tokens on Arc | Deployed by script; the wrapped tokens use Circle's CCTPx ownerless token manager. |
 | Price service and oracle relayer | Written in this repo (`services/price`), run on a server. |
 
-Status today: the app still trades against the first set of contracts (same source, deployed by script). Switching the app to the Studio-deployed set needs the owner setup and inventory move (T-056) and the app switch (T-057). Check [TASKS.md](./TASKS.md) for the current state.
+Status today: the app trades against the Studio-deployed contracts (NVDA and TSLA oracle and market, built, tested and deployed in Arc Studio, ADR 0025). The first, script-deployed set is superseded and kept under `superseded` in [`deployments/arc-testnet.json`](./deployments/arc-testnet.json). Real buys and sells on both stocks were run against the Studio markets on 2026-11-07 (hashes in [LOG.md](./LOG.md)).
 
 ## What is real and what is mocked
 
@@ -163,20 +163,20 @@ To use the app you need a wallet with Sepolia USDC (Circle faucet) and some Sepo
 
 ## Deployed (testnet)
 
-Arc testnet (chain id 5042002), first set used by the app today:
+Arc testnet (chain id 5042002), Studio set used by the app (built and deployed in Arc Studio):
 
 | Contract | Address |
 | --- | --- |
 | wNVDA | `0x5ad2862787d5C7F42a09014CE4C973d162878a16` |
 | wTSLA | `0xD6bB2FFfCc37845fe44767E40569b801c9F9afd5` |
-| PriceOracle (NVDA) | `0xcd92cc2ff8d630a93090c203463843ffd685f83d` |
-| InventoryMarket (NVDA) | `0x8046c2bcb05c8750772bfcc2109659c85f3b10f4` |
-| PriceOracle (TSLA) | `0xf17f5449be304de315e48eee44cf889e8e47867d` |
-| InventoryMarket (TSLA) | `0x7872ad4bb1a18b63140d4df0fe31af451470f0f3` |
+| PriceOracle (NVDA) | `0x8503bb2d15f88bb31a9363bc0dfbe9391028ebda` |
+| InventoryMarket (NVDA) | `0x0e0d70183cfdf6192e0f43cea39d5567f3698d13` |
+| PriceOracle (TSLA) | `0x1b53204d9d873b74760fd1933e8151220995de05` |
+| InventoryMarket (TSLA) | `0x3fb35049ebee5618538214bb504743cdf4f0b5f2` |
 
 Ethereum Sepolia: `mNVDA` `0xecD2332b5E119C0a34dbd80043EC54cd1a9B7423`, `mTSLA` `0xbd0ae58afe2d6c42a3b31f8d97b31093fcbc8bdf`.
 
-The Studio-deployed set, with transaction hashes, is in [`deployments/arc-testnet.json`](./deployments/arc-testnet.json).
+The first, script-deployed set is superseded (same source, no longer used by the app). Both sets, with transaction hashes, are in [`deployments/arc-testnet.json`](./deployments/arc-testnet.json).
 
 ## Feedback for Arc and Circle
 

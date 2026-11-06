@@ -92,6 +92,14 @@ Newest entries at the bottom. Times are IST (UTC+5:30). Testnet only. Every addr
 - App: `lib/assets.ts` carries the per-asset market, oracle, token and deploy block. NVDA and TSLA are live in the picker and the trade page switches price, market quote, balances, trades and ticket (ADR 0024). `tsc` and `oxlint` pass. Checked in the in-app browser: picking TSLA shows wTSLA in the ticket, the TSLA price from the app's own fallback route (the production ingest still answers NVDA, so the UI rejects it by symbol), and "Oracle price is stale" because no relayer feeds the TSLA oracle yet.
 - NOT verified: a real TSLA buy or sell with a wallet, mobile layout of the switch, chart history for TSLA (needs the server).
 
+## 2026-11-07 T-057: app switched to the Arc Studio contracts
+- Read-only check on Arc testnet (laptop): both Studio oracles and markets have code, owner is 0x07621e39..B351, relayer 0xB4964152..faE0 authorised on both oracles, demoMode true on both oracles, offHoursTrading true and not paused on both markets. Both Studio oracles were being updated by the live relayers during the check (timestamps advanced about every 60 s, age under 60 s), so the relayers already push to the Studio oracles.
+- Real testnet trades with the throwaway wallet 0x07621e39..B351 (0.5 USDC buy, then sell back all received), Studio markets, all succeeded:
+  - NVDA buy `0x4f501dd11e3b5bfa8c3dc2bf05d02c652219b4c3311dcb5bbfe5e15c0aba5cb0`, sell `0xe801cf8b74dc8e55157e2b3ef281932bf382d9da801a250088c6340a8eed7a67` (got 0.480392 USDC back).
+  - TSLA buy `0x91466d2e89b8adb3c96e769ab579a1f8c0210ecbaba7986b8929c2c11dd05ebc`, sell `0x3728d5539e59366467f6a74935f477b64b1cb2cf938b8461d5f8be63face190e` (got 0.480392 USDC back).
+- `DEFAULT_SET` is now `studio`; `deployments/arc-testnet.json` keeps the first set under `superseded`; README and docs contract page say which set the app uses.
+- Local app check (port 3217, Studio set): NVDA and TSLA quotes and chart render; 5 USDC quotes 0.02606 wNVDA and 0.013662 wTSLA. Wallet-connected balances and the trades list were not clicked through (no wallet in the browser pane); the Bought/Sold logs on both Studio markets read back from the deploy blocks (4 each).
+
 ## Not verified yet
 - Whether Bridge Kit can move mNVDA by token id (T-024).
 - Fast Transfer availability for mNVDA (T-024; the docs expect `FX_SYMBOL_NOT_CONFIGURED`).

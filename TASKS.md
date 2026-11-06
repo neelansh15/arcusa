@@ -109,7 +109,7 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 | [T-054](#t-054-deploy-tsla-support-on-the-server-price-service-and-relayer) | todo | alle | Deploy TSLA support on the server: price service and relayer |
 | [T-055](#t-055-build-test-and-deploy-the-arc-contracts-in-arc-studio-adr-0025) | done | laptop | Build, test and deploy the Arc contracts in Arc Studio (ADR 0025) |
 | [T-056](#t-056-configure-the-studio-deployed-markets-and-move-inventory-adr-0025) | todo | alle | Configure the Studio-deployed markets and move inventory (ADR 0025) |
-| [T-057](#t-057-switch-the-app-relayer-and-docs-to-the-studio-deployments-adr-0025) | todo | laptop | Switch the app, relayer and docs to the Studio deployments (ADR 0025) |
+| [T-057](#t-057-switch-the-app-relayer-and-docs-to-the-studio-deployments-adr-0025) | done | laptop | Switch the app, relayer and docs to the Studio deployments (ADR 0025) |
 | [T-058](#t-058-provider-selector-control-and-modal-adr-0026) | done | laptop | Provider selector control and modal (ADR 0026) |
 | [T-020](#t-020-post-mvp-spike-indexer-options-on-arc-testnet-and-sepolia) | todo | alle | (post-MVP) Spike: indexer options on Arc testnet and Sepolia |
 | [T-021](#t-021-post-mvp-build-indexer-and-holdingshistory-view) | todo | laptop | (post-MVP) Build indexer and holdings/history view |
@@ -904,7 +904,7 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 
 ### T-057: Switch the app, relayer and docs to the Studio deployments (ADR 0025)
 - Owner: laptop
-- Status: doing
+- Status: done
 - ADR: docs/adr/0025-contracts-built-and-deployed-in-arc-studio.md
 - Depends on: T-056
 - Prep done (laptop, 2026-11-07): all app addresses now come from `app/src/lib/contracts.ts` (sets `current` and `studio`, with deploy blocks). Switching is `NEXT_PUBLIC_CONTRACT_SET=studio` at build time (e.g. a Vercel env var) or changing `DEFAULT_SET`. Checked in dev with the env var: the app calls the Studio NVDA oracle and market. The docs contract page lists the Studio set too. Still to do after T-056: flip the set, run a real buy and sell on NVDA and TSLA, update `deployments/arc-testnet.json` (move the old set under `superseded`), the relayer env on the server, and the README status line.
@@ -913,7 +913,12 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
   - [ ] `lib/market.ts`, `lib/assets.ts` and the docs contract pages use the new addresses; trades work on NVDA and TSLA in the app (or Result says what was not run).
   - [ ] `deployments/arc-testnet.json` lists the Studio deployments and keeps the old ones under `superseded`.
   - [ ] README and docs state plainly which parts were built where, and carry the Studio URL.
-- Result:
+- Result (2026-11-07, laptop): Done for everything run below.
+  - On-chain check (read-only, Arc RPC): all four Studio contracts have code; owner 0x07621e39..B351; relayer 0xB4964152..faE0 authorised on both oracles; demoMode true; offHoursTrading true, not paused; inventory NVDA 2.994697 wNVDA / 4.64 USDC, TSLA 5 wTSLA / 4.04 USDC. Oracle prices were fresh and advancing about every 60 s on both Studio oracles (age under 60 s), so the live relayers already push to them. I did not log in to the server and pushed no prices myself.
+  - Real trades on the Studio markets with the throwaway wallet (0.5 USDC buy then sell back): NVDA buy `0x4f501dd1..5cb0`, sell `0xe801cf8b..7a67`; TSLA buy `0x91466d2e..5ebc`, sell `0x3728d553..190e` (full hashes in LOG.md). All succeeded; each round trip cost about 0.0196 USDC of spread.
+  - Code: `DEFAULT_SET = "studio"` in `app/src/lib/contracts.ts` (override `NEXT_PUBLIC_CONTRACT_SET=current`). `deployments/arc-testnet.json`: old set under `superseded`, Studio sample trades under `studio.sample`. Docs contract page rows renamed (Studio set in use, first set marked superseded). README status line and Deployed table state which contracts the app uses.
+  - Local app (port 3217, Studio set): NVDA and TSLA price, chart and ticket quote work; `tsc --noEmit` passes.
+  - Not verified: wallet-connected balances and a trade made through the app UI (no wallet in the browser pane; trades were sent by script against the same contracts); the trades list in the UI (log reads from the Studio deploy blocks return 4 events per market); the live Vercel deploy after the push; which host process pushes to the Studio oracles (the server agent should confirm the units point at the Studio oracles); `pnpm test` (pnpm is not installed on the laptop shell).
 
 ### T-058: Provider selector control and modal (ADR 0026)
 - Owner: laptop

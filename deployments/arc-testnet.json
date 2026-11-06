@@ -2,22 +2,10 @@
   "chainId": 5042002,
   "deployedAt": "2026-11-06",
   "deployer": "0x07621e39424914f633D478DdE751f3FF728CB351",
-  "priceOracle": {
-    "address": "0xcd92cc2ff8d630a93090c203463843ffd685f83d",
-    "tx": "0x00af89531f97fbea3c63115bfd7edd388e1a50fabf561e7a23774f1b10ed489f"
-  },
-  "inventoryMarket": {
-    "address": "0x8046c2bcb05c8750772bfcc2109659c85f3b10f4",
-    "tx": "0xa01b539e5f78fb5df9e6d33baac2c1ac982924cfe4bbfa711a763f3f3e699b07"
-  },
   "wNVDA": "0x5ad2862787d5C7F42a09014CE4C973d162878a16",
   "usdc": "0x3600000000000000000000000000000000000000",
   "ccts": "0x63753E722bd2C2A5DF6EE19C5106662208B81077",
   "ownerlessTokenManager": "0x276fACA17FA1C19A0d9B4f1B190C89c2d28C601b",
-  "sample": {
-    "buyTx": "0xccbfdfa863c4cc2b962b2c40202b80ec4c5799f7b715240b7a8dfeddd3c600c6",
-    "sellTx": "0xf089a3b0117ddea968bb429dff8c6d35193e51f2227aabd4187d6106c54082ba"
-  },
   "tsla": {
     "sourceToken": {
       "address": "0xbd0ae58afe2d6c42a3b31f8d97b31093fcbc8bdf",
@@ -28,20 +16,10 @@
     "registerTx": "0x88b72ca6d3fba249b967356c55673b296f06ca317d01e0dc050b8acdca06c1f7",
     "deployRemoteTx": "0xd4d0e7bae2699c651e80716035804c64d52e4c6244b1178878856fe67cd596f1",
     "tokenManager": "0xc49A72ceF1c4cDA64A4a12aBA9859a0E3BFE877f",
-    "wTSLA": "0xD6bB2FFfCc37845fe44767E40569b801c9F9afd5",
-    "priceOracle": {
-      "address": "0xf17f5449be304de315e48eee44cf889e8e47867d",
-      "tx": "0xd8b694e1680fe544a2a84b14606751a420341b30329cbf9cdb1ffa07a665fb59"
-    },
-    "inventoryMarket": {
-      "address": "0x7872ad4bb1a18b63140d4df0fe31af451470f0f3",
-      "tx": "0xff278d0295f5da914392d4a4900611eed1cf63b623eb4096f21a83b361c908b4"
-    },
-    "firstPriceTx": "0xb59157a5588ad03b3042c42f517f7679572b897f42e5eac5a9801afb69219934",
-    "setRelayerTx": "0xbf9a66fc0767d42e5a208b5e1a426d136da3e143de9b4da7a72bcc0f5c9577b3"
+    "wTSLA": "0xD6bB2FFfCc37845fe44767E40569b801c9F9afd5"
   },
   "studio": {
-    "note": "Built, tested and deployed in Arc Studio (ADR 0025). Sources are byte-identical to contracts/arc/src. Deployed by Studio's shared platform wallet; the owner is the deployer address below, whose key is held by the server agent. NOT yet used by the app: see T-056 and T-057.",
+    "note": "Built, tested and deployed in Arc Studio (ADR 0025). Sources are byte-identical to contracts/arc/src. Deployed by Studio's shared platform wallet; the owner is the deployer address below, whose key is held by the server agent. In use by the app since T-057 (2026-11-07).",
     "studioApp": "https://studio.arc.io/app/efb4a3b8-92a8-41d3-993a-5d254dc32258",
     "deployedAt": "2026-11-06",
     "owner": "0x07621e39424914f633D478DdE751f3FF728CB351",
@@ -68,6 +46,39 @@
         "address": "0x3fb35049ebee5618538214bb504743cdf4f0b5f2",
         "tx": "0x35422af41a2e89c36b3c6daa6037e0af5813c720e91f39ff32c83152761851e7"
       }
+    },
+    "sample": {
+      "nvdaBuy": "0x4f501dd11e3b5bfa8c3dc2bf05d02c652219b4c3311dcb5bbfe5e15c0aba5cb0",
+      "nvdaSell": "0xe801cf8b74dc8e55157e2b3ef281932bf382d9da801a250088c6340a8eed7a67",
+      "tslaBuy": "0x91466d2e89b8adb3c96e769ab579a1f8c0210ecbaba7986b8929c2c11dd05ebc",
+      "tslaSell": "0x3728d5539e59366467f6a74935f477b64b1cb2cf938b8461d5f8be63face190e"
     }
+  },
+  "superseded": {
+    "priceOracle": {
+      "address": "0xcd92cc2ff8d630a93090c203463843ffd685f83d",
+      "tx": "0x00af89531f97fbea3c63115bfd7edd388e1a50fabf561e7a23774f1b10ed489f"
+    },
+    "inventoryMarket": {
+      "address": "0x8046c2bcb05c8750772bfcc2109659c85f3b10f4",
+      "tx": "0xa01b539e5f78fb5df9e6d33baac2c1ac982924cfe4bbfa711a763f3f3e699b07"
+    },
+    "sample": {
+      "buyTx": "0xccbfdfa863c4cc2b962b2c40202b80ec4c5799f7b715240b7a8dfeddd3c600c6",
+      "sellTx": "0xf089a3b0117ddea968bb429dff8c6d35193e51f2227aabd4187d6106c54082ba"
+    },
+    "tsla": {
+      "priceOracle": {
+        "address": "0xf17f5449be304de315e48eee44cf889e8e47867d",
+        "tx": "0xd8b694e1680fe544a2a84b14606751a420341b30329cbf9cdb1ffa07a665fb59"
+      },
+      "inventoryMarket": {
+        "address": "0x7872ad4bb1a18b63140d4df0fe31af451470f0f3",
+        "tx": "0xff278d0295f5da914392d4a4900611eed1cf63b623eb4096f21a83b361c908b4"
+      },
+      "firstPriceTx": "0xb59157a5588ad03b3042c42f517f7679572b897f42e5eac5a9801afb69219934",
+      "setRelayerTx": "0xbf9a66fc0767d42e5a208b5e1a426d136da3e143de9b4da7a72bcc0f5c9577b3"
+    },
+    "note": "First set, same source as the Studio set, deployed by script on 2026-11-06. Superseded 2026-11-07 (ADR 0025, T-057). Still on-chain; the app no longer uses it."
   }
 }
