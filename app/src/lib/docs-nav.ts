@@ -37,6 +37,7 @@ export const DOCS_NAV: DocSection[] = [
   {
     title: "Reference",
     links: [
+      { title: "Roadmap", href: "/docs/roadmap", summary: "Planned terminal layout, issuers and chains. Not built yet unless marked done." },
       { title: "Risks", href: "/docs/risks", summary: "What can go wrong, and what is not audited." },
       { title: "FAQ", href: "/docs/faq", summary: "Short answers." },
     ],
