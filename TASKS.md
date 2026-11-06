@@ -93,7 +93,7 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 | [T-038](#t-038-payreceive-order-ticket-with-fee-summary) | done | laptop | Pay/receive order ticket with fee summary |
 | [T-039](#t-039-mobile-layout-bottom-sheet-ticket-and-sticky-buysell-bar) | done | laptop | Mobile layout: bottom-sheet ticket and sticky Buy/Sell bar |
 | [T-040](#t-040-pro-mode-toggle-desktop) | done | laptop | Pro mode toggle (desktop) |
-| [T-041](#t-041-theme-foundation-tokens-darklight-switch-font-button-reset) | todo | laptop | Theme foundation: tokens, dark/light switch, font, button reset |
+| [T-041](#t-041-theme-foundation-tokens-darklight-switch-font-button-reset) | doing | laptop | Theme foundation: tokens, dark/light switch, font, button reset |
 | [T-042](#t-042-trade-shell-header-and-chart-restyle) | todo | laptop | Trade shell, header and chart restyle |
 | [T-043](#t-043-ticket-position-and-market-panels-restyle) | todo | laptop | Ticket, position and market panels restyle |
 | [T-044](#t-044-bridge-page-and-toast-on-the-new-theme) | todo | laptop | Bridge page and toast on the new theme |
@@ -667,7 +667,7 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 
 ### T-041: Theme foundation: tokens, dark/light switch, font, button reset
 - Owner: laptop
-- Status: todo
+- Status: doing
 - ADR: docs/adr/0020-visual-redesign-dark-first-lumatrade.md
 - Goal: One commit that introduces `theme.css` (dark default, light via `data-theme`), the no-flash head script, the header theme button, Figtree, the global button reset and the token renames from ADR 0020 revision 4, with every existing page still readable in both themes.
 - Acceptance criteria:
