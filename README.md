@@ -8,7 +8,7 @@
 ![USDC](https://img.shields.io/badge/settlement-USDC-2775CA?style=for-the-badge)
 ![Built in Arc Studio](https://img.shields.io/badge/built%20in-Arc%20Studio-6C5CE7?style=for-the-badge)
 ![ETHGlobal Mumbai](https://img.shields.io/badge/hackathon-ETHGlobal%20Mumbai-E84393?style=for-the-badge)
-![Testnet](https://img.shields.io/badge/network-testnet%20demo-F1C40F?style=for-the-badge)
+![Testnet](https://img.shields.io/badge/network-arc%20testnet-F1C40F?style=for-the-badge)
 
 ## ETHGlobal Mumbai submission
 
