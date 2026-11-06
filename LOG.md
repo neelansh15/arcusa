@@ -77,9 +77,10 @@ Newest entries at the bottom. Times are IST (UTC+5:30). Testnet only. Every addr
 ## 2026-11-07 mTSLA: second wrapped token, Sepolia side done (runbook deploy-wrapped-token)
 - Added contracts/sepolia/src/MockTSLAToken.sol (copy of the mock with name "Mock Tesla (testnet)", symbol mTSLA). Compiled with solc-js 0.8.38 (runbook says 0.8.30), cancun, optimizer 200.
 - Sepolia, from the throwaway testnet wallet: mTSLA 0xbd0ae58afe2d6c42a3b31f8d97b31093fcbc8bdf (deploy tx 0x1e20e2a0...a8130), mint 1000 (0x11617f92...a216614), registerOwnerlessToken (0x88b72ca6...6c1f7), deployRemoteOwnerlessToken (0xd4d0e7ba...596f1, success).
-- tokenId 0x7f1c9fb53db47fd1c05448f8551ce0db9d2a30cdd4836c55ab890597f278f930. Sepolia manager 0xc49A72ceF1c4cDA64A4a12aBA9859a0E3BFE877f, which differs from the mNVDA manager 0x276f...601b; the runbook's "same address for every token" is wrong for the manager (the 0x276f address is the NVDA one).
+- tokenId 0x7f1c9fb53db47fd1c05448f8551ce0db9d2a30cdd4836c55ab890597f278f930. Sepolia manager 0xc49A72ceF1c4cDA64A4a12aBA9859a0E3BFE877f, which equals the Arc manager but differs from the mNVDA manager 0x276f...601b. The runbook's fixed-address table lists the NVDA manager only; the manager is per token.
 - Register worked first time, quote returned 200, no TokenNotRegistered retry was needed.
-- NOT done yet: Arc wrapper (pending when written, expected ~23 min after the deploy tx), wrapper verification, first bridge, locked == supply check, oracle and market.
+- Arc wrapper wTSLA 0xD6bB2FFfCc37845fe44767E40569b801c9F9afd5 appeared 1168 s (about 19.5 min) after the deploy tx. Verified on Arc: name "Mock Tesla (testnet)", symbol mTSLA, decimals 18, totalSupply 0. Manager token() is the wrapper on Arc and mTSLA on Sepolia; locked 0.
+- NOT done yet: first bridge, locked == supply check after it, oracle and market.
 
 ## Not verified yet
 - Whether Bridge Kit can move mNVDA by token id (T-024).

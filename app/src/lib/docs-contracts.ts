@@ -64,6 +64,14 @@ export const ARC_CONTRACTS: ContractRow[] = [
     note: "Created by Circle's cross-chain token service from a Sepolia message, not by a direct deploy, so the repo records no Arc deploy tx.",
   },
   {
+    name: "wTSLA",
+    address: "0xD6bB2FFfCc37845fe44767E40569b801c9F9afd5",
+    purpose: "Wrapped mock TSLA on Arc (18 decimals, name \"Mock Tesla (testnet)\", symbol mTSLA). Minted when mTSLA is locked on Sepolia, burned when it is released.",
+    owner: "wrapper",
+    source: "LOG.md (2026-11-06 mTSLA entry)",
+    note: "Created by Circle's cross-chain token service from a Sepolia message, so there is no Arc deploy tx. totalSupply 0, no bridge done yet. Its manager is 0xc49A72ceF1c4cDA64A4a12aBA9859a0E3BFE877f.",
+  },
+  {
     name: "USDC (ERC-20 interface)",
     address: "0x3600000000000000000000000000000000000000",
     purpose: "Arc's system USDC. 6 decimals through the ERC-20 interface; it is also the native gas token with 18 decimals.",
@@ -74,11 +82,11 @@ export const ARC_CONTRACTS: ContractRow[] = [
   {
     name: "mTSLA (mock provider token)",
     address: "0xbd0ae58afe2d6c42a3b31f8d97b31093fcbc8bdf",
-    purpose: "Mock stand-in for a provider's tokenized TSLA (18 decimals, public faucet). To be locked here and wrapped on Arc (second wrapped token, runbook deploy-wrapped-token).",
+    purpose: "Mock stand-in for a provider's tokenized TSLA (18 decimals, public faucet). Locked here, wrapped as wTSLA on Arc (second wrapped token, runbook deploy-wrapped-token).",
     owner: "arcusa",
     deployTx: "0x1e20e2a08ae39939ee1bcef7c867661e4dadc3496cc4eacfe96885550cfa8130",
     source: "LOG.md (2026-11-06 mTSLA entry)",
-    note: "Testnet mock with no backing and no value. Source: contracts/sepolia/src/MockTSLAToken.sol. The Arc wrapper was still pending when this was written; it is not listed until it is verified onchain.",
+    note: "Testnet mock with no backing and no value. Source: contracts/sepolia/src/MockTSLAToken.sol.",
   },
   {
     name: "mTSLA TokenManager (LOCK_UNLOCK, Sepolia)",
@@ -86,7 +94,7 @@ export const ARC_CONTRACTS: ContractRow[] = [
     purpose: "Holds locked mTSLA once bridged. Read from resolveTokenManager(tokenId) on Sepolia after registration.",
     owner: "Circle",
     source: "LOG.md (2026-11-06 mTSLA entry)",
-    note: "Differs from the mNVDA manager address, so the manager is not the same for every token. Not yet checked on Arc.",
+    note: "The ownerless manager is per token: same address on Sepolia and Arc for mTSLA, but different from the mNVDA manager.",
   },
   {
     name: "CrossChainTokenService (CCTPx)",
