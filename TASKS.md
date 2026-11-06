@@ -58,7 +58,7 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 |---|---|---|---|
 | [T-001](#t-001-get-user-decisions-needed-for-submission-and-demo) | todo | alle | Get user decisions needed for submission and demo |
 | [T-002](#t-002-create-repo-skeleton-per-adr-0010) | done | laptop | Create repo skeleton per ADR 0010 |
-| [T-003](#t-003-create-the-arc-studio-app-and-link-the-cli-adr-0006) | todo | laptop | Create the Arc Studio app and link the CLI (ADR 0006) |
+| [T-003](#t-003-create-the-arc-studio-app-and-link-the-cli-adr-0006) | done | laptop | Create the Arc Studio app and link the CLI (ADR 0006) |
 | [T-004](#t-004-spike-usdc-bridge-in-from-sepolia-to-arc-with-forwarding-adr-0003) | todo | laptop | Spike: USDC bridge-in from Sepolia to Arc with Forwarding (ADR 0003) |
 | [T-005](#t-005-spike-deploy-taapl-as-a-native-crosschaintoken-on-arc-and-sepolia-adr-0002) | superseded | laptop | Spike: deploy tAAPL as a native CrossChainToken on Arc and Sepolia (ADR 0002) |
 | [T-006](#t-006-spike-bridge-kit-transfer-of-taapl-by-token-id-in-both-directions-adr-0001) | superseded | laptop | Spike: Bridge Kit transfer of tAAPL by token id, in both directions (ADR 0001) |
@@ -160,7 +160,7 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 
 ### T-003: Create the Arc Studio app and link the CLI (ADR 0006)
 - Owner: laptop
-- Status: todo
+- Status: done
 - ADR: docs/adr/0006-arc-studio-workflow.md
 - Depends on: T-002
 - Goal: Start the project in Arc Studio, as all Arc tracks require, and make sure the laptop can drive it and pull code.
@@ -172,7 +172,7 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
   - [ ] The Result notes what a judge sees when opening the shareable URL (code, preview, or both).
   - [ ] The Result notes how "Push to GitHub" behaves: does it target a new repo or an existing one? Do not push to a new public repo without the user's OK.
 - Notes: Studio deploys to Arc testnet only. Studio cannot `clone` a private repo. Mind the usage limits (`arc-studio usage`).
-- Result:
+- Result (2026-11-07, laptop): `@circle-fin/arc-studio-cli` 1.2.2 is installed and authenticated (`arc-studio whoami` ok; the binary is under the fnm Node 26.13 bin dir, so new shells needed `eval "$(fnm env --use-on-cd --shell zsh)"` in `~/.zshrc`, done by the user). The Claude Code skill and subagent for Studio are registered. The Studio app is "Arc Terminal Stock Trading", id `efb4a3b8-92a8-41d3-993a-5d254dc32258`, linked to this folder in `~/.arc-studio/sessions.json`; URL https://studio.arc.io/app/efb4a3b8-92a8-41d3-993a-5d254dc32258 (a second, unrelated empty app `e46e5f64…` "Secure Solidity Contract Builder" exists in the account; do not share that one). Studio stack: Vite, React 18, TypeScript, Tailwind, wagmi, viem, ConnectKit, Circle App Kit, Bun, Foundry (solc 0.8.28). The first scaffold was a Portfolio and Bridge UI with empty config. `arc-studio pull` works; the contracts and tests were pulled into `contracts/arc/studio/` (not `app/`: our app is Next.js, written in this repo). Usage 4 percent of the daily limit on 2026-11-07. NOT verified: what a judge sees when opening the shareable URL; how "Push to GitHub" behaves (not tried). Known gap: the Studio project holds the contracts, tests and deployments but not our Next.js app (ADR 0006 expects UI changes to be made in or synced back to Studio); see ADR 0025 and the open question in TASKS.md notes.
 
 ### T-004: Spike: USDC bridge-in from Sepolia to Arc with Forwarding (ADR 0003)
 - Owner: laptop
