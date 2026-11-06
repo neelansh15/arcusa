@@ -57,6 +57,17 @@ Newest entries at the bottom. Times are IST (UTC+5:30). Testnet only. Every addr
 - Timings: into Arc about 16 min (Sepolia finality), back to Sepolia 28 s (Arc finality is fast).
 - Still unverified: Fast Transfer (FAST reverts in simulation; reason unknown), and Bridge Kit in a browser bundle.
 
+## 2026-11-06 18:40 Arc market contracts deployed, first buy and sell done
+- Contracts (sources in contracts/arc/src, compiled with solc-js, cancun, optimizer 200; ABIs in app/src/lib/abi/; addresses in deployments/arc-testnet.json):
+  - PriceOracle 0xcd92cc2ff8d630a93090c203463843ffd685f83d (deploy tx 0x00af8953...ed489f). Relayer-updated price, 8 decimals, maxStaleness 300 s, confidence and deviation guards, demoMode true (serves stale prices off-hours).
+  - InventoryMarket 0x8046c2bcb05c8750772bfcc2109659c85f3b10f4 (deploy tx 0xa01b539e...e699b07). USDC (6 dec) <-> wNVDA (18 dec) at oracle price with a spread; per-session spread and trade caps; offHoursTrading true; owner deposit/withdraw; pause; reentrancy guard.
+- Deployed with viem from the throwaway wallet (the Arc Studio CLI route was not used: the container install of the Studio CLI never completed, and I have not tried the Studio deploy flow yet. If the prize needs a Studio-deployed contract, redeploy through Studio).
+- Price set from the xStocks price-data endpoint: 188.738 (no timestamp, session recorded as Closed).
+- Seeded inventory: 3 wNVDA and 8 USDC. Real trades on testnet: buy 5 USDC for 0.025972 wNVDA (tx 0xccbfdfa8...3c600c6), then sell it back for 4.803921 USDC (tx 0xf089a3b0...c54082ba). The round trip cost 0.196 USDC, which is the 2% spread each way in the Closed session. The quoted amounts match the hand calculation.
+- Not tested: the contract test suite (only the on-chain buy and sell were exercised), pause, owner withdraw, caps and slippage reverts.
+- Scripts: contracts/scripts/spikes/{compile-arc,deploy-arc,trade-arc}.mjs.
+- Process note: background agents are killed when my turn ends, so earlier agent runs lost their work; work now runs in my own turn.
+
 ## Not verified yet
 - Whether Bridge Kit can move mNVDA by token id (T-024).
 - Fast Transfer availability for mNVDA (T-024; the docs expect `FX_SYMBOL_NOT_CONFIGURED`).
