@@ -1,5 +1,5 @@
 import { LandingEffects } from "@/components/landing/effects";
-import { Bridge, Features, FinalCta, Footer, Hero, HowItWorks, Nav, Stats } from "@/components/landing/sections";
+import { Bento, Faq, FinalCta, Footer, Hero, HowItWorks, Nav, Phone, Try } from "@/components/landing/sections";
 import "./landing.css";
 
 export default function Home() {
@@ -8,10 +8,11 @@ export default function Home() {
       <Nav />
       <main>
         <Hero />
-        <Features />
         <HowItWorks />
-        <Bridge />
-        <Stats />
+        <Bento />
+        <Try />
+        <Phone />
+        <Faq />
         <FinalCta />
       </main>
       <Footer />

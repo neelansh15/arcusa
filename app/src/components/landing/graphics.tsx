@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 
-/* ---------- Logo (flat) ---------- */
+/* Decorative graphics for the landing page. All colours are theme tokens (the logo keeps literals, ADR 0020).
+   Everything here is aria-hidden: the copy next to it carries the meaning. */
 
 export function Logo({ size = 28 }: { size?: number }) {
   return (
@@ -12,137 +13,122 @@ export function Logo({ size = 28 }: { size?: number }) {
   );
 }
 
-/* ---------- Candlestick chart (flat, illustrative) ---------- */
+export const Arrow = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+);
 
-type Candle = { o: number; h: number; l: number; c: number };
+/* ---------- Story visuals (one per step) ---------- */
 
-function makeCandles(n: number, seed: number): Candle[] {
-  let s = seed;
-  const rnd = () => {
-    s = (s * 16807) % 2147483647;
-    return s / 2147483647;
-  };
-  const out: Candle[] = [];
-  let p = 100;
-  for (let i = 0; i < n; i++) {
-    const o = p;
-    const wave = i % 9 < 6 ? 1.1 : -1.6;
-    const c = o + (rnd() - 0.5) * 5 + wave;
-    const h = Math.max(o, c) + rnd() * 2.6;
-    const l = Math.min(o, c) - rnd() * 2.6;
-    out.push({ o, h, l, c });
-    p = c;
-  }
-  return out;
+export function Vis1() {
+  return (
+    <div className="lp-vis v1" aria-hidden="true">
+      <div className="lp-wallet">
+        <div className="lp-wallet-top"><i className="lp-ic us">$</i><div><small>Wallet</small><b>USDC</b></div></div>
+        <div className="lp-wallet-bal">120.00</div>
+        <span className="lp-coin c1">$</span><span className="lp-coin c2">$</span><span className="lp-coin c3">$</span>
+      </div>
+    </div>
+  );
 }
 
-const CANDLES = makeCandles(40, 20260);
-const W = 600;
-const H = 280;
-const PAD = 14;
-
-export function CandleChart() {
-  const lo = Math.min(...CANDLES.map((c) => c.l));
-  const hi = Math.max(...CANDLES.map((c) => c.h));
-  const y = (v: number) => PAD + ((hi - v) / (hi - lo)) * (H - PAD * 2);
-  const step = W / CANDLES.length;
-  const bw = step * 0.56;
-  const f = (n: number) => n.toFixed(1);
-  const last = CANDLES[CANDLES.length - 1];
-
+export function Vis2() {
   return (
-    <svg className="lp-candles" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" role="img" aria-label="Illustrative NVDA/USDC candlestick chart">
-      {[0.2, 0.4, 0.6, 0.8].map((t) => (
-        <line key={t} x1="0" x2={W} y1={H * t} y2={H * t} className="lp-gridline" />
-      ))}
-      {CANDLES.map((c, i) => {
-        const up = c.c >= c.o;
-        const x = i * step + step / 2;
-        const top = y(Math.max(c.o, c.c));
-        const bh = Math.max(1.5, Math.abs(y(c.o) - y(c.c)));
-        return (
-          <g key={i} className={`lp-candle ${up ? "up" : "down"}`}>
-            <line x1={f(x)} x2={f(x)} y1={f(y(c.h))} y2={f(y(c.l))} />
-            <rect x={f(x - bw / 2)} y={f(top)} width={f(bw)} height={f(bh)} />
-          </g>
-        );
-      })}
-      <line x1="0" x2={W} y1={f(y(last.c))} y2={f(y(last.c))} className="lp-lastline" />
+    <div className="lp-vis v2" aria-hidden="true">
+      <div className="lp-pick">
+        <div className="lp-pick-row sel"><i className="lp-ic nv">N</i><div><b>NVDA</b><small>Mock NVIDIA token</small></div><span>Selected</span></div>
+        <div className="lp-pick-more"><span /><span /><small>More stocks on the roadmap</small></div>
+      </div>
+    </div>
+  );
+}
+
+export function Vis3() {
+  return (
+    <div className="lp-vis v3" aria-hidden="true">
+      <div className="lp-press">
+        <div className="lp-press-btn">Buy NVDA</div>
+        <svg className="lp-press-ok" viewBox="0 0 52 52"><circle cx="26" cy="26" r="23" pathLength="1" /><path d="M15 27l8 8 15-17" pathLength="1" /></svg>
+        <small>Settled in one transaction</small>
+      </div>
+    </div>
+  );
+}
+
+/* ---------- Bento tile graphics ---------- */
+
+export function GOne() {
+  return (
+    <svg className="lp-g" viewBox="0 0 220 120" aria-hidden="true">
+      <circle className="g-coin" cx="110" cy="60" r="34" />
+      <text x="110" y="68" textAnchor="middle" className="g-coin-t">USDC</text>
+      <g className="g-chip g-chip-a"><rect x="6" y="14" width="64" height="26" rx="13" /><text x="38" y="31" textAnchor="middle">price</text></g>
+      <g className="g-chip g-chip-b"><rect x="150" y="80" width="64" height="26" rx="13" /><text x="182" y="97" textAnchor="middle">fee</text></g>
     </svg>
   );
 }
 
-/* ---------- Icons ---------- */
-
-function Icon({ children }: { children: ReactNode }) {
+export function GPrice() {
   return (
-    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      {children}
+    <svg className="lp-g" viewBox="0 0 220 120" aria-hidden="true">
+      <path className="g-spark" pathLength="1" d="M4 86 C28 80 38 96 62 78 S100 40 124 56 S160 84 184 46 S206 34 216 28" fill="none" />
+      <circle className="g-ping" cx="216" cy="28" r="5" />
+      <circle className="g-ring" cx="216" cy="28" r="5" />
     </svg>
   );
 }
 
-export const icons = {
-  stock: (
-    <Icon>
-      <path d="M4 19h16" />
-      <path d="M7 15V9M7 9V6M12 16v-6M12 10V8M17 13V5" />
-      <rect x="5.5" y="9" width="3" height="5" rx=".6" />
-      <rect x="10.5" y="10" width="3" height="5" rx=".6" />
-      <rect x="15.5" y="6" width="3" height="6" rx=".6" />
-    </Icon>
-  ),
-  usdc: (
-    <Icon>
-      <circle cx="12" cy="12" r="8.5" />
-      <path d="M14.6 9.4c-.4-.9-1.4-1.4-2.6-1.4-1.6 0-2.7.8-2.7 2s1 1.7 2.7 2 2.7.8 2.7 2-1.1 2-2.7 2c-1.3 0-2.3-.6-2.7-1.5M12 6.5V8M12 16v1.5" />
-    </Icon>
-  ),
-  oracle: (
-    <Icon>
-      <circle cx="12" cy="12" r="3" />
-      <path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1" />
-    </Icon>
-  ),
-  book: (
-    <Icon>
-      <path d="M4 6h7M4 10h5M4 14h8M4 18h4" />
-      <path d="M13 6h7M15 10h5M12 14h8M16 18h4" />
-    </Icon>
-  ),
-  bridge: (
-    <Icon>
-      <path d="M3 17c3-6 6-8 9-8s6 2 9 8" />
-      <path d="M3 17h18M7 13.5V17M12 9v8M17 13.5V17" />
-    </Icon>
-  ),
-  terminal: (
-    <Icon>
-      <rect x="3" y="4.5" width="18" height="15" rx="2.5" />
-      <path d="M7 10l3 2-3 2M12.5 14.5H17" />
-    </Icon>
-  ),
-  wallet: (
-    <Icon>
-      <path d="M4 7.5A2.5 2.5 0 0 1 6.5 5H18v3" />
-      <rect x="4" y="8" width="16" height="11" rx="2.5" />
-      <circle cx="16" cy="13.5" r="1.2" />
-    </Icon>
-  ),
-  swap: (
-    <Icon>
-      <path d="M5 9h13l-3.5-3.5M19 15H6l3.5 3.5" />
-    </Icon>
-  ),
-  check: (
-    <Icon>
-      <circle cx="12" cy="12" r="8.5" />
-      <path d="M8.5 12.2l2.4 2.4 4.6-4.9" />
-    </Icon>
-  ),
-  arrow: (
-    <svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M4 10h11M11 5.5L15.5 10 11 14.5" />
+export function GCost() {
+  return (
+    <svg className="lp-g" viewBox="0 0 220 120" aria-hidden="true">
+      <rect className="g-bar g-bid" x="20" y="22" width="120" height="22" rx="11" />
+      <text x="30" y="37" className="g-lbl">Sell</text>
+      <rect className="g-bar g-ask" x="20" y="76" width="150" height="22" rx="11" />
+      <text x="30" y="91" className="g-lbl">Buy</text>
+      <g className="g-gap"><path d="M150 50v20" /><path d="M144 56l6-6 6 6M144 64l6 6 6-6" /></g>
     </svg>
-  ),
-};
+  );
+}
+
+export function GPhone() {
+  return (
+    <svg className="lp-g" viewBox="0 0 220 120" aria-hidden="true">
+      <rect className="g-ph" x="78" y="6" width="64" height="124" rx="12" />
+      <rect className="g-ph-in" x="84" y="14" width="52" height="30" rx="5" />
+      <rect className="g-sheet" x="84" y="52" width="52" height="66" rx="8" />
+      <rect className="g-ph-btn" x="90" y="98" width="40" height="12" rx="6" />
+    </svg>
+  );
+}
+
+export function GBridge() {
+  return (
+    <svg className="lp-g" viewBox="0 0 220 120" aria-hidden="true">
+      <circle className="g-node" cx="28" cy="60" r="14" />
+      <text x="28" y="92" textAnchor="middle" className="g-lbl2">Sepolia</text>
+      <path className="g-track" d="M46 60H174" />
+      <circle className="g-packet" cx="46" cy="60" r="5" />
+      <circle className="g-node g-arc" cx="192" cy="60" r="14" />
+      <text x="192" y="92" textAnchor="middle" className="g-lbl2">Arc</text>
+    </svg>
+  );
+}
+
+export function GChain() {
+  return (
+    <div className="lp-receipt" aria-hidden="true">
+      <div className="lp-receipt-top"><i>✓</i><b>Bought NVDA</b><span>Illustration</span></div>
+      <div className="lp-receipt-row"><small>Transaction</small><code>0x7f3a…c91e</code></div>
+      <div className="lp-receipt-link">View in the Arc explorer ↗</div>
+    </div>
+  );
+}
+
+export function Tile({ id, title, body, children, wide }: { id: string; title: string; body: string; children: ReactNode; wide?: boolean }) {
+  return (
+    <article className={`lp-tile t-${id}${wide ? " wide" : ""}`} data-reveal data-live-root>
+      <div className="lp-tile-art">{children}</div>
+      <h3>{title}</h3>
+      <p>{body}</p>
+    </article>
+  );
+}

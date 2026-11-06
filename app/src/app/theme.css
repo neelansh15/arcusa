@@ -18,6 +18,7 @@
   --chart-grid: rgba(255, 255, 255, .05); --chart-cross: #8b93a1; --chart-border: rgba(255, 255, 255, .08);
   --chart-area-top: rgba(195, 220, 78, .28); --chart-area-bottom: rgba(195, 220, 78, 0);
   --chart-area-down-top: rgba(255, 107, 107, .26); --chart-area-down-bottom: rgba(255, 107, 107, 0);
+  --glow: rgba(195, 220, 78, .16);
   --header-h: 72px;
   --r-card: 28px; --r-inner: 22px; --r-pill: 999px;
   --font-num: var(--font-body), system-ui, sans-serif;
@@ -41,6 +42,7 @@
   --chart-grid: rgba(13, 15, 19, .06); --chart-cross: #7a8392; --chart-border: #e3e6ec;
   --chart-area-top: rgba(95, 143, 18, .26); --chart-area-bottom: rgba(95, 143, 18, 0);
   --chart-area-down-top: rgba(192, 57, 43, .22); --chart-area-down-bottom: rgba(192, 57, 43, 0);
+  --glow: rgba(195, 220, 78, 0);
   color-scheme: light;
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
