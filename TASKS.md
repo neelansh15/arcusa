@@ -928,6 +928,19 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 - Notes: The FE session owns `providers.ts`, `use-provider-quotes.ts` and the ticket wiring; this task does not edit them.
 - Result:
 
+### T-059: Multi-provider quotes and selection logic (ADR 0027)
+- Owner: laptop
+- Status: doing
+- ADR: docs/adr/0027-multiple-providers-best-price.md
+- Goal: Several providers per stock in code, compared on quote, with no visible change while there is one.
+- Acceptance criteria:
+  - [x] `providers.ts` registry and shared types, demo flag `NEXT_PUBLIC_DEMO_PROVIDERS` documented in `.env.example`.
+  - [x] `use-provider-quotes.ts` hook; ranking in `provider-rank.ts`.
+  - [x] Selected provider per asset on the trade page; ticket executes only providers with a market; quote-only reason shown.
+  - [x] Unit tests for best selection (buy, sell, ties, stale, unavailable, zero amount, single provider).
+  - [ ] Checked in the running app with and without the flag (see Result).
+- Result: (fill in)
+
 ### T-054: Deploy TSLA support on the server: price service and relayer
 - Owner: alle
 - Status: todo
