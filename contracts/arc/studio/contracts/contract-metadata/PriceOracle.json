@@ -1,0 +1,622 @@
+{
+  "contractAddress": "0x8503bb2d15f88bb31a9363bc0dfbe9391028ebda",
+  "network": "ARC-TESTNET",
+  "deployerWalletId": "3c2464b2-8369-52e2-a782-800bbeca5396",
+  "contract_code_path": "/home/user/app/contracts/PriceOracle.sol",
+  "contract_compiled_code_path": "/home/user/app/contracts/out/PriceOracle.sol/PriceOracle.json",
+  "contract_network_and_links": {
+    "Arc Testnet (NVDA)": "https://explorer.testnet.arc.io/address/0x8503bb2d15f88bb31a9363bc0dfbe9391028ebda",
+    "Arc Testnet (TSLA)": "https://explorer.testnet.arc.io/address/0x1b53204d9d873b74760fd1933e8151220995de05"
+  },
+  "contract_deployments": [
+    {
+      "role": "NVDA oracle",
+      "chain": "Arc Testnet",
+      "address": "0x8503bb2d15f88bb31a9363bc0dfbe9391028ebda",
+      "explorerUrl": "https://explorer.testnet.arc.io/address/0x8503bb2d15f88bb31a9363bc0dfbe9391028ebda",
+      "txHash": "0x8d8efb77b5151177c6d0c12b977e3e362d4efc347f65644fb5c43d0952a2dade",
+      "deployedAt": "2026-11-06T21:44:01.389Z"
+    },
+    {
+      "role": "TSLA oracle",
+      "chain": "Arc Testnet",
+      "address": "0x1b53204d9d873b74760fd1933e8151220995de05",
+      "explorerUrl": "https://explorer.testnet.arc.io/address/0x1b53204d9d873b74760fd1933e8151220995de05",
+      "txHash": "0xca1d5a23bcb592e6b157ff3c3ef1a3d714313159a24a082f9a8c34bdc505c845",
+      "deployedAt": "2026-11-06T21:48:29.452Z"
+    }
+  ],
+  "abi": [
+    {
+      "type": "constructor",
+      "inputs": [
+        {
+          "name": "owner_",
+          "type": "address",
+          "internalType": "address"
+        },
+        {
+          "name": "maxStaleness_",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "DECIMALS",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint8",
+          "internalType": "uint8"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "MAX_GAP_BPS_LIMIT",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "MAX_STALENESS_LIMIT",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "acceptGap",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "decimals",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint8",
+          "internalType": "uint8"
+        }
+      ],
+      "stateMutability": "pure"
+    },
+    {
+      "type": "function",
+      "name": "demoMode",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool",
+          "internalType": "bool"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "gapAccepted",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool",
+          "internalType": "bool"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "getPrice",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "price",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "publishTime",
+          "type": "uint64",
+          "internalType": "uint64"
+        },
+        {
+          "name": "session",
+          "type": "uint8",
+          "internalType": "enum PriceOracle.Session"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "isRelayer",
+      "inputs": [
+        {
+          "name": "",
+          "type": "address",
+          "internalType": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool",
+          "internalType": "bool"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "latestRound",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "price",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "publishTime",
+          "type": "uint64",
+          "internalType": "uint64"
+        },
+        {
+          "name": "session",
+          "type": "uint8",
+          "internalType": "enum PriceOracle.Session"
+        },
+        {
+          "name": "confidenceBps",
+          "type": "uint32",
+          "internalType": "uint32"
+        },
+        {
+          "name": "age",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "stale",
+          "type": "bool",
+          "internalType": "bool"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "maxConfidenceBps",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "maxDeviationBps",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "maxStaleness",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "owner",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "address",
+          "internalType": "address"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "renounceOwnership",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "setDemoMode",
+      "inputs": [
+        {
+          "name": "on",
+          "type": "bool",
+          "internalType": "bool"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "setGuards",
+      "inputs": [
+        {
+          "name": "maxConfidenceBps_",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "maxDeviationBps_",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "setMaxStaleness",
+      "inputs": [
+        {
+          "name": "seconds_",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "setRelayer",
+      "inputs": [
+        {
+          "name": "relayer",
+          "type": "address",
+          "internalType": "address"
+        },
+        {
+          "name": "allowed",
+          "type": "bool",
+          "internalType": "bool"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "transferOwnership",
+      "inputs": [
+        {
+          "name": "newOwner",
+          "type": "address",
+          "internalType": "address"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "updatePrice",
+      "inputs": [
+        {
+          "name": "price",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "publishTime",
+          "type": "uint64",
+          "internalType": "uint64"
+        },
+        {
+          "name": "session",
+          "type": "uint8",
+          "internalType": "enum PriceOracle.Session"
+        },
+        {
+          "name": "confidenceBps",
+          "type": "uint32",
+          "internalType": "uint32"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "event",
+      "name": "DemoModeSet",
+      "inputs": [
+        {
+          "name": "demoMode",
+          "type": "bool",
+          "indexed": false,
+          "internalType": "bool"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "GapAccepted",
+      "inputs": [],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "GuardsSet",
+      "inputs": [
+        {
+          "name": "maxConfidenceBps",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        },
+        {
+          "name": "maxDeviationBps",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "MaxStalenessSet",
+      "inputs": [
+        {
+          "name": "maxStaleness",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "OwnershipTransferred",
+      "inputs": [
+        {
+          "name": "previousOwner",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        },
+        {
+          "name": "newOwner",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "PriceUpdated",
+      "inputs": [
+        {
+          "name": "price",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        },
+        {
+          "name": "publishTime",
+          "type": "uint64",
+          "indexed": false,
+          "internalType": "uint64"
+        },
+        {
+          "name": "session",
+          "type": "uint8",
+          "indexed": false,
+          "internalType": "enum PriceOracle.Session"
+        },
+        {
+          "name": "confidenceBps",
+          "type": "uint32",
+          "indexed": false,
+          "internalType": "uint32"
+        },
+        {
+          "name": "relayer",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "RelayerSet",
+      "inputs": [
+        {
+          "name": "relayer",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        },
+        {
+          "name": "allowed",
+          "type": "bool",
+          "indexed": false,
+          "internalType": "bool"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "error",
+      "name": "ConfidenceTooWide",
+      "inputs": [
+        {
+          "name": "confidenceBps",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "maxBps",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "DeviationTooLarge",
+      "inputs": [
+        {
+          "name": "oldPrice",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "newPrice",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "maxBps",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "InvalidParam",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "InvalidPrice",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "NoPrice",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "NotRelayer",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "OwnableInvalidOwner",
+      "inputs": [
+        {
+          "name": "owner",
+          "type": "address",
+          "internalType": "address"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "OwnableUnauthorizedAccount",
+      "inputs": [
+        {
+          "name": "account",
+          "type": "address",
+          "internalType": "address"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "PublishTimeInFuture",
+      "inputs": [
+        {
+          "name": "publishTime",
+          "type": "uint64",
+          "internalType": "uint64"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "PublishTimeNotIncreasing",
+      "inputs": [
+        {
+          "name": "publishTime",
+          "type": "uint64",
+          "internalType": "uint64"
+        },
+        {
+          "name": "last",
+          "type": "uint64",
+          "internalType": "uint64"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "StalePrice",
+      "inputs": [
+        {
+          "name": "age",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "maxAge",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ]
+    }
+  ]
+}

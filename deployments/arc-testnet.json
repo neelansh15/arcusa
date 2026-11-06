@@ -39,5 +39,35 @@
     },
     "firstPriceTx": "0xb59157a5588ad03b3042c42f517f7679572b897f42e5eac5a9801afb69219934",
     "setRelayerTx": "0xbf9a66fc0767d42e5a208b5e1a426d136da3e143de9b4da7a72bcc0f5c9577b3"
+  },
+  "studio": {
+    "note": "Built, tested and deployed in Arc Studio (ADR 0025). Sources are byte-identical to contracts/arc/src. Deployed by Studio's shared platform wallet; the owner is the deployer address below, whose key is held by the server agent. NOT yet used by the app: see T-056 and T-057.",
+    "studioApp": "https://studio.arc.io/app/efb4a3b8-92a8-41d3-993a-5d254dc32258",
+    "deployedAt": "2026-11-06",
+    "owner": "0x07621e39424914f633D478DdE751f3FF728CB351",
+    "verifiedOnChain": "2026-11-07 (code present, owner(), maxStaleness, market usdc/token/oracle read back by the laptop)",
+    "nvda": {
+      "priceOracle": {
+        "address": "0x8503bb2d15f88bb31a9363bc0dfbe9391028ebda",
+        "tx": "0x8d8efb77b5151177c6d0c12b977e3e362d4efc347f65644fb5c43d0952a2dade",
+        "maxStaleness": 300
+      },
+      "inventoryMarket": {
+        "address": "0x0e0d70183cfdf6192e0f43cea39d5567f3698d13",
+        "tx": "0x4016a613de4ce1eca593c86c6dca9d1d4f302d8a02a5dca4bec1e34b7b92c833"
+      }
+    },
+    "tsla": {
+      "priceOracle": {
+        "address": "0x1b53204d9d873b74760fd1933e8151220995de05",
+        "tx": "0xca1d5a23bcb592e6b157ff3c3ef1a3d714313159a24a082f9a8c34bdc505c845",
+        "maxStaleness": 301,
+        "note": "301 not 300, so the deploy tool does not de-duplicate it against the NVDA oracle (approved)"
+      },
+      "inventoryMarket": {
+        "address": "0x3fb35049ebee5618538214bb504743cdf4f0b5f2",
+        "tx": "0x35422af41a2e89c36b3c6daa6037e0af5813c720e91f39ff32c83152761851e7"
+      }
+    }
   }
 }

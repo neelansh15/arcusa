@@ -1,0 +1,61 @@
+{
+  "project": "arcusa",
+  "network": "ARC-TESTNET",
+  "chainId": 5042002,
+  "note": "Deployed by the shared platform wallet; owner is the address in constructor args. ABIs: abi field of PriceOracle.json and InventoryMarket.json in this folder (same ABI for both instances).",
+  "deployments": [
+    {
+      "role": "NVDA oracle",
+      "contract": "PriceOracle",
+      "status": "deployed",
+      "address": "0x8503bb2d15f88bb31a9363bc0dfbe9391028ebda",
+      "txHash": "0x8d8efb77b5151177c6d0c12b977e3e362d4efc347f65644fb5c43d0952a2dade",
+      "constructorArgs": {
+        "owner_": "0x07621e39424914f633D478DdE751f3FF728CB351",
+        "maxStaleness_": 300
+      },
+      "abiFile": "PriceOracle.json"
+    },
+    {
+      "role": "NVDA market",
+      "contract": "InventoryMarket",
+      "status": "deployed",
+      "address": "0x0e0d70183cfdf6192e0f43cea39d5567f3698d13",
+      "txHash": "0x4016a613de4ce1eca593c86c6dca9d1d4f302d8a02a5dca4bec1e34b7b92c833",
+      "constructorArgs": {
+        "owner_": "0x07621e39424914f633D478DdE751f3FF728CB351",
+        "usdc_": "0x3600000000000000000000000000000000000000",
+        "wnvda_": "0x5ad2862787d5C7F42a09014CE4C973d162878a16",
+        "oracle_": "0x8503bb2d15f88bb31a9363bc0dfbe9391028ebda"
+      },
+      "abiFile": "InventoryMarket.json"
+    },
+    {
+      "role": "TSLA oracle",
+      "contract": "PriceOracle",
+      "status": "deployed",
+      "address": "0x1b53204d9d873b74760fd1933e8151220995de05",
+      "txHash": "0xca1d5a23bcb592e6b157ff3c3ef1a3d714313159a24a082f9a8c34bdc505c845",
+      "constructorArgs": {
+        "owner_": "0x07621e39424914f633D478DdE751f3FF728CB351",
+        "maxStaleness_": 301
+      },
+      "abiFile": "PriceOracle.json",
+      "note": "maxStaleness 301 (not 300) so the deploy tool does not de-duplicate it against the NVDA oracle. Approved departure."
+    },
+    {
+      "role": "TSLA market",
+      "contract": "InventoryMarket",
+      "status": "deployed",
+      "address": "0x3fb35049ebee5618538214bb504743cdf4f0b5f2",
+      "txHash": "0x35422af41a2e89c36b3c6daa6037e0af5813c720e91f39ff32c83152761851e7",
+      "constructorArgs": {
+        "owner_": "0x07621e39424914f633D478DdE751f3FF728CB351",
+        "usdc_": "0x3600000000000000000000000000000000000000",
+        "wnvda_": "0xD6bB2FFfCc37845fe44767E40569b801c9F9afd5",
+        "oracle_": "0x1b53204d9d873b74760fd1933e8151220995de05"
+      },
+      "abiFile": "InventoryMarket.json"
+    }
+  ]
+}

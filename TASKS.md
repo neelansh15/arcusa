@@ -107,7 +107,7 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 | [T-052](#t-052-asset-selector-button-and-modal-in-the-pair-header) | done | laptop | Asset selector button and modal in the pair header |
 | [T-053](#t-053-custom-wallet-connect-and-account-modals) | done | laptop | Custom wallet connect and account modals |
 | [T-054](#t-054-deploy-tsla-support-on-the-server-price-service-and-relayer) | todo | alle | Deploy TSLA support on the server: price service and relayer |
-| [T-055](#t-055-build-test-and-deploy-the-arc-contracts-in-arc-studio-adr-0025) | doing | laptop | Build, test and deploy the Arc contracts in Arc Studio (ADR 0025) |
+| [T-055](#t-055-build-test-and-deploy-the-arc-contracts-in-arc-studio-adr-0025) | done | laptop | Build, test and deploy the Arc contracts in Arc Studio (ADR 0025) |
 | [T-056](#t-056-configure-the-studio-deployed-markets-and-move-inventory-adr-0025) | todo | alle | Configure the Studio-deployed markets and move inventory (ADR 0025) |
 | [T-057](#t-057-switch-the-app-relayer-and-docs-to-the-studio-deployments-adr-0025) | todo | laptop | Switch the app, relayer and docs to the Studio deployments (ADR 0025) |
 | [T-020](#t-020-post-mvp-spike-indexer-options-on-arc-testnet-and-sepolia) | todo | alle | (post-MVP) Spike: indexer options on Arc testnet and Sepolia |
@@ -868,7 +868,7 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 
 ### T-055: Build, test and deploy the Arc contracts in Arc Studio (ADR 0025)
 - Owner: laptop
-- Status: doing
+- Status: done
 - ADR: docs/adr/0025-contracts-built-and-deployed-in-arc-studio.md
 - Depends on: T-003 (the Studio app is the existing one, `arc-studio whoami` works)
 - Goal: Studio compiles, tests and deploys `PriceOracle` and `InventoryMarket` for NVDA and TSLA, with owner `0x07621e39424914f633D478DdE751f3FF728CB351`.
