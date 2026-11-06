@@ -42,6 +42,15 @@ Newest entries at the bottom. Times are IST (UTC+5:30). Testnet only. Every addr
 - Locked mNVDA is 0 and wNVDA totalSupply is 0, so locked >= wrapped trivially holds. It must be re-checked after the first bridge in T-024.
 - The getters were probed by name (`owner`, `operator`, `rateLimit` and so on) and answered; they are not in Circle's reference page, so they could change.
 
+## 2026-11-06 13:08 T-024 in progress: lock and mint works, timings
+- Bridge Kit accepts the mNVDA tokenId as `token` (`kit.bridge({from, to:{useForwarder:true}, amount, token: tokenId, config:{feePayment:'source', transferSpeed:'SLOW'}})`).
+- The default transfer speed is FAST. With FAST the approve step passed but the `transfer` step reverted in simulation on both chains (`ONCHAIN_SIMULATION_FAILED`, no revert reason). Likely cause, not proven: FAST needs a PRE_FINALITY quote item that is not configured for this token. `transferSpeed: 'SLOW'` works.
+- Sepolia to Arc, 10 mNVDA (lock and mint): approve, transfer, fetchAttestation, forward all `success`. 965 s (about 16 min), dominated by Sepolia finality. After it, locked mNVDA 10 and wNVDA supply 10 (before the return leg).
+- Arc to Sepolia, 5 mNVDA (burn and unlock): started 13:06 IST, burn done (wNVDA supply 5), unlock on Sepolia pending at time of writing.
+- What took ~23 min in T-022 was the wrapper contract creation on Arc (DeployTokenMessage, Sepolia finality). It is a one-time cost per token. A transfer into Arc costs about 16 min in SLOW mode.
+- Demo implication: pre-bridge the tokens and show the live bridge as a status view, not a wait.
+- Script: contracts/scripts/spikes/t024.ts (to be pushed).
+
 ## Not verified yet
 - Whether Bridge Kit can move mNVDA by token id (T-024).
 - Fast Transfer availability for mNVDA (T-024; the docs expect `FX_SYMBOL_NOT_CONFIGURED`).
