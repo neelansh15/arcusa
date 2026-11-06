@@ -27,6 +27,7 @@ One file per decision: `NNNN-short-title.md`, copied from `0000-template.md`. St
 | [0020](0020-visual-redesign-dark-first-lumatrade.md) | Visual redesign: dark-first theme to match LumaTrade, light mode kept | accepted |
 | [0021](0021-landing-page-redesign.md) | Landing page redesign: big, bold, simple, animated | proposed |
 | [0022](0022-asset-selector-modal.md) | Asset selector in the pair header, with a modal list | proposed |
+| [0023](0023-custom-wallet-modal.md) | Custom wallet connect modal on wagmi 3 (not RainbowKit) | proposed |
 
 Note: ADR 0010 (accepted, immutable) still says `tAAPL`. Read it as the wrapped token `wNVDA` (ADR 0012).
 

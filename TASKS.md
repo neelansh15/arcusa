@@ -105,6 +105,7 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 | [T-050](#t-050-landing-faq-final-cta-footer-and-copy-audit) | done | laptop | Landing: FAQ, final CTA, footer and copy audit |
 | [T-051](#t-051-landing-verification-themes-devices-motion-performance) | done | laptop | Landing verification: themes, devices, motion, performance |
 | [T-052](#t-052-asset-selector-button-and-modal-in-the-pair-header) | done | laptop | Asset selector button and modal in the pair header |
+| [T-053](#t-053-custom-wallet-connect-and-account-modals) | todo | laptop | Custom wallet connect and account modals |
 | [T-020](#t-020-post-mvp-spike-indexer-options-on-arc-testnet-and-sepolia) | todo | alle | (post-MVP) Spike: indexer options on Arc testnet and Sepolia |
 | [T-021](#t-021-post-mvp-build-indexer-and-holdingshistory-view) | todo | laptop | (post-MVP) Build indexer and holdings/history view |
 
@@ -820,6 +821,19 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
   - [ ] `tsc`, `oxlint`, `pnpm build` pass; trade and ticket behaviour unchanged.
   - [ ] Escape fires once; search focuses on desktop only, dialog focus on mobile; planned rows are ticker-only, labelled Coming soon, with the ADR 0016 line in the modal.
 - Result: Pair header is now an `AssetSelector` button (logos, pair name, vertical chevron icon, inside the `h1`, visually hidden "choose asset"); the whole group tints on hover and when open (`--hover` token, both themes) and shows a focus ring. Click opens a new `Modal` (portal, z-index 70, one Escape handler, focus trap, focus return, inert background, scroll lock with restore; centered dialog on desktop, bottom sheet by CSS under 768px, no drag; `BottomSheet` untouched). List from `lib/assets.ts`: NVDA live ("Mock NVDA token (wNVDA)", check when current) and four planned rows (AAPL, TSLA, MSFT, AMZN), ticker only, `aria-disabled`, visible "Coming soon", plus the ADR 0016 line in the modal. Search by ticker or label with a polite live region and an empty state. `asset` is display-only state. Verified in the in-app browser: hover tint, open and close, search "ts" gives TSLA, "zzz" gives "No assets match", Tab wraps first to last, Escape closes once and returns focus to the button, body overflow and inert restored, picking NVDA closes with the same label, dark and light at 1440, mobile sheet at 375 (dialog focused, search not focused, no horizontal scroll). `tsc`, `oxlint`, `pnpm build` pass. NOT verified: screen reader output, keyboard-only walkthrough on a real device, on-screen keyboard overlap on a real phone, 768px.
+
+### T-053: Custom wallet connect and account modals
+- Owner: laptop
+- Status: todo
+- ADR: docs/adr/0023-custom-wallet-modal.md
+- Goal: Replace the single `injected()` connect with a themed modal listing detected wallets, plus an account modal, opened from the header and the order ticket.
+- Acceptance criteria:
+  - [ ] Connect modal lists discovered wallets with icons; a fallback row only when none are found; install links when no wallet.
+  - [ ] Pending, rejected, and "already pending" states shown inline; others disabled while pending.
+  - [ ] Address pill opens an account modal (copy, ArcScan link, network, Disconnect); it no longer disconnects on click.
+  - [ ] Header and ticket "Connect wallet" use one opener; auto-switch to Arc still works.
+  - [ ] Dark and light, 1440 and 375; `tsc`, `oxlint`, `pnpm build` pass; Result says what could not be tested without real wallets.
+- Result:
 
 ### T-020: (post-MVP) Spike: indexer options on Arc testnet and Sepolia
 - Owner: alle
