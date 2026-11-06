@@ -10,7 +10,7 @@ The user decided that arcusa does not issue its own stock token. Tokenized stock
 
 Mechanism (Circle CCTP for non-USDC assets, sources in ADR 0001, fetched 2026-11-05/06):
 - The ownerless path: `registerOwnerlessToken` on one home chain with a LOCK_UNLOCK token manager. An Iris quote (`DeployTokenMessage`) then lets anyone call `deployRemoteOwnerlessToken` on each destination chain. The destination token is minted and burned by its manager.
-- `resolveTokenAddress` and `resolveTokenManager` find the contracts. The remote rate limit must be above 0.
+- `resolveTokenAddress` and `resolveTokenManager` find the contracts. The remote rate limit must be above 0 (amended 2026-11-06: ownerless managers have no rate limit to set; see the amendment below).
 - Tokens are locked, not burned, on the home chain. Supply on Arc is therefore always backed 1:1 by locked provider tokens.
 
 ## Options considered

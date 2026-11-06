@@ -276,7 +276,7 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 - Owner: laptop
 - Status: todo
 - ADR: docs/adr/0003-usdc-bridge-in-with-forwarding.md
-- Depends on: T-004, T-011
+- Depends on: T-004, T-011, T-033, T-036
 - Goal: A user with USDC on Sepolia funds their Arc account from the terminal in one flow.
 - Acceptance criteria:
   - [ ] The "Deposit USDC" flow runs Bridge Kit with Forwarding from Sepolia to Arc and shows progress until COMPLETE.
@@ -289,7 +289,7 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 - Owner: laptop
 - Status: todo
 - ADR: docs/adr/0013-wrapped-token-bridging-path.md (must be accepted)
-- Depends on: T-024, T-011
+- Depends on: T-024, T-011, T-033, T-036
 - Goal: A user moves wNVDA from Arc to Sepolia, and back, from the terminal with Bridge Kit (no raw-call fallback, ADR 0013).
 - Acceptance criteria:
   - [ ] The "Send wNVDA to Sepolia" and "Bring wNVDA to Arc" flows work. The UI shows the states PENDING, SENT, CONFIRMED, COMPLETE and FAILED.
@@ -395,7 +395,7 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 - Goal: Prove that a mock provider token `mNVDA` on Sepolia can be registered as an ownerless LOCK_UNLOCK token and wrapped as `wNVDA` on Arc testnet.
 - Acceptance criteria:
   - [ ] `mNVDA` is deployed on Sepolia (clearly named as a mock).
-  - [ ] `registerOwnerlessToken` succeeds with LOCK_UNLOCK; the Iris quote is fetched; `deployRemoteOwnerlessToken` succeeds on Arc.
+  - [ ] `registerOwnerlessToken` succeeds with LOCK_UNLOCK (raw contract calls are fine for setup; the transfer itself goes through Bridge Kit); the Iris quote is fetched; `deployRemoteOwnerlessToken` succeeds on Arc.
   - [ ] `mNVDA` uses the same decimals as Ondo's real tokens (18); `wNVDA` decimals are recorded.
   - [ ] The mock name and symbol are chosen knowing the Arc wrapper copies them from the home token. Record what the wrapper shows on Arc.
   - [ ] Wallets are funded (Sepolia ETH, Arc USDC for gas) and the faucet sources are recorded in the Result.
@@ -531,9 +531,9 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
   - [ ] API: `quote`, `send`, `status`, `resume` for (a) USDC Sepolia → Arc with Forwarding, (b) wNVDA Arc → Sepolia, (c) mNVDA Sepolia → Arc. Chain and token config in one place (token id, addresses, decimals).
   - [ ] Bridge Kit is the only transfer path (ADR 0013). Raw `CrossChainTokenService` calls are not part of the module.
   - [ ] A pure state machine with PENDING, SENT, CONFIRMED, COMPLETE, FAILED. Persistence and resume are T-036.
-  - [ ] Typed errors for the known failures: `TokenNotRegistered` (`0x5d0028cf`), unsupported route, quote rejected (`FX_SYMBOL_NOT_CONFIGURED`, falls back to Standard), insufficient gas on the source chain, user rejection.
+  - [ ] Typed errors for the known failures: `TokenNotRegistered` (`0x5d0028cf`), unsupported route, quote rejected (`FX_SYMBOL_NOT_CONFIGURED`; the module requests Standard explicitly), insufficient gas on the source chain, user rejection.
   - [ ] Unit tests with a mocked kit and mocked RPC (no network): each state transition, each error, amount and decimals handling. Tests run with one command and in CI.
-- Notes: Keep it independent of the oracle and market. Do not hardcode secrets.
+- Notes: `resume` only has its signature here; the storage and behaviour are T-036. Keep it independent of the oracle and market. Do not hardcode secrets.
 - Result:
 
 ### T-034: Contract tests for the mock token and lock-and-mint accounting
@@ -541,7 +541,7 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 - Status: todo
 - ADR: docs/adr/0012-provider-token-lock-and-wrap.md
 - Depends on: T-022
-- Goal: Foundry tests that prove the fixture and the accounting rule: locked mNVDA on Sepolia equals wNVDA supply on Arc.
+- Goal: Foundry tests that prove the fixture and the accounting rule: locked mNVDA on Sepolia is at least the wNVDA supply on Arc (equal when nothing is in flight).
 - Acceptance criteria:
   - [ ] `MockProviderToken` (mNVDA) is clearly named as a mock and has a faucet or mint for testnet use only.
   - [ ] Tests for transfers, decimals and the lock-and-unlock round trip, using a local stand-in for the manager if the real service cannot run locally.

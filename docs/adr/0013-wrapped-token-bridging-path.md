@@ -15,7 +15,7 @@ Facts (fetched 2026-11-05/06, see ADR 0001 for links):
 - Fees for non-USDC are paid in native gas (USDC on Arc). The source chain still needs its own gas.
 
 ## Decision
-- User path: **Bridge Kit by token id is required** (the track needs Bridge Kit). Raw `CrossChainTokenService` calls are a debugging aid only, not a shipped path.
+- User path: **Bridge Kit by token id is required** (the track needs Bridge Kit). Raw `CrossChainTokenService` calls are a debugging aid only, not a shipped path. The rule covers user transfers: `registerOwnerlessToken` and `deployRemoteOwnerlessToken` are raw contract calls by necessity, and the T-022 transfer goes through Bridge Kit.
 - **Direction shown in the demo: Arc to Sepolia** (`wNVDA` burned on Arc, `mNVDA` unlocked on Sepolia). Arc as source settles in about 0.5s on Standard. This is the redeem direction and it is fast.
 - **Sepolia to Arc** (lock and mint) is slow on Standard and may or may not have Fast. It is used only for **pre-positioning inventory before the demo** (ADR 0014), not live.
 - The demo shows the bridge as its own step (ADR 0017), not hidden inside a trade.
