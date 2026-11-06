@@ -99,7 +99,7 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 | [T-044](#t-044-bridge-page-and-toast-on-the-new-theme) | done | laptop | Bridge page and toast on the new theme |
 | [T-045](#t-045-docs-and-landing-theme-tokens-only) | done | laptop | Docs and landing theme (tokens only) |
 | [T-046](#t-046-redesign-verification-both-themes-contrast-mobile) | done | laptop | Redesign verification: both themes, contrast, mobile |
-| [T-047](#t-047-landing-foundation-hero-and-ticker-strip) | todo | laptop | Landing foundation, hero and ticker strip |
+| [T-047](#t-047-landing-foundation-hero-and-ticker-strip) | doing | laptop | Landing foundation, hero and ticker strip |
 | [T-048](#t-048-landing-how-it-works-story-and-bento-grid) | todo | laptop | Landing: how-it-works story and bento grid |
 | [T-049](#t-049-landing-interactive-calculator-and-phone-showcase) | todo | laptop | Landing: interactive calculator and phone showcase |
 | [T-050](#t-050-landing-faq-final-cta-footer-and-copy-audit) | todo | laptop | Landing: FAQ, final CTA, footer and copy audit |
@@ -745,13 +745,14 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 
 ### T-047: Landing foundation, hero and ticker strip
 - Owner: laptop
-- Status: todo
+- Status: doing
 - ADR: docs/adr/0021-landing-page-redesign.md
-- Goal: Rebuild the landing shell (nav matching the app header, section rhythm, `copy.ts`, fail-safe reveal hook, `--glow` token), the giant hero with the animated trade-card mock and live indicative price, and the ticker strip.
+- Goal: `copy.ts` with a source for every claim (ADR 0021 revisions 1 to 5), landing shell (nav on `SiteNav`, section rhythm, fail-safe reveal, `--glow` token), the giant hero with an animated trade-card mock and the indicative price, and the metadata and OG fix. No ticker strip.
 - Acceptance criteria:
   - [ ] Hero headline at clamp(52px, 8vw, 112px); live indicative price with a labelled fallback when the feed is down; chart draw and count-up animations.
   - [ ] Reveal is fail-safe: content is visible without JS, in-view elements reveal immediately, a safety timeout reveals the rest.
-  - [ ] Ticker: NVDA live tile, other tickers greyed and labelled Soon, not clickable; marquee off under reduced motion.
+  - [ ] `layout.tsx` metadata no longer says many chains; `openGraph`, `twitter` and an OG image exist.
+  - [ ] Old `LiveQuote` removed; `useIndicativeQuote` calls only `/api/price` with a 3s abort and shows a labelled sample on failure.
   - [ ] Dark and light checked at 1440 and 375; `tsc`, `oxlint` pass.
 - Result:
 
@@ -773,10 +774,10 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 - Status: todo
 - ADR: docs/adr/0021-landing-page-redesign.md
 - Depends on: T-047
-- Goal: A no-wallet calculator using the live indicative quote, and a phone frame that cycles through the mobile screens as mocks.
+- Goal: A no-wallet calculator using the indicative price only, and a phone frame that plays the mobile screens once as mocks and then rests.
 - Acceptance criteria:
   - [ ] Typing or sliding USDC updates the NVDA estimate; labelled "estimate, testnet, not a quote"; empty and bad input handled.
-  - [ ] Button opens `/trade`; if the ticket prefill is added it is tested, otherwise Result says it is not.
+  - [ ] No fee number; button opens `/trade` (no prefill, by decision).
   - [ ] Phone showcase pauses offscreen and shows static final state under reduced motion.
 - Result:
 

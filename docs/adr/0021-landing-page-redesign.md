@@ -1,6 +1,6 @@
 # 0021. Landing page redesign: big, bold, simple, animated
 
-- Status: proposed
+- Status: accepted
 - Date: 2026-11-07
 - Deciders: user, laptop
 
@@ -63,3 +63,21 @@ Option 2.
 
 ## Tasks
 T-047 foundation, hero and ticker; T-048 how-it-works story and bento; T-049 calculator and phone showcase; T-050 FAQ, final CTA, footer and copy audit; T-051 verification.
+
+## Revisions after devil's advocate review (2026-11-07)
+Accepted with these changes. They override anything above that conflicts.
+1. **Claims allowed (the only ones).** One stock, a mock NVDA token (`mNVDA` on Sepolia, `wNVDA` on Arc). One home chain (Ethereum Sepolia). One settlement chain (Arc testnet). USDC is "digital dollars", and the FAQ says once that it is a dollar-pegged stablecoin. Wording of the disclaimer is ADR 0016: "Testnet demo. Not a security, no real shares, no real value." Say "mock stock token" in the hero area, the calculator and the FAQ. Do not name any token provider and do not use provider names or logos. Other chains and tickers are not drawn at all (no Soon tiles, no named tickers): a single "More stocks and chains are on the roadmap" line that links to the roadmap doc.
+2. **No marquee, no ticker strip.** Cut (accessibility and unshipped-asset claims).
+3. **Price source.** Delete the old `LiveQuote` (it fakes random prices and changes). New `useIndicativeQuote()` calls only `/api/price`, once plus a 30 second poll, 3 second abort. If it fails, show a static, labelled "Sample price" and never call anything "live" unless the quote is under 60 seconds old. Do not load `/api/ticks` and do not use `useMarket` or `useQuote` on the landing (no Arc RPC load). Label the price "indicative", never name the upstream.
+4. **Calculator.** Uses only the indicative price. Output is "about X NVDA. Estimate: fees and slippage not included." No fee number is shown. No prefill into `/trade`; the button just opens `/trade`.
+5. **No speed or "one tap" claims.** First use needs an approval and then the trade, so step titles say "Tap Buy" only with the note "The first time you also approve USDC". No "seconds". The bridge tile draws exactly one source dot (Sepolia) and says demo.
+6. **Server and client boundaries.** `sections.tsx` stays a server component. Client islands only: `Reveal`, `CountUp`, `HeroQuote`, `Calculator`, `StepTracker`, `GlowTile`, `PhoneShowcase`, `LandingLive` (offscreen pausing). `copy.ts` is a plain module. Counts render their final value on the server and animate only after mount; the animated copy is `aria-hidden` and the final value is in the DOM for assistive tech.
+7. **Reveal fail-safe.** `lp-js` is added only after the first observer callback; content already in view at mount is revealed immediately; a 2.5 second timeout reveals the rest; reduced motion skips hiding entirely.
+8. **Scroll story.** `position: sticky` plus an IntersectionObserver per step (rootMargin -45% 0 -45% 0), desktop only; stacked and not sticky on mobile. All three step texts stay in the DOM and the sticky visual comes after them in DOM order. No scroll-driven animation timelines. Check that no wrapper has `overflow` other than visible.
+9. **Glow and hover.** One `pointermove` per tile setting two CSS variables, only under `(hover: hover) and (pointer: fine)`, animating a pseudo-element's opacity and transform. Off under reduced motion. In the light theme the glow is used only behind the CTA panel at low opacity.
+10. **Motion budget.** One hero loop (the chart line draws, then idles) plus reveal-once animations. The phone showcase and bento graphics animate on first entering view and then rest; none loop forever. All looping CSS pauses offscreen via a shared observer toggling `data-live` and on `visibilitychange`. FAQ uses native `details` with only a chevron rotate (no height animation).
+11. **Layout stability.** Fixed heights for the hero mock, price block and calculator output so the live price and fonts do not shift layout. The `h1` is the LCP.
+12. **Nav and links.** Reuse `SiteNav` and the app header look. Landing-only anchors (`#how`, `#faq`) are added next to it. "Under the hood" links point to `/docs/how-it-works`, `/docs/risks`, `/docs/contracts` and `/docs/roadmap`.
+13. **Metadata.** Fix `app/layout.tsx` (remove "from many chains"), add `openGraph` and `twitter` metadata and a generated OG image, keep `icon.svg`.
+14. **Hero mock.** Built from the app's own tokens and shapes, captioned "Illustration".
+15. **Order.** The claims table is built first as `copy.ts` with a source comment next to each claim, so every later section reads from audited copy. Verification is a checklist inside each task; T-051 is the final sweep. Cut line if time runs short: cursor glow and phone cycling first, then the sticky story (fall back to stacked), keeping the hero, the story, the calculator, the FAQ, the CTA and the metadata.
