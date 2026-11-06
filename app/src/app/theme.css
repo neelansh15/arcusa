@@ -18,6 +18,7 @@
   --chart-grid: rgba(255, 255, 255, .05); --chart-cross: #8b93a1; --chart-border: rgba(255, 255, 255, .08);
   --chart-area-top: rgba(195, 220, 78, .28); --chart-area-bottom: rgba(195, 220, 78, 0);
   --chart-area-down-top: rgba(255, 107, 107, .26); --chart-area-down-bottom: rgba(255, 107, 107, 0);
+  --header-h: 72px;
   --r-card: 28px; --r-inner: 22px; --r-pill: 999px;
   --font-num: var(--font-body), system-ui, sans-serif;
   color-scheme: dark;

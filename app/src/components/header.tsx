@@ -54,11 +54,11 @@ export function Header({ extra }: { extra?: ReactNode }) {
     <header className="header">
       <div className="brand">
         <Link href="/" className="logo"><i />arcusa</Link>
-        <SiteNav className="nav" />
+      </div>
+      <SiteNav className="nav" />
+      <div className="header-right">
         <span className="badge net">Arc Testnet</span>
         <span className="badge warn" title="Off-hours demo mode: indicative price, testnet only">DEMO</span>
-      </div>
-      <div className="header-right">
         {extra}
         <ThemeToggle />
         {msg && <span className="neg small">{msg.slice(0, 80)}</span>}

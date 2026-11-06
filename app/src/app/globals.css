@@ -279,3 +279,46 @@ button.primary:hover:not(:disabled) { background: var(--accent2); border-color: 
 .icon-btn:hover:not(:disabled) { color: var(--text); }
 ::selection { background: var(--accent-soft); }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* T-042: header and trade shell in the LumaTrade language */
+body { font-size: 15px; }
+.header { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; height: var(--header-h); padding: 0 32px; background: transparent; border-bottom: 0; }
+.header .brand { justify-self: start; }
+.header-right { justify-self: end; gap: 8px; }
+.header .nav { margin: 0; gap: 4px; }
+.nav a { padding: 8px 16px; border-radius: var(--r-pill); font-size: 15px; }
+.badge { margin: 0; padding: 4px 10px; font-size: 11px; }
+.logo { font-size: 20px; gap: 10px; } .logo i { width: 16px; height: 16px; background: var(--accent-fill); }
+button.wallet { background: var(--panel); border-color: transparent; padding: 9px 16px; font-family: var(--font-num); font-weight: 500; }
+button.wallet i { background: var(--accent-fill); }
+.header .primary { padding: 10px 20px; font-size: 15px; }
+.terminal > .header, .trade-app > .header { background: transparent; }
+
+.trade { grid-template-columns: minmax(0, 1fr) 420px; gap: 40px; max-width: 1360px; margin: 0 auto 32px; width: calc(100% - 64px); padding: 36px 40px; background: var(--card); border-radius: 44px; align-items: start; }
+.chart-card { background: transparent; border: 0; padding: 0; border-radius: 0; }
+.pair-head { gap: 16px; }
+.pair-head h1 { font-size: 34px; font-weight: 700; letter-spacing: -.02em; }
+.ic { width: 52px; height: 52px; font-size: 20px; border-color: var(--card); } .ic.usdc { margin-left: -16px; }
+.price-row { margin: 20px 0 8px; gap: 16px; }
+.price { font-size: 56px; letter-spacing: -.035em; font-weight: 700; }
+.pill { font-size: 14px; padding: 6px 14px; }
+.chips { background: transparent; padding: 0; gap: 4px; }
+.chips button { padding: 8px 18px; font-size: 15px; background: transparent; border: 0; }
+.chips button.on { background: var(--panel2); box-shadow: none; color: var(--text); }
+.chart-slot { height: 380px; margin: 8px -4px 16px; }
+.mrow { border-top: 0; padding: 14px 0; font-size: 16px; grid-template-columns: 1.4fr 1fr 1fr; }
+.mrow.head { color: var(--muted); font-size: 14px; padding-bottom: 6px; }
+.mrow b { font-weight: 600; }
+.tag { font-size: 13px; padding: 5px 14px; }
+.side .card, .side .panel { background: var(--panel2); border: 0; border-radius: var(--r-inner); }
+.side { gap: 16px; }
+@media (max-width: 1100px) { .trade { grid-template-columns: minmax(0, 1fr) 360px; gap: 28px; padding: 28px; } }
+@media (max-width: 767px) {
+  .trade { grid-template-columns: minmax(0, 1fr); width: calc(100% - 24px); padding: 16px 14px 96px; gap: 16px; border-radius: 28px; margin-bottom: 12px; }
+  .header { padding: 0 14px; grid-template-columns: auto 1fr; } .header .nav { display: none; } .header-right .badge { display: none; }
+  .price { font-size: 40px; } .ic { width: 40px; height: 40px; font-size: 16px; } .pair-head h1 { font-size: 26px; }
+  .chart-slot { height: 240px; }
+  .chips { width: 100%; justify-content: space-between; } .chips button { flex: 1; padding: 8px 4px; }
+  .pill { font-size: 12px; padding: 4px 10px; white-space: nowrap; }
+  .mdetails summary { white-space: nowrap; }
+}

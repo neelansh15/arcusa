@@ -94,8 +94,8 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 | [T-039](#t-039-mobile-layout-bottom-sheet-ticket-and-sticky-buysell-bar) | done | laptop | Mobile layout: bottom-sheet ticket and sticky Buy/Sell bar |
 | [T-040](#t-040-pro-mode-toggle-desktop) | done | laptop | Pro mode toggle (desktop) |
 | [T-041](#t-041-theme-foundation-tokens-darklight-switch-font-button-reset) | done | laptop | Theme foundation: tokens, dark/light switch, font, button reset |
-| [T-042](#t-042-trade-shell-header-and-chart-restyle) | doing | laptop | Trade shell, header and chart restyle |
-| [T-043](#t-043-ticket-position-and-market-panels-restyle) | todo | laptop | Ticket, position and market panels restyle |
+| [T-042](#t-042-trade-shell-header-and-chart-restyle) | done | laptop | Trade shell, header and chart restyle |
+| [T-043](#t-043-ticket-position-and-market-panels-restyle) | doing | laptop | Ticket, position and market panels restyle |
 | [T-044](#t-044-bridge-page-and-toast-on-the-new-theme) | todo | laptop | Bridge page and toast on the new theme |
 | [T-045](#t-045-docs-and-landing-theme-tokens-only) | todo | laptop | Docs and landing theme (tokens only) |
 | [T-046](#t-046-redesign-verification-both-themes-contrast-mobile) | todo | laptop | Redesign verification: both themes, contrast, mobile |
@@ -680,7 +680,7 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 
 ### T-042: Trade shell, header and chart restyle
 - Owner: laptop
-- Status: doing
+- Status: done
 - ADR: docs/adr/0020-visual-redesign-dark-first-lumatrade.md
 - Depends on: T-041
 - Goal: Header (centered nav, wallet pill, theme button, Pro switch), page shell, pair header and chart styled to the LumaTrade reference (ADR 0020).
@@ -688,11 +688,11 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
   - [ ] Chart reads colours from tokens and re-themes on switch; left price scale, no vertical grid, dashed crosshair, ring-dot marker, white tooltip pill; candles in Pro use tokens.
   - [ ] Pair header, price (large), change pill and range chips match the reference proportions.
   - [ ] Mobile sheet, sticky buy bar and Pro toggle still work; before and after screenshots at 1440 and 375.
-- Result:
+- Result: Header is now a three-column grid (brand, centered pill nav, right actions: badges, Pro, theme, wallet), transparent on the canvas, 72px (`--header-h`, docs sidebar offset follows). `/trade` is one rounded shell (44px radius, `--card`) holding the chart column and the ticket column, with the pair header at 52px icons and 34px title, 56px price, pill change, text-style range chips, larger market table without row borders. Chart: left axis, no vertical grid, dashed crosshair, ring marker, theme tokens (done in T-041). Mobile re-checked at 375px after fixing a grid override: no horizontal scroll (375 = 375), sticky Buy/Sell bar and bottom sheet (Sell opens on the Sell tab) work. Dark checked at 1440 and 375. NOT verified: light at 375, 768px, no before and after screenshot files committed.
 
 ### T-043: Ticket, position and market panels restyle
 - Owner: laptop
-- Status: todo
+- Status: doing
 - ADR: docs/adr/0020-visual-redesign-dark-first-lumatrade.md
 - Depends on: T-042
 - Goal: Pay and receive cards, round swap button, lime pill CTA, outlined summary with three columns (fee, receive, spread) and a compact secondary row (execution price, slippage, max per trade), available balance block, market table with honest pills, Pro panels on tokens.
