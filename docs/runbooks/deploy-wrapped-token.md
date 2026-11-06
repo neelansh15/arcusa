@@ -56,3 +56,11 @@ Register about 2.5M gas, remote deploy about 305k gas plus the Iris fee (0.00014
 - Whether a real issuer token (with its own pause/deny-list) can be registered and bridged the same way is untested (ADR 0016).
 - Mainnet: the Iris sandbox URL, domains and fees differ; not checked.
 - The manager owner is an address we do not control (`0x173d...9F94`, probably Circle's); we cannot change rate limits.
+
+## Update 2026-11-07: second run (mTSLA)
+
+The runbook was run end to end for mTSLA. Result and scripts: LOG.md (2026-11-07 entry) and `contracts/scripts/second-token/`.
+- Register, quote and remote deploy worked first time. The Arc wrapper appeared after about 19.5 min; the first bridge (10, SLOW) took about 19 min. Locked 10 equals wrapper supply 10.
+- The token manager address is per token (same on both chains for one token). The fixed table above lists the NVDA manager only; read `resolveTokenManager(tokenId)` for a new token.
+- Arc's RPC returned 429 when two scripts ran at once; use viem `http(url, {retryCount, retryDelay})`.
+- Still untested: a real issuer token, and the server price service and relayer for a second symbol.
