@@ -104,6 +104,7 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 | [T-049](#t-049-landing-interactive-calculator-and-phone-showcase) | done | laptop | Landing: interactive calculator and phone showcase |
 | [T-050](#t-050-landing-faq-final-cta-footer-and-copy-audit) | done | laptop | Landing: FAQ, final CTA, footer and copy audit |
 | [T-051](#t-051-landing-verification-themes-devices-motion-performance) | done | laptop | Landing verification: themes, devices, motion, performance |
+| [T-052](#t-052-asset-selector-button-and-modal-in-the-pair-header) | todo | laptop | Asset selector button and modal in the pair header |
 | [T-020](#t-020-post-mvp-spike-indexer-options-on-arc-testnet-and-sepolia) | todo | alle | (post-MVP) Spike: indexer options on Arc testnet and Sepolia |
 | [T-021](#t-021-post-mvp-build-indexer-and-holdingshistory-view) | todo | laptop | (post-MVP) Build indexer and holdings/history view |
 
@@ -805,6 +806,19 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
   - [ ] Production build passes; page weight and layout shift measured and noted; contrast of new colours computed.
   - [ ] Gaps against the brief listed in Result.
 - Result: `tsc`, `oxlint`, `pnpm build` pass. Viewed in the in-app browser: dark 1440 (hero, story steps 1 and 3, bento, calculator, phone, FAQ, CTA), light 1440 (hero), dark 375 (hero, story, bento, phone), no horizontal scroll at 375 (scrollWidth equals clientWidth). Colour literals left outside `theme.css`: the logo SVG and the OG image (a canvas, cannot use CSS variables). Lime button and heading colours reuse the T-046 contrast table (CTA text 12.21:1 dark, accent olive 5.89:1 on light card). No Lighthouse run, so LCP and layout shift are NOT measured; the hero h1 is plain text and the mock, price block and calculator have fixed or reserved sizes. Gaps: reduced-motion not tested with the setting on, light theme below the hero not reviewed, 768px not reviewed, real phones not tested, the landing reveal on the actual production host not tested.
+
+### T-052: Asset selector button and modal in the pair header
+- Owner: laptop
+- Status: todo
+- ADR: docs/adr/0022-asset-selector-modal.md
+- Goal: A chevron selector after "NVDA / USDC" whose whole group highlights on hover and opens a modal asset list (centered dialog on desktop, bottom sheet on mobile).
+- Acceptance criteria:
+  - [ ] Hover and focus tint the whole logo-name-icon group; no layout shift.
+  - [ ] Modal with search, live and planned rows; planned rows are greyed, labelled Coming soon, not selectable.
+  - [ ] Esc, scrim and close button dismiss; focus goes to search, is trapped, and returns to the button; body scroll locked.
+  - [ ] Works in dark and light, at 1440 and 375; mobile uses the bottom sheet.
+  - [ ] `tsc`, `oxlint`, `pnpm build` pass; trade and ticket behaviour unchanged.
+- Result:
 
 ### T-020: (post-MVP) Spike: indexer options on Arc testnet and Sepolia
 - Owner: alle
