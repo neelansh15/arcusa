@@ -6,6 +6,7 @@ import { useAccount, useReadContract, useSwitchChain, useWriteContract } from "w
 import { usePublicClient } from "wagmi";
 import { ARC_CHAIN_ID, ARC_USDC, WNVDA, explorerTx } from "@/lib/config";
 import { ARC_FEES, MARKET_ADDRESS, marketAbi } from "@/lib/market";
+import { Toast, type ToastMsg } from "@/components/toast";
 import { useQuote, type MarketState } from "@/lib/use-market";
 
 const SLIPPAGE_BPS = 100n;
@@ -18,7 +19,7 @@ export function OrderTicket({ market, usdcBal, nvdaBal }: { market: MarketState;
   const [side, setSide] = useState<"buy" | "sell">("buy");
   const [amount, setAmount] = useState("5");
   const [busy, setBusy] = useState<string | null>(null);
-  const [msg, setMsg] = useState<{ kind: "ok" | "err"; text: string; tx?: string } | null>(null);
+  const [msg, setMsg] = useState<ToastMsg | null>(null);
 
   const inDec = side === "buy" ? 6 : 18;
   const outDec = side === "buy" ? 18 : 6;
@@ -63,10 +64,13 @@ export function OrderTicket({ market, usdcBal, nvdaBal }: { market: MarketState;
         ...ARC_FEES,
       });
       const r = await client.waitForTransactionReceipt({ hash });
-      setMsg(r.status === "success" ? { kind: "ok", text: `${side === "buy" ? "Bought" : "Sold"} ${outText} ${side === "buy" ? "wNVDA" : "USDC"}`, tx: hash } : { kind: "err", text: "Transaction reverted", tx: hash });
+      const href = explorerTx(ARC_CHAIN_ID, hash);
+      setMsg(r.status === "success"
+        ? { id: Date.now(), kind: "ok", title: "Transaction confirmed", text: `${side === "buy" ? "Bought" : "Sold"} ${outText} ${side === "buy" ? "wNVDA" : "USDC"}`, href }
+        : { id: Date.now(), kind: "err", title: "Transaction reverted", text: "The market rejected this order.", href });
     } catch (e) {
       const m = e instanceof Error ? e.message : String(e);
-      setMsg({ kind: "err", text: m.split("\n")[0].slice(0, 120) });
+      setMsg({ id: Date.now(), kind: "err", title: "Transaction failed", text: m.split("\n")[0].slice(0, 120) });
     } finally {
       setBusy(null);
     }
@@ -113,17 +117,7 @@ export function OrderTicket({ market, usdcBal, nvdaBal }: { market: MarketState;
       <button className={`submit ${side}`} disabled={isConnected && !canSubmit} onClick={isConnected ? submit : undefined}>
         {!isConnected ? "Connect wallet to trade" : busy ?? `${side === "buy" ? "Buy" : "Sell"} NVDA`}
       </button>
-      {msg && (
-        <div className={`small note ${msg.kind === "err" ? "neg" : "pos"}`}>
-          {msg.text}
-          {msg.tx && (
-            <>
-              {" "}
-              <a href={explorerTx(ARC_CHAIN_ID, msg.tx)} target="_blank" rel="noreferrer">view tx</a>
-            </>
-          )}
-        </div>
-      )}
+      <Toast toast={msg} onClose={() => setMsg(null)} />
     </section>
   );
 }

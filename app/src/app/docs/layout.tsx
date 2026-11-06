@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import type { ReactNode } from "react";
 import { DocsSidebar } from "@/components/docs/sidebar";
-import { SiteNav } from "@/components/site-nav";
+import { Header } from "@/components/header";
 import { PrevNext } from "@/components/docs/prev-next";
 import "./docs.css";
 
@@ -14,16 +13,9 @@ export const metadata: Metadata = {
 export default function DocsLayout({ children }: { children: ReactNode }) {
   return (
     <div className="docs">
-      <header className="docs-top">
-        <div className="docs-top-inner">
-          <Link href="/" className="docs-logo">
-            <i />
-            arcusa
-          </Link>
-          <span className="docs-top-label">Docs</span>
-          <SiteNav className="docs-top-nav" />
-        </div>
-      </header>
+      <div className="docs-top">
+        <Header />
+      </div>
       <div className="docs-body">
         <DocsSidebar />
         <main className="docs-main">

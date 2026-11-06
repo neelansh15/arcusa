@@ -1,19 +1,10 @@
 /* arcusa docs. Flat, light, hairline borders, one blue accent. */
 .docs { min-height: 100vh; background: #fff; color: var(--text); font-size: 15px; line-height: 1.65; font-family: var(--font-body), system-ui, sans-serif; }
 .docs a { color: var(--accent); }
-.docs-top { position: sticky; top: 0; z-index: 10; background: #fff; border-bottom: 1px solid var(--line); }
-.docs-top-inner { max-width: 1160px; margin: 0 auto; height: 52px; padding: 0 20px; display: flex; align-items: center; gap: 12px; }
-.docs-logo { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; font-size: 17px; letter-spacing: -.02em; color: var(--text) !important; }
-.docs-logo:hover { text-decoration: none; }
-.docs-logo i { width: 14px; height: 14px; border-radius: 50%; background: var(--accent); }
-.docs-top-label { color: var(--muted); font-size: 13px; padding-left: 12px; border-left: 1px solid var(--line2); }
-.docs-top-nav { margin-left: auto; display: flex; gap: 4px; }
-.docs-top-nav a { color: var(--muted); padding: 4px 10px; border-radius: 6px; font-size: 14px; font-weight: 500; }
-.docs-top-nav a:hover { color: var(--text); background: var(--panel2); text-decoration: none; }
-.docs-top-nav a.on { color: var(--accent); background: #eaf0fd; }
+.docs-top { position: sticky; top: 0; z-index: 10; }
 
 .docs-body { max-width: 1160px; margin: 0 auto; display: grid; grid-template-columns: 248px minmax(0, 1fr); }
-.docs-side { position: sticky; top: 52px; align-self: start; height: calc(100vh - 52px); overflow-y: auto; padding: 28px 16px 40px 20px; border-right: 1px solid var(--line); }
+.docs-side { position: sticky; top: 46px; align-self: start; height: calc(100vh - 46px); overflow-y: auto; padding: 28px 16px 40px 20px; border-right: 1px solid var(--line); }
 .docs-side-group { margin-bottom: 22px; }
 .docs-side-title { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; margin-bottom: 6px; padding: 0 8px; }
 .docs-side ul { list-style: none; margin: 0; padding: 0; }
@@ -77,5 +68,4 @@
   .docs-side-group { margin-bottom: 8px; }
   .docs-main { padding: 28px 20px 72px; }
   .docs h1 { font-size: 28px; }
-  .docs-top-label { display: none; }
 }
