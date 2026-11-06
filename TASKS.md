@@ -105,7 +105,7 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 | [T-050](#t-050-landing-faq-final-cta-footer-and-copy-audit) | done | laptop | Landing: FAQ, final CTA, footer and copy audit |
 | [T-051](#t-051-landing-verification-themes-devices-motion-performance) | done | laptop | Landing verification: themes, devices, motion, performance |
 | [T-052](#t-052-asset-selector-button-and-modal-in-the-pair-header) | done | laptop | Asset selector button and modal in the pair header |
-| [T-053](#t-053-custom-wallet-connect-and-account-modals) | todo | laptop | Custom wallet connect and account modals |
+| [T-053](#t-053-custom-wallet-connect-and-account-modals) | doing | laptop | Custom wallet connect and account modals |
 | [T-020](#t-020-post-mvp-spike-indexer-options-on-arc-testnet-and-sepolia) | todo | alle | (post-MVP) Spike: indexer options on Arc testnet and Sepolia |
 | [T-021](#t-021-post-mvp-build-indexer-and-holdingshistory-view) | todo | laptop | (post-MVP) Build indexer and holdings/history view |
 
@@ -824,7 +824,7 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 
 ### T-053: Custom wallet connect and account modals
 - Owner: laptop
-- Status: todo
+- Status: doing
 - ADR: docs/adr/0023-custom-wallet-modal.md
 - Goal: Replace the single `injected()` connect with a themed modal listing detected wallets, plus an account modal, opened from the header and the order ticket.
 - Acceptance criteria:
@@ -832,6 +832,7 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
   - [ ] Pending, rejected, and "already pending" states shown inline; others disabled while pending.
   - [ ] Address pill opens an account modal (copy, ArcScan link, network, Disconnect); it no longer disconnects on click.
   - [ ] Header and ticket "Connect wallet" use one opener; auto-switch to Arc still works.
+  - [ ] No `window.ethereum` use except the fallback-row check (grep); wrong-chain path via the account modal; Escape closes one layer; hydration state correct after mount.
   - [ ] Dark and light, 1440 and 375; `tsc`, `oxlint`, `pnpm build` pass; Result says what could not be tested without real wallets.
 - Result:
 
