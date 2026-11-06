@@ -1,8 +1,10 @@
 "use client";
 
+import Link from "next/link";
+import { useEffect } from "react";
 import { useAccount, useChainId, useConnect, useDisconnect, useSwitchChain } from "wagmi";
 import { injected } from "wagmi/connectors";
-import { arcTestnet, sepolia } from "@/lib/config";
+import { arcTestnet } from "@/lib/config";
 
 const short = (a: string) => `${a.slice(0, 6)}…${a.slice(-4)}`;
 
@@ -13,7 +15,7 @@ export function Header() {
   const { disconnect } = useDisconnect();
   const { switchChainAsync, error: switchError } = useSwitchChain();
 
-  async function switchTo(id: typeof arcTestnet.id | typeof sepolia.id) {
+  async function switchTo(id: typeof arcTestnet.id) {
     try {
       await switchChainAsync({ chainId: id });
     } catch (e) {
@@ -37,35 +39,31 @@ export function Header() {
     }
   }
 
-  const active = walletChainId ?? chainId;
-  const msg = error?.message ?? switchError?.message;
+  const onArc = (walletChainId ?? chainId) === arcTestnet.id;
+  const msg = [error?.message, switchError?.message].find((m) => m && !/reject|denied/i.test(m));
+
+  // Users only ever need Arc: move the wallet there as soon as it connects.
+  useEffect(() => {
+    if (isConnected && walletChainId !== undefined && walletChainId !== arcTestnet.id) switchTo(arcTestnet.id).catch(() => {});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isConnected, walletChainId]);
 
   return (
     <header className="header">
       <div className="brand">
-        <b>arcusa</b>
-        <span className="muted">NVDA / USDC</span>
-        <span className="badge warn" title="Off-hours demo mode: indicative price, testnet only">
-          OFF-HOURS DEMO
-        </span>
+        <Link href="/" className="logo"><i />arcusa</Link>
+        <nav className="nav">
+          <Link href="/">Home</Link>
+          <Link href="/trade" className="on">Trade</Link>
+        </nav>
+        <span className="badge net">Arc Testnet</span>
+        <span className="badge warn" title="Off-hours demo mode: indicative price, testnet only">DEMO</span>
       </div>
       <div className="header-right">
         {msg && <span className="neg small">{msg.slice(0, 80)}</span>}
-        {isConnected && (
-          <div className="seg">
-            {[arcTestnet, sepolia].map((c) => (
-              <button
-                key={c.id}
-                className={active === c.id ? "on" : ""}
-                onClick={() => switchTo(c.id).catch(() => {})}
-              >
-                {c.id === arcTestnet.id ? "Arc" : "Sepolia"}
-              </button>
-            ))}
-          </div>
-        )}
+        {isConnected && !onArc && <button onClick={() => switchTo(arcTestnet.id).catch(() => {})}>Switch to Arc</button>}
         {isConnected && address ? (
-          <button onClick={() => disconnect()}>{short(address)}</button>
+          <button className="wallet" onClick={() => disconnect()} title="Disconnect"><i />{short(address)}</button>
         ) : (
           <button className="primary" disabled={isPending} onClick={() => connect({ connector: injected() })}>
             {isPending ? "Connecting…" : "Connect wallet"}
