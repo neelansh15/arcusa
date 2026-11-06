@@ -107,6 +107,9 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 | [T-052](#t-052-asset-selector-button-and-modal-in-the-pair-header) | done | laptop | Asset selector button and modal in the pair header |
 | [T-053](#t-053-custom-wallet-connect-and-account-modals) | done | laptop | Custom wallet connect and account modals |
 | [T-054](#t-054-deploy-tsla-support-on-the-server-price-service-and-relayer) | todo | alle | Deploy TSLA support on the server: price service and relayer |
+| [T-055](#t-055-build-test-and-deploy-the-arc-contracts-in-arc-studio-adr-0025) | doing | laptop | Build, test and deploy the Arc contracts in Arc Studio (ADR 0025) |
+| [T-056](#t-056-configure-the-studio-deployed-markets-and-move-inventory-adr-0025) | todo | alle | Configure the Studio-deployed markets and move inventory (ADR 0025) |
+| [T-057](#t-057-switch-the-app-relayer-and-docs-to-the-studio-deployments-adr-0025) | todo | laptop | Switch the app, relayer and docs to the Studio deployments (ADR 0025) |
 | [T-020](#t-020-post-mvp-spike-indexer-options-on-arc-testnet-and-sepolia) | todo | alle | (post-MVP) Spike: indexer options on Arc testnet and Sepolia |
 | [T-021](#t-021-post-mvp-build-indexer-and-holdingshistory-view) | todo | laptop | (post-MVP) Build indexer and holdings/history view |
 
@@ -861,6 +864,44 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
   - [ ] The UI has a holdings and history page that matches onchain state for a test wallet. The comparison is in Result.
   - [ ] Native USDC and ERC-20 USDC events are not double counted.
 - Notes: Post-MVP.
+- Result:
+
+### T-055: Build, test and deploy the Arc contracts in Arc Studio (ADR 0025)
+- Owner: laptop
+- Status: doing
+- ADR: docs/adr/0025-contracts-built-and-deployed-in-arc-studio.md
+- Depends on: T-003 (the Studio app is the existing one, `arc-studio whoami` works)
+- Goal: Studio compiles, tests and deploys `PriceOracle` and `InventoryMarket` for NVDA and TSLA, with owner `0x07621e39424914f633D478DdE751f3FF728CB351`.
+- Acceptance criteria:
+  - [ ] Our two sources are sent with `arc-studio run --file`; Foundry tests written and run by Studio pass; any source change Studio made is listed in Result and reviewed.
+  - [ ] Four deployments on Arc testnet reported by Studio; each verified on-chain by us (code present, `owner()` equals the deployer, constructor args, oracle address wired).
+  - [ ] `arc-studio pull` brings the contracts and tests into `contracts/arc/`; the diff against the old sources is noted.
+  - [ ] The shareable Studio URL is recorded in Result and README; Result says what a judge sees.
+- Result:
+
+### T-056: Configure the Studio-deployed markets and move inventory (ADR 0025)
+- Owner: alle
+- Status: todo
+- ADR: docs/adr/0025-contracts-built-and-deployed-in-arc-studio.md
+- Depends on: T-055
+- Goal: Using the deployer key (never in the repo), do the owner-only setup on the four Studio-deployed contracts and fund the new markets, so the app can switch.
+- Acceptance criteria:
+  - [ ] For each oracle: first price, `setDemoMode`, relayer set; for each market: `setOffHoursTrading` and any limits as before; same values as the current deployments.
+  - [ ] Inventory (wNVDA, wTSLA and USDC) moved or re-seeded into the new markets to the same levels; a test buy and sell on each, tx hashes in Result.
+  - [ ] The price service and relayer on the server are pointed at the new oracles, or a note says what the laptop must change.
+- Notes: Laptop has no deployer key. Do not paste keys anywhere.
+- Result:
+
+### T-057: Switch the app, relayer and docs to the Studio deployments (ADR 0025)
+- Owner: laptop
+- Status: todo
+- ADR: docs/adr/0025-contracts-built-and-deployed-in-arc-studio.md
+- Depends on: T-056
+- Goal: The app, the docs, `deployments/arc-testnet.json` and the README point at the Studio-deployed contracts, with the old ones recorded as superseded.
+- Acceptance criteria:
+  - [ ] `lib/market.ts`, `lib/assets.ts` and the docs contract pages use the new addresses; trades work on NVDA and TSLA in the app (or Result says what was not run).
+  - [ ] `deployments/arc-testnet.json` lists the Studio deployments and keeps the old ones under `superseded`.
+  - [ ] README and docs state plainly which parts were built where, and carry the Studio URL.
 - Result:
 
 ### T-054: Deploy TSLA support on the server: price service and relayer
