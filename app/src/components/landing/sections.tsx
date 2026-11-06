@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { CSSProperties } from "react";
-import { BridgeDiagram, CandleChart, Logo, Sparkline, icons } from "./graphics";
+import { CandleChart, Logo, icons } from "./graphics";
 import { LiveQuote } from "./live-quote";
 
 const delay = (ms: number) => ({ "--d": `${ms}ms` }) as CSSProperties;
@@ -16,14 +16,12 @@ export function Nav() {
           <span>arcusa</span>
         </a>
         <nav className="lp-nav-links" aria-label="Sections">
-          <a href="#features">Features</a>
+          <a href="#features">Product</a>
           <a href="#how">How it works</a>
           <a href="#bridge">Bridge</a>
         </nav>
         <div className="lp-nav-right">
-          <span className="lp-testnet">
-            <i /> Testnet
-          </span>
+          <span className="lp-testnet">Arc testnet demo</span>
           <Link href="/trade" className="lp-btn lp-btn-primary lp-btn-sm">
             Launch app
           </Link>
@@ -38,56 +36,40 @@ export function Nav() {
 export function Hero() {
   return (
     <section className="lp-hero" id="top">
-      <div className="lp-hero-bg" aria-hidden="true">
-        <div className="lp-grid" />
-        <div data-parallax="0.18" className="lp-orb-wrap">
-          <div className="lp-orb lp-orb-a" />
-        </div>
-        <div data-parallax="0.08" className="lp-orb-wrap">
-          <div className="lp-orb lp-orb-b" />
-        </div>
-        <div data-parallax="0.12" className="lp-orb-wrap">
-          <div className="lp-orb lp-orb-c" />
-        </div>
-      </div>
-
       <div className="lp-container lp-hero-inner">
         <div className="lp-hero-copy">
-          <a href="#how" className="lp-eyebrow lp-load" style={delay(0)}>
-            <span className="lp-eyebrow-tag">ETHGlobal Mumbai</span>
-            Live demo on Arc testnet
-            {icons.arrow}
-          </a>
-          <h1 className="lp-h1 lp-load" style={delay(80)}>
-            US stocks,
-            <br />
-            <span className="lp-grad">settled in USDC.</span>
-          </h1>
-          <p className="lp-lead lp-load" style={delay(160)}>
-            arcusa is a trading terminal for tokenized US equities on Arc, Circle&apos;s L1. Buy and sell NVDA against
-            USDC at an on-chain oracle price, with a live bid/ask and a built-in CCTP bridge from Sepolia.
+          <p className="lp-eyebrow lp-load" style={delay(0)}>
+            Tokenized US equities on Arc
           </p>
-          <div className="lp-cta-row lp-load" style={delay(240)}>
+          <h1 className="lp-h1 lp-load" style={delay(60)}>
+            US stocks from every chain, settled in USDC.
+          </h1>
+          <p className="lp-lead lp-load" style={delay(120)}>
+            arcusa is a trading terminal for tokenized US stocks on Arc, Circle&apos;s L1. The goal: bring tokenized
+            equities from Ethereum, BNB Chain, Base, Solana and more onto Arc, and trade them against USDC at an
+            oracle-anchored price, with CCTP and Bridge Kit moving the funds.
+          </p>
+          <div className="lp-cta-row lp-load" style={delay(180)}>
             <Link href="/trade" className="lp-btn lp-btn-primary lp-btn-lg">
               Open the terminal {icons.arrow}
             </Link>
             <a href="#how" className="lp-btn lp-btn-ghost lp-btn-lg">
-              See how it works
+              How it works
             </a>
           </div>
-          <p className="lp-note lp-load" style={delay(320)}>
-            Testnet demo. No real money, no real shares.
+          <p className="lp-note lp-load" style={delay(240)}>
+            Live demo on Arc testnet, no real money.
           </p>
         </div>
 
-        <div className="lp-hero-visual lp-load" style={delay(200)}>
+        <div className="lp-hero-visual lp-load" style={delay(140)}>
           <div className="lp-chart-card">
             <div className="lp-chart-head">
               <div className="lp-pair">
                 <span className="lp-pair-logo">N</span>
                 <div>
                   <b>NVDA / USDC</b>
-                  <span>Tokenized NVIDIA · Arc testnet</span>
+                  <span>Tokenized NVIDIA</span>
                 </div>
               </div>
               <div className="lp-tf" aria-hidden="true">
@@ -101,82 +83,11 @@ export function Hero() {
               <CandleChart />
             </div>
             <div className="lp-chart-foot">
-              <span>
-                <i className="lp-live-dot" /> Oracle price · illustrative preview
-              </span>
-              <span className="lp-mono">USDC settlement</span>
-            </div>
-          </div>
-
-          <div className="lp-float lp-float-a">
-            <span className="lp-float-ic ok">{icons.check}</span>
-            <div>
-              <b>Order filled</b>
-              <span>Bought 2.50 NVDA @ 182.45</span>
-            </div>
-          </div>
-          <div className="lp-float lp-float-b">
-            <span className="lp-float-ic">{icons.bridge}</span>
-            <div>
-              <b>CCTP transfer</b>
-              <span>250.00 USDC · Sepolia → Arc</span>
-            </div>
-          </div>
-          <div className="lp-float lp-float-c">
-            <span className="lp-float-ic">{icons.oracle}</span>
-            <div>
-              <b>Oracle update</b>
-              <span>NVDA price pushed on-chain</span>
+              <span>Oracle price · illustrative preview</span>
+              <span>USDC settlement</span>
             </div>
           </div>
         </div>
-      </div>
-    </section>
-  );
-}
-
-/* ---------- Ticker marquee ---------- */
-
-const TICKS = [
-  { sym: "NVDA", name: "NVIDIA", px: "182.40", ch: "+1.94%", up: true, live: true },
-  { sym: "AAPL", name: "Apple", px: "—", ch: "soon", up: true, live: false },
-  { sym: "MSFT", name: "Microsoft", px: "—", ch: "soon", up: true, live: false },
-  { sym: "TSLA", name: "Tesla", px: "—", ch: "soon", up: false, live: false },
-  { sym: "AMZN", name: "Amazon", px: "—", ch: "soon", up: true, live: false },
-  { sym: "GOOGL", name: "Alphabet", px: "—", ch: "soon", up: false, live: false },
-  { sym: "META", name: "Meta", px: "—", ch: "soon", up: true, live: false },
-];
-
-function TickerRow({ hidden }: { hidden?: boolean }) {
-  return (
-    <div className="lp-ticker-row" aria-hidden={hidden || undefined}>
-      {TICKS.map((t, i) => (
-        <div className={`lp-tick ${t.live ? "live" : ""}`} key={t.sym}>
-          <b>{t.sym}</b>
-          <span className="lp-tick-name">{t.name}</span>
-          <Sparkline seed={(i + 3) * 7919} up={t.up} />
-          <span className="lp-mono">{t.px}</span>
-          <span className={`lp-tick-ch ${t.live ? (t.up ? "up" : "down") : "soon"}`}>{t.ch}</span>
-        </div>
-      ))}
-      <div className="lp-tick info">
-        <b>USDC</b>
-        <span className="lp-tick-name">native settlement on Arc</span>
-      </div>
-      <div className="lp-tick info">
-        <b>CCTP</b>
-        <span className="lp-tick-name">Sepolia → Arc testnet</span>
-      </div>
-    </div>
-  );
-}
-
-export function Ticker() {
-  return (
-    <section className="lp-ticker" aria-label="Markets">
-      <div className="lp-ticker-track">
-        <TickerRow />
-        <TickerRow hidden />
       </div>
     </section>
   );
@@ -188,32 +99,38 @@ const FEATURES = [
   {
     icon: icons.stock,
     title: "Tokenized US stocks",
-    body: "Trade on-chain tokens that track US equities, starting with NVDA. More tickers are on the roadmap.",
+    body: "On-chain tokens that track US equities. NVDA is the first listing; more tickers and issuers are the roadmap.",
+    tag: "Live: NVDA",
   },
   {
     icon: icons.usdc,
-    title: "USDC-native settlement",
+    title: "USDC settlement",
     body: "Every trade is quoted and settled in USDC, which is also the gas token on Arc. One balance, no volatile gas asset.",
+    tag: "Live",
   },
   {
     icon: icons.oracle,
-    title: "On-chain price oracle",
+    title: "Oracle-priced market",
     body: "Prices are published on-chain, so every fill is anchored to a reference price anyone can verify.",
+    tag: "Live",
   },
   {
     icon: icons.book,
-    title: "Inventory market, live bid/ask",
+    title: "Inventory market",
     body: "An on-chain inventory market quotes a bid and ask around the oracle price. You see the spread before you trade.",
+    tag: "Live",
   },
   {
     icon: icons.bridge,
-    title: "Built-in CCTP bridge",
-    body: "Bring testnet USDC from Ethereum Sepolia to Arc with Circle's CCTP: burn, attest, mint. No wrapped tokens.",
+    title: "Multi-chain in",
+    body: "Bring tokenized stocks and USDC from Ethereum, BNB Chain, Base, Solana and others to Arc using CCTP and Bridge Kit.",
+    tag: "Roadmap",
   },
   {
     icon: icons.terminal,
     title: "A real terminal",
-    body: "Candlestick chart, order ticket, balances and recent trades in one dense, keyboard-friendly screen.",
+    body: "Candlestick chart, order ticket, balances and recent trades in one dense screen.",
+    tag: "Live",
   },
 ];
 
@@ -222,17 +139,16 @@ export function Features() {
     <section className="lp-section" id="features">
       <div className="lp-container">
         <div className="lp-section-head" data-reveal>
-          <span className="lp-kicker">Features</span>
-          <h2 className="lp-h2">
-            A brokerage feel.
-            <br />
-            <span className="lp-dim">An on-chain engine.</span>
-          </h2>
+          <span className="lp-kicker">Product</span>
+          <h2 className="lp-h2">A brokerage feel on an on-chain engine.</h2>
         </div>
         <div className="lp-features">
           {FEATURES.map((f, i) => (
-            <article className="lp-feature" key={f.title} data-reveal style={delay(i * 70)}>
-              <div className="lp-feature-ic">{f.icon}</div>
+            <article className="lp-feature" key={f.title} data-reveal style={delay(i * 40)}>
+              <div className="lp-feature-top">
+                <div className="lp-feature-ic">{f.icon}</div>
+                <span className={`lp-tag ${f.tag === "Roadmap" ? "road" : ""}`}>{f.tag}</span>
+              </div>
               <h3>{f.title}</h3>
               <p>{f.body}</p>
             </article>
@@ -246,10 +162,14 @@ export function Features() {
 /* ---------- How it works ---------- */
 
 const STEPS = [
-  { icon: icons.wallet, title: "Connect", body: "Connect a wallet and switch to Arc testnet. USDC pays for gas." },
-  { icon: icons.bridge, title: "Fund with USDC", body: "Bridge testnet USDC from Sepolia via CCTP, or use USDC you already hold on Arc." },
-  { icon: icons.swap, title: "Trade NVDA", body: "Pick buy or sell, check the oracle-anchored bid/ask, and submit from the order ticket." },
-  { icon: icons.check, title: "Settle on-chain", body: "The fill settles in one transaction: tokens and USDC land in your wallet." },
+  {
+    icon: icons.bridge,
+    title: "Bring assets to Arc",
+    body: "Move USDC and tokenized stocks from Ethereum, BNB Chain, Base, Solana and other chains with CCTP and Bridge Kit.",
+  },
+  { icon: icons.wallet, title: "Connect", body: "Connect a wallet on Arc. USDC pays for gas, so there is no second token to hold." },
+  { icon: icons.swap, title: "Trade against USDC", body: "Pick buy or sell, check the oracle-anchored bid/ask, and submit from the order ticket." },
+  { icon: icons.check, title: "Settle on Arc", body: "The fill settles in one transaction: tokens and USDC land in your wallet." },
 ];
 
 export function HowItWorks() {
@@ -258,29 +178,17 @@ export function HowItWorks() {
       <div className="lp-container">
         <div className="lp-section-head" data-reveal>
           <span className="lp-kicker">How it works</span>
-          <h2 className="lp-h2">
-            From Sepolia to a filled order
-            <br />
-            <span className="lp-dim">in four steps.</span>
-          </h2>
+          <h2 className="lp-h2">From any chain to a filled order in four steps.</h2>
         </div>
-        <div className="lp-steps-wrap">
-          <div className="lp-steps-line" aria-hidden="true">
-            <span />
-          </div>
-          <ol className="lp-steps">
+        <ol className="lp-steps">
           {STEPS.map((s, i) => (
-            <li className="lp-step" key={s.title} data-reveal style={delay(i * 110)}>
-              <div className="lp-step-node">
-                {s.icon}
-                <em>{String(i + 1).padStart(2, "0")}</em>
-              </div>
+            <li className="lp-step" key={s.title} data-reveal style={delay(i * 50)}>
+              <em>{String(i + 1).padStart(2, "0")}</em>
               <h3>{s.title}</h3>
               <p>{s.body}</p>
             </li>
           ))}
-          </ol>
-        </div>
+        </ol>
       </div>
     </section>
   );
@@ -288,47 +196,53 @@ export function HowItWorks() {
 
 /* ---------- Bridge / USDC ---------- */
 
+const CHAINS = [
+  { name: "Ethereum", state: "Demo: Sepolia testnet", live: true },
+  { name: "BNB Chain", state: "Planned", live: false },
+  { name: "Base", state: "Planned", live: false },
+  { name: "Solana", state: "Planned", live: false },
+  { name: "More chains", state: "Planned", live: false },
+];
+
 export function Bridge() {
   return (
     <section className="lp-section lp-bridge" id="bridge">
       <div className="lp-container lp-bridge-inner">
         <div className="lp-bridge-copy" data-reveal>
-          <span className="lp-kicker">USDC in, via CCTP</span>
-          <h2 className="lp-h2">
-            Native USDC.
-            <br />
-            <span className="lp-grad">No wrappers.</span>
-          </h2>
+          <span className="lp-kicker">Multi-chain in, USDC on Arc</span>
+          <h2 className="lp-h2">Native USDC. No wrappers.</h2>
           <p className="lp-body">
-            Circle&apos;s Cross-Chain Transfer Protocol burns USDC on the source chain and mints it natively on the
-            destination once Circle attests to the burn. arcusa wires this into the terminal, so moving testnet USDC
-            from Sepolia to Arc is one panel, not a separate app.
+            Circle&apos;s Cross-Chain Transfer Protocol burns USDC on the source chain and mints it natively on Arc once
+            Circle attests to the burn. Bridge Kit packages the flow for apps. arcusa builds on both so funds and
+            tokenized stocks from many chains end up in one place, priced by an oracle and settled in USDC.
           </p>
           <ul className="lp-checks">
-            <li>{icons.check} Burn on Ethereum Sepolia</li>
+            <li>{icons.check} Burn on the source chain</li>
             <li>{icons.check} Attestation from Circle</li>
-            <li>{icons.check} Mint native USDC on Arc testnet</li>
-            <li>{icons.check} Trade immediately: USDC is also gas</li>
+            <li>{icons.check} Mint native USDC on Arc</li>
+            <li>{icons.check} Trade right away: USDC is also gas</li>
           </ul>
         </div>
-        <div className="lp-bridge-visual" data-reveal style={delay(120)}>
+        <div className="lp-bridge-visual" data-reveal style={delay(80)}>
           <div className="lp-bridge-card">
-            <BridgeDiagram />
-            <div className="lp-bridge-row">
-              <div>
-                <span>From</span>
-                <b>Sepolia</b>
-              </div>
-              <div className="lp-bridge-amt">
-                <span>Amount</span>
-                <b className="lp-mono">250.00 USDC</b>
-              </div>
-              <div>
-                <span>To</span>
-                <b>Arc testnet</b>
-              </div>
+            <div className="lp-bridge-head">
+              <span>Source chain</span>
+              <span>Status</span>
+            </div>
+            <ul className="lp-chains">
+              {CHAINS.map((c) => (
+                <li key={c.name}>
+                  <b>{c.name}</b>
+                  <span className={c.live ? "on" : ""}>{c.state}</span>
+                </li>
+              ))}
+            </ul>
+            <div className="lp-bridge-dest">
+              <span>Destination</span>
+              <b>Arc · settled in USDC</b>
             </div>
           </div>
+          <p className="lp-fine">Today the in-app bridge moves testnet USDC from Ethereum Sepolia. Other chains are the goal, not yet live.</p>
         </div>
       </div>
     </section>
@@ -338,10 +252,10 @@ export function Bridge() {
 /* ---------- Stats ---------- */
 
 const STATS = [
-  { k: "NVDA", v: "First listed equity", s: "more tickers on the roadmap" },
   { k: "USDC", v: "Quote, settlement and gas", s: "one asset for everything" },
-  { k: "2 chains", v: "Sepolia → Arc via CCTP", s: "burn, attest, mint" },
-  { k: "$0", v: "Real money at risk", s: "testnet demo only" },
+  { k: "Oracle", v: "On-chain reference price", s: "verifiable fills" },
+  { k: "CCTP", v: "Native USDC transfers", s: "burn, attest, mint" },
+  { k: "NVDA", v: "First listed equity", s: "more tickers on the roadmap" },
 ];
 
 export function Stats() {
@@ -350,7 +264,7 @@ export function Stats() {
       <div className="lp-container">
         <div className="lp-stats">
           {STATS.map((s, i) => (
-            <div className="lp-stat" key={s.k} data-reveal style={delay(i * 90)}>
+            <div className="lp-stat" key={s.k} data-reveal style={delay(i * 40)}>
               <b>{s.k}</b>
               <span>{s.v}</span>
               <small>{s.s}</small>
@@ -369,14 +283,8 @@ export function FinalCta() {
     <section className="lp-section lp-final">
       <div className="lp-container">
         <div className="lp-final-card" data-reveal>
-          <div className="lp-final-bg" aria-hidden="true" />
-          <span className="lp-kicker">Try the demo</span>
-          <h2 className="lp-h2 lp-final-h">
-            Open the terminal.
-            <br />
-            <span className="lp-grad">Trade NVDA on Arc.</span>
-          </h2>
-          <p className="lp-body">Grab testnet USDC, connect a wallet, and place your first on-chain stock trade.</p>
+          <h2 className="lp-h2">Open the terminal.</h2>
+          <p className="lp-body">Connect a wallet and place an on-chain stock trade settled in USDC.</p>
           <div className="lp-cta-row center">
             <Link href="/trade" className="lp-btn lp-btn-primary lp-btn-lg">
               Launch arcusa {icons.arrow}
@@ -399,11 +307,11 @@ export function Footer() {
             <Logo size={24} />
             <span>arcusa</span>
           </a>
-          <p>Built for ETHGlobal Mumbai on Arc testnet.</p>
+          <p>Live demo on Arc testnet, no real money. Built for ETHGlobal.</p>
         </div>
         <nav className="lp-footer-links" aria-label="Footer">
           <Link href="/trade">Terminal</Link>
-          <a href="#features">Features</a>
+          <a href="#features">Product</a>
           <a href="#how">How it works</a>
           <a href="https://www.arc.network" target="_blank" rel="noreferrer">
             Arc
@@ -414,8 +322,9 @@ export function Footer() {
         </nav>
       </div>
       <div className="lp-container lp-disclaimer">
-        Testnet demonstration only. Tokens on arcusa have no monetary value, are not backed by or redeemable for real
-        shares, and nothing here is investment advice. Prices shown on this page are illustrative.
+        Demo only. The deployment runs on Arc testnet; tokens have no monetary value, are not backed by or redeemable
+        for real shares, and nothing here is investment advice. Prices on this page are illustrative. Multi-chain
+        support is a roadmap goal and is not live.
       </div>
     </footer>
   );

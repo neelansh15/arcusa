@@ -1,24 +1,18 @@
-import type { CSSProperties, ReactNode } from "react";
+import type { ReactNode } from "react";
 
-/* ---------- Logo ---------- */
+/* ---------- Logo (flat) ---------- */
 
 export function Logo({ size = 28 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 32 32" aria-hidden="true">
-      <defs>
-        <linearGradient id="lp-logo-g" x1="0" y1="1" x2="1" y2="0">
-          <stop offset="0" stopColor="#3b82f6" />
-          <stop offset="1" stopColor="#22d3ee" />
-        </linearGradient>
-      </defs>
-      <rect x="1" y="1" width="30" height="30" rx="9" fill="#0e1626" stroke="rgba(96,165,250,.35)" />
-      <path d="M7 23 A9.5 9.5 0 0 1 25 23" fill="none" stroke="url(#lp-logo-g)" strokeWidth="3" strokeLinecap="round" />
-      <circle cx="16" cy="13.5" r="2.6" fill="#22d3ee" />
+      <rect width="32" height="32" rx="8" fill="#2563eb" />
+      <path d="M7.5 23 A8.5 8.5 0 0 1 24.5 23" fill="none" stroke="#fff" strokeWidth="2.6" strokeLinecap="round" />
+      <circle cx="16" cy="13.5" r="2.4" fill="#fff" />
     </svg>
   );
 }
 
-/* ---------- Candlestick chart ---------- */
+/* ---------- Candlestick chart (flat, illustrative) ---------- */
 
 type Candle = { o: number; h: number; l: number; c: number };
 
@@ -54,65 +48,26 @@ export function CandleChart() {
   const step = W / CANDLES.length;
   const bw = step * 0.56;
   const f = (n: number) => n.toFixed(1);
-
-  const line = CANDLES.map((c, i) => `${i === 0 ? "M" : "L"}${f(i * step + step / 2)},${f(y(c.c))}`).join(" ");
-  const area = `${line} L${f((CANDLES.length - 1) * step + step / 2)},${H} L${f(step / 2)},${H} Z`;
   const last = CANDLES[CANDLES.length - 1];
-  const lastX = (CANDLES.length - 1) * step + step / 2;
 
   return (
     <svg className="lp-candles" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" role="img" aria-label="Illustrative NVDA/USDC candlestick chart">
-      <defs>
-        <linearGradient id="lp-area" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#3b82f6" stopOpacity=".32" />
-          <stop offset="1" stopColor="#3b82f6" stopOpacity="0" />
-        </linearGradient>
-        <filter id="lp-glow" x="-20%" y="-20%" width="140%" height="140%">
-          <feGaussianBlur stdDeviation="3" result="b" />
-          <feMerge>
-            <feMergeNode in="b" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
-        </filter>
-      </defs>
       {[0.2, 0.4, 0.6, 0.8].map((t) => (
         <line key={t} x1="0" x2={W} y1={H * t} y2={H * t} className="lp-gridline" />
       ))}
-      <path d={area} fill="url(#lp-area)" className="lp-area" />
       {CANDLES.map((c, i) => {
         const up = c.c >= c.o;
         const x = i * step + step / 2;
         const top = y(Math.max(c.o, c.c));
         const bh = Math.max(1.5, Math.abs(y(c.o) - y(c.c)));
         return (
-          <g key={i} className={`lp-candle ${up ? "up" : "down"}`} style={{ "--i": i } as CSSProperties}>
+          <g key={i} className={`lp-candle ${up ? "up" : "down"}`}>
             <line x1={f(x)} x2={f(x)} y1={f(y(c.h))} y2={f(y(c.l))} />
-            <rect x={f(x - bw / 2)} y={f(top)} width={f(bw)} height={f(bh)} rx="1.5" />
+            <rect x={f(x - bw / 2)} y={f(top)} width={f(bw)} height={f(bh)} />
           </g>
         );
       })}
-      <path d={line} pathLength={1} className="lp-priceline" filter="url(#lp-glow)" />
       <line x1="0" x2={W} y1={f(y(last.c))} y2={f(y(last.c))} className="lp-lastline" />
-      <circle cx={f(lastX)} cy={f(y(last.c))} r="4" className="lp-lastdot" />
-    </svg>
-  );
-}
-
-/* ---------- Mini sparkline for ticker ---------- */
-
-export function Sparkline({ seed, up }: { seed: number; up: boolean }) {
-  let s = seed;
-  const pts: string[] = [];
-  let v = 10;
-  for (let i = 0; i < 16; i++) {
-    s = (s * 16807) % 2147483647;
-    v += (s / 2147483647 - 0.5) * 4 + (up ? 0.45 : -0.45);
-    v = Math.max(1, Math.min(19, v));
-    pts.push(`${i * 4},${(20 - v).toFixed(1)}`);
-  }
-  return (
-    <svg className={`lp-spark ${up ? "up" : "down"}`} viewBox="0 0 60 20" aria-hidden="true">
-      <polyline points={pts.join(" ")} />
     </svg>
   );
 }
@@ -121,7 +76,7 @@ export function Sparkline({ seed, up }: { seed: number; up: boolean }) {
 
 function Icon({ children }: { children: ReactNode }) {
   return (
-    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       {children}
     </svg>
   );
@@ -186,62 +141,8 @@ export const icons = {
     </Icon>
   ),
   arrow: (
-    <svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       <path d="M4 10h11M11 5.5L15.5 10 11 14.5" />
     </svg>
   ),
 };
-
-/* ---------- CCTP bridge diagram ---------- */
-
-export function BridgeDiagram() {
-  const path = "M90 150 C 210 40, 390 40, 510 150";
-  return (
-    <svg className="lp-bridge-svg" viewBox="0 0 600 230" role="img" aria-label="USDC is burned on Sepolia, attested by Circle, and minted natively on Arc testnet">
-      <defs>
-        <linearGradient id="lp-arc-g" x1="0" x2="1">
-          <stop offset="0" stopColor="#8da2c0" stopOpacity=".5" />
-          <stop offset=".5" stopColor="#3b82f6" />
-          <stop offset="1" stopColor="#22d3ee" />
-        </linearGradient>
-        <radialGradient id="lp-node-g">
-          <stop offset="0" stopColor="#3b82f6" stopOpacity=".45" />
-          <stop offset="1" stopColor="#3b82f6" stopOpacity="0" />
-        </radialGradient>
-      </defs>
-
-      <path d={path} className="lp-bridge-track" />
-      <path d={path} pathLength={1} className="lp-bridge-flow" stroke="url(#lp-arc-g)" />
-      {[0, 1, 2].map((i) => (
-        <circle key={i} r="5" cx="0" cy="0" className="lp-bridge-dot">
-          <animateMotion dur="3.3s" begin={`-${(i * 1.1).toFixed(1)}s`} repeatCount="indefinite" path={path} />
-        </circle>
-      ))}
-
-      {/* attestation node */}
-      <g transform="translate(300 68)">
-        <circle r="34" fill="url(#lp-node-g)" />
-        <rect x="-62" y="-17" width="124" height="34" rx="17" className="lp-bridge-pill" />
-        <text y="5" textAnchor="middle" className="lp-bridge-label">Circle attests</text>
-      </g>
-
-      {/* Sepolia */}
-      <g transform="translate(90 160)">
-        <circle r="46" fill="url(#lp-node-g)" opacity=".6" />
-        <circle r="30" className="lp-bridge-node src" />
-        <text y="5" textAnchor="middle" className="lp-bridge-node-t">ETH</text>
-        <text y="66" textAnchor="middle" className="lp-bridge-cap">Sepolia</text>
-        <text y="84" textAnchor="middle" className="lp-bridge-sub">burn USDC</text>
-      </g>
-
-      {/* Arc */}
-      <g transform="translate(510 160)">
-        <circle r="50" fill="url(#lp-node-g)" className="lp-pulse" />
-        <circle r="30" className="lp-bridge-node dst" />
-        <text y="5" textAnchor="middle" className="lp-bridge-node-t">ARC</text>
-        <text y="66" textAnchor="middle" className="lp-bridge-cap">Arc testnet</text>
-        <text y="84" textAnchor="middle" className="lp-bridge-sub">mint native USDC</text>
-      </g>
-    </svg>
-  );
-}

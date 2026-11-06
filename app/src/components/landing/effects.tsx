@@ -4,10 +4,9 @@ import { useEffect } from "react";
 
 /**
  * Progressive enhancement for the landing page:
- * - reveal-on-scroll for [data-reveal] elements (IntersectionObserver)
- * - light parallax for [data-parallax] elements (rAF-throttled scroll)
- * - solid nav background once the page is scrolled
- * Everything is skipped when the user prefers reduced motion.
+ * - quiet reveal-on-scroll for [data-reveal] elements
+ * - hairline nav border once the page is scrolled
+ * Skipped when the user prefers reduced motion.
  */
 export function LandingEffects() {
   useEffect(() => {
@@ -17,7 +16,6 @@ export function LandingEffects() {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const nav = root.querySelector<HTMLElement>(".lp-nav");
     const revealEls = root.querySelectorAll<HTMLElement>("[data-reveal]");
-    const parallaxEls = root.querySelectorAll<HTMLElement>("[data-parallax]");
 
     let io: IntersectionObserver | undefined;
     if (!reduce && "IntersectionObserver" in window) {
@@ -36,27 +34,13 @@ export function LandingEffects() {
       revealEls.forEach((el) => io?.observe(el));
     }
 
-    let raf = 0;
-    const update = () => {
-      raf = 0;
-      const y = window.scrollY;
-      nav?.classList.toggle("is-scrolled", y > 12);
-      if (reduce) return;
-      parallaxEls.forEach((el) => {
-        const speed = Number(el.dataset.parallax) || 0.1;
-        el.style.transform = `translate3d(0, ${(y * speed).toFixed(1)}px, 0)`;
-      });
-    };
-    const onScroll = () => {
-      if (!raf) raf = requestAnimationFrame(update);
-    };
+    const onScroll = () => nav?.classList.toggle("is-scrolled", window.scrollY > 8);
     window.addEventListener("scroll", onScroll, { passive: true });
-    update();
+    onScroll();
 
     return () => {
       io?.disconnect();
       window.removeEventListener("scroll", onScroll);
-      if (raf) cancelAnimationFrame(raf);
       root.classList.remove("lp-js");
     };
   }, []);
