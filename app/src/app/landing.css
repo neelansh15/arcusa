@@ -310,3 +310,13 @@ html:has(.landing) { scroll-behavior: smooth; background: var(--canvas); }
 }
 .lp-pick-row .lp-ic { flex: none; } .lp-pick-row > div { min-width: 0; } .lp-pick-row small { display: block; }
 @media (max-width: 767px) { .lp-pick { width: 90%; } .lp-pick-row { padding: 14px 16px; gap: 10px; } .lp-pick-row > span { padding: 4px 10px; } .lp-wallet { width: 80%; } }
+
+/* Landing nav: same hamburger as the app header on narrow screens */
+.lp-nav .menu-btn { display: none; }
+.lp-nav-center, .lp-nav-right { flex-wrap: nowrap; } .lp-nav-right > * { flex: none; white-space: nowrap; }
+@media (max-width: 1000px) {
+  .lp-nav-center { display: none; } .lp-nav-inner { grid-template-columns: auto 1fr; }
+  .lp-nav .menu-btn { display: inline-grid; }
+  .lp-nav-inner { position: relative; } .lp-nav .menu-panel { top: calc(100% - 4px); left: 18px; right: 18px; }
+}
+@media (max-width: 420px) { .lp-nav-right { gap: 6px; } .lp-nav-right .lp-btn-sm { padding: 8px 14px; font-size: 14px; } }

@@ -5,6 +5,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import { useChainId, useConnection } from "wagmi";
 import { arcTestnet } from "@/lib/config";
 import { isRejection, useSwitchToArc } from "@/lib/use-switch-to-arc";
+import { NavMenu } from "./nav-menu";
 import { SiteNav } from "./site-nav";
 import { ThemeToggle } from "./theme-toggle";
 import { Toast, type ToastMsg } from "./toast";
@@ -48,8 +49,8 @@ export function Header({ extra }: { extra?: ReactNode }) {
       </div>
       <SiteNav className="nav" />
       <div className="header-right">
-        <span className="badge net">Arc Testnet</span>
-        <span className="badge warn" title="Off-hours demo mode: indicative price, testnet only">DEMO</span>
+        <span className="badge net"><span className="full">Arc Testnet</span><span className="short">Testnet</span></span>
+        <span className="badge warn demo" title="Off-hours demo mode: indicative price, testnet only">DEMO</span>
         {extra}
         <ThemeToggle />
         {isConnected && !onArc && <button onClick={switchTo}>Switch to Arc</button>}
@@ -60,6 +61,9 @@ export function Header({ extra }: { extra?: ReactNode }) {
         ) : (
           <button className="primary" onClick={openConnect} aria-haspopup="dialog">Connect wallet</button>
         )}
+        <NavMenu>
+          <p className="menu-status"><span className="badge net">Arc Testnet</span><span className="badge warn">DEMO</span><small>Indicative prices, no real money.</small></p>
+        </NavMenu>
       </div>
       <Toast toast={toast} onClose={() => setToast(null)} />
     </header>

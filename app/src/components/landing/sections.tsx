@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { CSSProperties } from "react";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { NavMenu } from "../nav-menu";
 import { SiteNav } from "../site-nav";
 import { CTA, FAQ, FOOTER_DISCLAIMER, HERO, HOOD, STEPS, TILES, CALC, PHONE } from "./copy";
 import { Arrow, GBridge, GChain, GCost, GOne, GPhone, GPrice, Logo, Tile, Vis1, Vis2, Vis3 } from "./graphics";
@@ -29,6 +30,9 @@ export function Nav() {
           <span className="lp-testnet">Arc testnet demo</span>
           <ThemeToggle />
           <Link href="/trade" className="lp-btn lp-btn-primary lp-btn-sm">Launch app</Link>
+          <NavMenu>
+            <nav className="menu-anchors" aria-label="On this page"><a href="#how">How it works</a><a href="#faq">FAQ</a></nav>
+          </NavMenu>
         </div>
       </div>
     </header>

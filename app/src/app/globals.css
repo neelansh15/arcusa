@@ -253,7 +253,7 @@ button.primary:hover:not(:disabled) { background: var(--accent2); border-color: 
   .price { font-size: 32px; }
   .chips { margin-left: 0; width: 100%; justify-content: space-between; }
   .chips button { flex: 1; }
-  .header { padding: 0 12px; } .header .nav, .header .badge { display: none; }
+  .header { padding: 0 12px; } .header .nav, .header-right > .badge { display: none; }
 }
 .tag { white-space: nowrap; }
 
@@ -315,7 +315,7 @@ button.wallet i { background: var(--accent-fill); }
 @media (max-width: 1100px) { .trade { grid-template-columns: minmax(0, 1fr) 360px; gap: 28px; padding: 28px; } }
 @media (max-width: 767px) {
   .trade { grid-template-columns: minmax(0, 1fr); width: calc(100% - 24px); padding: 16px 14px 96px; gap: 16px; border-radius: 28px; margin-bottom: 12px; }
-  .header { padding: 0 14px; grid-template-columns: auto 1fr; } .header .nav { display: none; } .header-right .badge { display: none; }
+  .header { padding: 0 14px; grid-template-columns: auto 1fr; } .header .nav { display: none; } .header-right > .badge { display: none; }
   .price { font-size: 40px; } .ic { width: 40px; height: 40px; font-size: 16px; } .pair-head h1 { font-size: 26px; }
   .chart-slot { height: 240px; }
   .chips { width: 100%; justify-content: space-between; } .chips button { flex: 1; padding: 8px 4px; }
@@ -462,3 +462,36 @@ button.asset-row:focus-visible { outline: 2px solid var(--accent); outline-offse
 .acct-actions { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; } .btn-link { color: var(--accent); font-weight: 600; font-size: 14px; }
 .acct-net { display: flex; align-items: center; gap: 10px; padding: 12px 4px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); } .acct-net span { color: var(--muted); } .acct-net b { margin-right: auto; } .acct-net b.warn { color: var(--warn); }
 .acct-out { background: var(--neg-soft); color: var(--neg); border-color: transparent; padding: 12px; font-weight: 700; }
+
+/* Responsive header: no wrapping, tiered compaction, hamburger menu on narrow screens */
+.header { grid-template-columns: auto 1fr auto; column-gap: 16px; position: relative; }
+.header .nav { justify-self: center; }
+.header-right { flex-wrap: nowrap; min-width: 0; }
+.header-right > *, .badge, button.wallet, .header .primary, .nav a { white-space: nowrap; flex: none; }
+.badge .short { display: none; }
+.menu-btn { display: none; }
+.menu-scrim { position: fixed; inset: 0; z-index: 55; background: var(--scrim); }
+.menu-panel { position: absolute; z-index: 60; top: calc(100% - 6px); left: 14px; right: 14px; background: var(--card); border: 1px solid var(--line2); border-radius: var(--r-inner); box-shadow: var(--shadow); padding: 12px; display: flex; flex-direction: column; gap: 4px; }
+.menu-links { display: flex; flex-direction: column; gap: 2px; margin: 0; }
+.menu-links a { padding: 14px 16px; border-radius: 16px; font-size: 18px; font-weight: 600; color: var(--text-2); }
+.menu-links a:hover { background: var(--hover); color: var(--text); } .menu-links a.on { background: var(--accent-soft); color: var(--accent); }
+.menu-anchors { display: flex; gap: 6px; padding: 6px 4px 2px; border-top: 1px solid var(--line); margin-top: 6px; } .menu-anchors a { padding: 8px 14px; border-radius: var(--r-pill); background: var(--panel2); font-size: 14px; color: var(--text-2); }
+.menu-status { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 6px 4px 2px; padding-top: 12px; border-top: 1px solid var(--line); } .menu-status small { color: var(--muted); font-size: 13px; }
+.menu-panel .badge .full { display: inline; } .menu-panel .badge .short { display: none; }
+
+@media (max-width: 1279px) {
+  .header { padding: 0 22px; column-gap: 12px; }
+  .nav a { padding: 8px 12px; font-size: 14px; }
+  .header-right > .badge .full { display: none; } .header-right > .badge .short { display: inline; } .header-right > .badge.demo { display: none; }
+  .header-right { gap: 6px; }
+  button.wallet { padding: 8px 14px; font-size: 14px; } .header .primary { padding: 9px 16px; font-size: 14px; }
+}
+@media (max-width: 960px) {
+  .header { grid-template-columns: auto 1fr; padding: 0 16px; }
+  .header .nav { display: none; } .header-right > .badge { display: none; }
+  .menu-btn { display: inline-grid; }
+}
+@media (max-width: 420px) {
+  .header { padding: 0 12px; column-gap: 6px; } .logo { font-size: 18px; } .logo i { width: 14px; height: 14px; }
+  button.wallet { padding: 7px 11px; font-size: 13px; } .header .primary { padding: 8px 14px; font-size: 13px; }
+}
