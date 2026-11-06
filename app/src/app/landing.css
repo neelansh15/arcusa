@@ -321,3 +321,5 @@ html:has(.landing) { scroll-behavior: smooth; background: var(--canvas); }
 }
 @media (max-width: 420px) { .lp-nav-right { gap: 6px; } .lp-nav-right .lp-btn-sm { padding: 8px 14px; font-size: 14px; } }
 .lp-h1 { text-wrap: balance; }
+.lp-eyebrow b { color: var(--text); font-weight: 800; letter-spacing: -.01em; }
+.lp-eyebrow span[aria-hidden] { color: var(--dim); }

@@ -47,7 +47,7 @@ export function Hero() {
       <div className="lp-hero-glow" aria-hidden="true" />
       <div className="lp-container lp-hero-inner">
         <div className="lp-hero-copy">
-          <p className="lp-eyebrow lp-load" style={delay(0)}><i />{HERO.eyebrow}</p>
+          <p className="lp-eyebrow lp-load" style={delay(0)}><i /><b>{HERO.brand}</b><span aria-hidden="true">·</span>{HERO.eyebrow}</p>
           <h1 className="lp-h1 lp-load" style={delay(60)}>
             {HERO.h1a}
             <span>{HERO.h1b}</span>

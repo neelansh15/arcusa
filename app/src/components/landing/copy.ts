@@ -8,6 +8,7 @@
 export const DISCLAIMER_SHORT = "Testnet demo. Not a security, no real shares, no real value."; // ADR 0016
 
 export const HERO = {
+  brand: "Arcusa",
   eyebrow: "Testnet demo · no real money",
   h1a: "Bringing US stocks",
   h1b: "to Arc",
