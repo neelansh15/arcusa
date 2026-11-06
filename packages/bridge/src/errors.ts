@@ -4,7 +4,8 @@ export type BridgeErrorCode =
   | "CONFIG_MISSING"
   | "CONFIG_INVALID"
   | "UNSUPPORTED_ROUTE"
-  | "INVALID_AMOUNT";
+  | "INVALID_AMOUNT"
+  | "INVALID_TRANSITION";
 
 export abstract class BridgeError extends Error {
   abstract readonly code: BridgeErrorCode;
@@ -41,4 +42,12 @@ export class UnsupportedRouteError extends BridgeError {
 /** Amount is not a positive value representable at the token's decimals. */
 export class InvalidAmountError extends BridgeError {
   readonly code = "INVALID_AMOUNT" as const;
+}
+
+/** The state machine was asked for a move it does not allow. */
+export class InvalidTransitionError extends BridgeError {
+  readonly code = "INVALID_TRANSITION" as const;
+  constructor(readonly from: string, readonly event: string) {
+    super(`invalid transition: ${event} from ${from}`);
+  }
 }
