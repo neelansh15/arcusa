@@ -44,7 +44,7 @@ export function OrderTicket({ asset, market, usdcBal, nvdaBal, onDone, initialSi
 
   // Provider comparison (ADR 0026). Default = best; with one provider this is just that provider and nothing changes.
   const pq = useProviderQuotes(asset, side, amount);
-  const selQ = pq.quotes.find((x) => x.providerId === selectedProviderId) ?? pq.best;
+  const selQ = pq.quotes.find((x) => x.providerId === selectedProviderId) ?? pq.preferred;
   const provider = providersFor(asset.ticker).find((p) => p.id === selQ?.providerId);
   const quoteOnly = !!provider && !provider.market;
 

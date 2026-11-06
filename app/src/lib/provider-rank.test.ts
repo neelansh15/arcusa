@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { rankQuotes, simulateQuote, type Provider, type RawQuote } from "./provider-rank.ts";
+import { defaultQuote, holdLastGood, rankQuotes, simulateQuote, type Provider, type RawQuote } from "./provider-rank.ts";
 
 const addr = "0x0000000000000000000000000000000000000001" as const;
 const real: Provider = { id: "real", assetTicker: "TSLA", label: "wTSLA", tokenSymbol: "wTSLA", premiumBps: 0, spreadBps: 0, simulated: false, market: { oracle: addr, market: addr, token: addr } };
@@ -67,4 +67,36 @@ test("simulateQuote applies premium then spread, both directions", () => {
   const sell = simulateQuote({ premiumBps: 100, spreadBps: 100 }, "sell", 2, 100);
   assert.ok(Math.abs(sell.price - 100 * 1.01 * 0.99) < 1e-9);
   assert.ok(Math.abs(sell.out - 2 * sell.price) < 1e-9);
+});
+
+test("default selection is the best tradable provider, while best stays the overall winner", () => {
+  const { quotes, best } = rankQuotes([raw(real, 0.4), raw(simA, 0.5)], "buy");
+  assert.equal(best?.providerId, "a");
+  assert.equal(defaultQuote(quotes, best)?.providerId, "real");
+  assert.equal(quotes.find((q) => q.isBest)?.providerId, "a");
+});
+
+test("default selection: stale tradable beats nothing, no tradable falls back to best", () => {
+  const stale = rankQuotes([raw(real, 0.4, "stale"), raw(simA, 0.5)], "buy");
+  assert.equal(defaultQuote(stale.quotes, stale.best)?.providerId, "real");
+  const none = rankQuotes([raw(simA, 0.5), raw(simB, 0.4)], "buy");
+  assert.equal(defaultQuote(none.quotes, none.best)?.providerId, "a");
+  const down = rankQuotes([raw(real, 0, "unavailable"), raw(simA, 0.5)], "buy");
+  assert.equal(defaultQuote(down.quotes, down.best)?.providerId, "a");
+});
+
+test("default selection with one provider is that provider", () => {
+  const { quotes, best } = rankQuotes([raw(real, 1)], "buy");
+  assert.equal(defaultQuote(quotes, best)?.providerId, "real");
+});
+
+test("a single failed read keeps the last good quote for a short time", () => {
+  const good = raw(real, 0.4);
+  const bad = raw(real, 0, "unavailable");
+  assert.equal(holdLastGood(bad, { raw: good, at: 1000 }, 5000, 20_000), good);
+  assert.equal(holdLastGood(bad, { raw: good, at: 1000 }, 30_000, 20_000), bad); // too old
+  assert.equal(holdLastGood(bad, undefined, 5000, 20_000), bad); // nothing to hold
+  assert.equal(holdLastGood(bad, { raw: raw(real, 0, "unavailable"), at: 1000 }, 5000, 20_000), bad);
+  const ok = raw(real, 0.5);
+  assert.equal(holdLastGood(ok, { raw: good, at: 1000 }, 5000, 20_000), ok); // fresh data always wins
 });

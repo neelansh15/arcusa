@@ -81,3 +81,25 @@ export function rankQuotes(raw: RawQuote[], side: Side): { quotes: ProviderQuote
   }));
   return { quotes, best: quotes.find((q) => q.isBest) };
 }
+
+/**
+ * The provider to select by default: the best tradable one (so the user can trade at once), falling back to the best
+ * overall only when none is tradable. "Best" and its pill stay on the overall winner, so the comparison is still visible.
+ */
+export function defaultQuote(quotes: ProviderQuote[], best: ProviderQuote | undefined): ProviderQuote | undefined {
+  const pool = quotes.some((q) => q.tradable && q.status === "ok") ? quotes.filter((q) => q.tradable && q.status === "ok") : quotes.filter((q) => q.tradable && q.status === "stale");
+  let pick: ProviderQuote | undefined;
+  for (const q of pool) if (!pick || Number(q.amountOut) > Number(pick.amountOut)) pick = q;
+  return pick ?? best;
+}
+
+export type LastGood = { raw: RawQuote; at: number };
+
+/**
+ * Keep the last good quote for a short time when a single read fails (for example an RPC 429), so a tradable provider
+ * does not flip to Unavailable for one bad poll. Only "unavailable" results are replaced, and only within `ttlMs`.
+ */
+export function holdLastGood(next: RawQuote, last: LastGood | undefined, now: number, ttlMs: number): RawQuote {
+  if (next.status !== "unavailable" || !last || last.raw.status === "unavailable" || now - last.at > ttlMs) return next;
+  return last.raw;
+}
