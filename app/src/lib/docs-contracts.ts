@@ -72,6 +72,23 @@ export const ARC_CONTRACTS: ContractRow[] = [
     note: "Not deployed by arcusa.",
   },
   {
+    name: "mTSLA (mock provider token)",
+    address: "0xbd0ae58afe2d6c42a3b31f8d97b31093fcbc8bdf",
+    purpose: "Mock stand-in for a provider's tokenized TSLA (18 decimals, public faucet). To be locked here and wrapped on Arc (second wrapped token, runbook deploy-wrapped-token).",
+    owner: "arcusa",
+    deployTx: "0x1e20e2a08ae39939ee1bcef7c867661e4dadc3496cc4eacfe96885550cfa8130",
+    source: "LOG.md (2026-11-06 mTSLA entry)",
+    note: "Testnet mock with no backing and no value. Source: contracts/sepolia/src/MockTSLAToken.sol. The Arc wrapper was still pending when this was written; it is not listed until it is verified onchain.",
+  },
+  {
+    name: "mTSLA TokenManager (LOCK_UNLOCK, Sepolia)",
+    address: "0xc49A72ceF1c4cDA64A4a12aBA9859a0E3BFE877f",
+    purpose: "Holds locked mTSLA once bridged. Read from resolveTokenManager(tokenId) on Sepolia after registration.",
+    owner: "Circle",
+    source: "LOG.md (2026-11-06 mTSLA entry)",
+    note: "Differs from the mNVDA manager address, so the manager is not the same for every token. Not yet checked on Arc.",
+  },
+  {
     name: "CrossChainTokenService (CCTPx)",
     address: "0x63753E722bd2C2A5DF6EE19C5106662208B81077",
     purpose: "Circle's service for non-USDC cross-chain tokens. Resolves token managers and wrapped token addresses.",
@@ -153,8 +170,12 @@ export const SEPOLIA_CONTRACTS: ContractRow[] = [
 
 export const SEPOLIA_TXS: TxRow[] = [
   { label: "deployRemoteOwnerlessToken (creates wNVDA on Arc)", hash: "0x4fd4052e56e5b9d38a178cc0d612715a4770db311195e1daaf71cec552b58cc0", source: "LOG.md" },
+  { label: "registerOwnerlessToken (mTSLA)", hash: "0x88b72ca6d3fba249b967356c55673b296f06ca317d01e0dc050b8acdca06c1f7", source: "LOG.md" },
+  { label: "deployRemoteOwnerlessToken (requests the mTSLA wrapper on Arc)", hash: "0xd4d0e7bae2699c651e80716035804c64d52e4c6244b1178878856fe67cd596f1", source: "LOG.md" },
   { label: "USDC bridge-in burn, 1 USDC to Arc with Forwarding (test T-004)", hash: "0x0fe962146b1f35f881d462196b6c94c47e317d5437448ceb1cc8a7883f77a899", source: "LOG.md" },
 ];
+
+export const MTSLA_TOKEN_ID = "0x7f1c9fb53db47fd1c05448f8551ce0db9d2a30cdd4836c55ab890597f278f930";
 
 export const MNVDA_TOKEN_ID = "0x9aba200723d57aa177e725ed5d5b230b9435824c339227e47b9ca552a16d218d";
 
