@@ -89,6 +89,10 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 | [T-034](#t-034-contract-tests-for-the-mock-token-and-lock-and-mint-accounting) | doing | laptop | Contract tests for the mock token and lock-and-mint accounting |
 | [T-035](#t-035-testnet-integration-tests-for-the-bridge-layer) | todo | laptop | Testnet integration tests for the bridge layer |
 | [T-036](#t-036-bridge-layer-persistence-and-resume) | todo | laptop | Bridge layer persistence and resume |
+| [T-037](#t-037-simple-trade-layout-pair-header-chart-card-market-table) | todo | laptop | Simple trade layout: pair header, chart card, market table |
+| [T-038](#t-038-payreceive-order-ticket-with-fee-summary) | todo | laptop | Pay/receive order ticket with fee summary |
+| [T-039](#t-039-mobile-layout-bottom-sheet-ticket-and-sticky-buysell-bar) | todo | laptop | Mobile layout: bottom-sheet ticket and sticky Buy/Sell bar |
+| [T-040](#t-040-pro-mode-toggle-desktop) | todo | laptop | Pro mode toggle (desktop) |
 | [T-020](#t-020-post-mvp-spike-indexer-options-on-arc-testnet-and-sepolia) | todo | alle | (post-MVP) Spike: indexer options on Arc testnet and Sepolia |
 | [T-021](#t-021-post-mvp-build-indexer-and-holdingshistory-view) | todo | laptop | (post-MVP) Build indexer and holdings/history view |
 
@@ -602,6 +606,57 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
   - [ ] `resume` completes a transfer after a restart, using only the stored record.
   - [ ] Unit tests with a mocked kit: crash after SENT, crash after CONFIRMED, duplicate resume is safe.
 - Notes: Split out of T-033 so each fits one session.
+- Result:
+
+### T-037: Simple trade layout: pair header, chart card, market table
+- Owner: laptop
+- Status: todo
+- ADR: docs/adr/0019-simple-default-ui-with-pro-mode.md
+- Goal: Replace the terminal layout with the LumaTrade-style simple layout on desktop (ADR 0019): top bar, pair header with big price and change pill, chart with hover tooltip, compact market table. Pro panels are not shown yet.
+- Acceptance criteria:
+  - [ ] `/trade` shows one rounded dark card: pair header, last price, change pill, range chips, chart, market table (oracle, bid, ask, feed).
+  - [ ] Range chips only list ranges the price source can serve; no fabricated history.
+  - [ ] Accent colour is a single token in `globals.css`.
+  - [ ] Screenshot at 1440px width in Result.
+- Notes: Reuse `usePrice`, `useMarket`, `PriceChart`. Do not touch contracts or bridge code.
+- Result:
+
+### T-038: Pay/receive order ticket with fee summary
+- Owner: laptop
+- Status: todo
+- ADR: docs/adr/0019-simple-default-ui-with-pro-mode.md
+- Depends on: T-037
+- Goal: Restyle `order-ticket.tsx` into BUY/SELL tabs, a "You pay" card and a "You receive" card with a swap arrow, balances on each, one primary button, and a summary card (fee, you receive, spread). Add a small "Your position" block above it: NVDA value in USDC and USDC balance.
+- Acceptance criteria:
+  - [ ] Buy and sell still work on Arc testnet exactly as before (same slippage default). Tx hash in Result.
+  - [ ] Primary button states: Connect wallet, Switch network, Approve, Buy/Sell, pending.
+  - [ ] Summary figures match the on-chain quote.
+  - [ ] No PnL shown unless computed from real trades.
+- Notes: Swap arrow flips side.
+- Result:
+
+### T-039: Mobile layout: bottom-sheet ticket and sticky Buy/Sell bar
+- Owner: laptop
+- Status: todo
+- ADR: docs/adr/0019-simple-default-ui-with-pro-mode.md
+- Depends on: T-038
+- Goal: Kraken-style mobile at widths below 768px.
+- Acceptance criteria:
+  - [ ] Single column: price header, chart, position card, "Market details" accordion.
+  - [ ] Sticky bottom bar with Buy and Sell that open the ticket as a bottom sheet.
+  - [ ] Checked at 375px and 768px with screenshots in Result; no horizontal scroll.
+- Result:
+
+### T-040: Pro mode toggle (desktop)
+- Owner: laptop
+- Status: todo
+- ADR: docs/adr/0019-simple-default-ui-with-pro-mode.md
+- Depends on: T-038
+- Goal: A header toggle, persisted in `localStorage`, off by default, hidden on mobile. When on it adds the stats strip, Balances and Trades tabs, slippage setting, oracle updated-at and staleness, pool inventory, fee tier and explorer links.
+- Acceptance criteria:
+  - [ ] Toggle state survives reload; localStorage access is wrapped in try/catch.
+  - [ ] Off state shows nothing from the Pro list.
+  - [ ] Reuses `MarketInfo`, `Balances`, `Trades`; no new data sources.
 - Result:
 
 ### T-020: (post-MVP) Spike: indexer options on Arc testnet and Sepolia
