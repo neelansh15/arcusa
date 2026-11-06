@@ -76,7 +76,7 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 | [T-018](#t-018-record-the-demo-video) | todo | laptop | Record the demo video |
 | [T-019](#t-019-submit-to-ethglobal-mumbai) | todo | laptop | Submit to ETHGlobal Mumbai |
 | [T-022](#t-022-spike-mock-provider-token-on-sepolia-lock-and-mint-to-arc-via-the-ownerless-path-adr-0012) | todo | laptop | Spike: mock provider token on Sepolia, lock-and-mint to Arc via the ownerless path (ADR 0012) |
-| [T-023](#t-023-research-can-real-provider-tokens-be-locked-and-wrapped-adr-0012-adr-0016) | todo | alle | Research: can real provider tokens be locked and wrapped? (ADR 0012, ADR 0016) |
+| [T-023](#t-023-research-can-real-provider-tokens-be-locked-and-wrapped-adr-0012-adr-0016) | done | alle | Research: can real provider tokens be locked and wrapped? (ADR 0012, ADR 0016) |
 | [T-024](#t-024-spike-bridge-kit-transfer-of-wnvda-by-token-id-both-directions-with-measured-timing-adr-0013) | todo | laptop | Spike: Bridge Kit transfer of wNVDA by token id, both directions, with measured timing (ADR 0013) |
 | [T-025](#t-025-spike-nvda-price-source-ondo-api-first-access-and-behaviour-by-market-session-adr-0015) | parked | alle | Spike: NVDA price source (Ondo API first), access and behaviour by market session (ADR 0015) |
 | [T-026](#t-026-build-priceoracle-with-guards-and-the-relayer-adr-0015) | parked | laptop | Build PriceOracle with guards, and the relayer (ADR 0015) |
@@ -414,15 +414,18 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 
 ### T-023: Research: can real provider tokens be locked and wrapped? (ADR 0012, ADR 0016)
 - Owner: alle
-- Status: todo
+- Status: done
 - ADR: docs/adr/0012-provider-token-lock-and-wrap.md, docs/adr/0016-compliance-provider-tokens.md
 - Depends on: none
 - Goal: For Ondo and xStocks tokens, record what restricts holding or transferring them and whether a lock manager contract could hold them.
 - Acceptance criteria:
-  - [ ] For each provider: chain, token address, allowlist or transfer hooks, rebasing or fee-on-transfer behaviour, redemption terms. Read-only, from primary sources fetched that day.
-  - [ ] A clear yes, no or unknown on "can a contract we do not control hold it".
-  - [ ] Unverified items listed.
-- Result:
+  - [x] For each provider: chain, token address, allowlist or transfer hooks, rebasing or fee-on-transfer behaviour, redemption terms. Read-only, from primary sources fetched that day.
+  - [x] A clear yes, no or unknown on "can a contract we do not control hold it".
+  - [x] Unverified items listed.
+- Result: Done 2026-11-06. Findings are in docs/research/provider-tokens.md (all sources fetched 2026-11-06).
+  - Ondo NVDAon (Ethereum 0x2D1F7226Bd1F780AF6B9A49DCC0aE00E8Df4bDEE, 18 decimals on chain): yes, a contract we do not control can hold it. GMToken checks a deny-list only (blocklist plus Chainalysis sanctions) and a pause; there is no allowlist, rebasing or transfer fee. It is already registered as an ownerless CCTPx token: LOCK_UNLOCK manager 0x8582133d6561dcb43af8c4d2ff6e48c7eaa7cf44 on Ethereum, wrapped on Arc mainnet at 0x65a70add2abe2051373a92f4a951d34eefdffa90. The Arc supply equals the locked amount, and the registration was made by a plain EOA. Risk: Ondo can blocklist or burn from the manager (BURNER_ROLE), pause the token, or upgrade it.
+  - xStocks NVDAx (Ethereum 0xc845b2894dbddd03858fd2d643b4ef725fe0849d, 18 decimals): yes, it can be held (sanctions oracle and global pause only). But it rebases through a multiplier and has a management-fee hook, so a raw lock and wrap breaks 1:1 accounting. The answer for wrapping it is unknown or unsafe. It is not in CCTPx and not deployed on Arc. A possible path is the non-rebasing ERC-4626 wrapper (untested).
+  - Unverified: the CCTPx TokenManager source (not public), and the manager owner() EOA 0x173d00f7e8702d176628963FbD4E1Bcc18B29F94, which contradicts the docs' "no owner". Also unverified: Final Terms PDFs and the source of the xStocks wrapper.
 
 ### T-024: Spike: Bridge Kit transfer of wNVDA by token id, both directions, with measured timing (ADR 0013)
 - Owner: laptop
