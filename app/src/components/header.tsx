@@ -1,18 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import { useAccount, useChainId, useConnect, useDisconnect, useSwitchChain } from "wagmi";
 import { injected } from "wagmi/connectors";
 import { arcTestnet } from "@/lib/config";
+import { SiteNav } from "./site-nav";
 
 const short = (a: string) => `${a.slice(0, 6)}…${a.slice(-4)}`;
 
 export function Header() {
   const { address, isConnected, chainId: walletChainId } = useAccount();
   const chainId = useChainId();
-  const path = usePathname();
   const { connect, isPending, error } = useConnect();
   const { disconnect } = useDisconnect();
   const { switchChainAsync, error: switchError } = useSwitchChain();
@@ -54,12 +53,7 @@ export function Header() {
     <header className="header">
       <div className="brand">
         <Link href="/" className="logo"><i />arcusa</Link>
-        <nav className="nav">
-          <Link href="/">Home</Link>
-          <Link href="/trade" className={path === "/trade" ? "on" : ""}>Trade</Link>
-          <Link href="/bridge" className={path === "/bridge" ? "on" : ""}>Bridge</Link>
-          <Link href="/docs">Docs</Link>
-        </nav>
+        <SiteNav className="nav" />
         <span className="badge net">Arc Testnet</span>
         <span className="badge warn" title="Off-hours demo mode: indicative price, testnet only">DEMO</span>
       </div>

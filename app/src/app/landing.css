@@ -40,7 +40,11 @@ html:has(.landing) { scroll-behavior: smooth; background: #fff; }
 .landing .lp-nav-inner { display: flex; align-items: center; justify-content: space-between; height: 64px; }
 .landing .lp-brand { display: inline-flex; align-items: center; gap: 10px; font-weight: 600; font-size: 17px; letter-spacing: -0.02em; }
 .landing .lp-nav-links { display: flex; gap: 28px; font-size: 14px; color: var(--l-muted); }
-.landing .lp-nav-links a:hover { color: var(--l-text); }
+.landing .lp-nav-links a:hover, .landing .lp-nav-links a.on { color: var(--l-text); }
+.landing .lp-nav-links a.on { font-weight: 500; }
+.landing .lp-nav-center { display: flex; align-items: center; gap: 28px; }
+.landing .lp-nav-sub { display: flex; gap: 20px; font-size: 13px; color: var(--l-dim); padding-left: 28px; border-left: 1px solid var(--l-line); }
+.landing .lp-nav-sub a:hover { color: var(--l-text); }
 .landing .lp-nav-right { display: flex; align-items: center; gap: 16px; }
 .landing .lp-testnet { font-size: 12px; color: var(--l-muted); border: 1px solid var(--l-line); border-radius: 4px; padding: 3px 8px; }
 
@@ -169,13 +173,14 @@ html:has(.landing) { scroll-behavior: smooth; background: #fff; }
   .landing .lp-steps { grid-template-columns: repeat(2, 1fr); }
   .landing .lp-stats { grid-template-columns: repeat(2, 1fr); gap: 0 24px; }
   .landing .lp-stat { padding-bottom: 24px; }
-  .landing .lp-nav-links { display: none; }
+  .landing .lp-nav-sub { display: none; }
 }
 @media (max-width: 600px) {
   .landing .lp-hero { padding: 56px 0 64px; }
   .landing .lp-section { padding: 72px 0; }
   .landing .lp-features, .landing .lp-steps { grid-template-columns: 1fr; }
   .landing .lp-testnet { display: none; }
+  .landing .lp-nav-links { gap: 14px; font-size: 13px; }
   .landing .lp-stats-sec { padding-bottom: 72px; }
 }
 @media (prefers-reduced-motion: reduce) {

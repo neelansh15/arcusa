@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { DocsSidebar } from "@/components/docs/sidebar";
+import { SiteNav } from "@/components/site-nav";
 import { PrevNext } from "@/components/docs/prev-next";
 import "./docs.css";
 
@@ -20,14 +21,7 @@ export default function DocsLayout({ children }: { children: ReactNode }) {
             arcusa
           </Link>
           <span className="docs-top-label">Docs</span>
-          <nav className="docs-top-nav" aria-label="Site">
-            <Link href="/">Home</Link>
-            <Link href="/trade">Trade</Link>
-            <Link href="/bridge">Bridge</Link>
-            <Link href="/docs" className="on">
-              Docs
-            </Link>
-          </nav>
+          <SiteNav className="docs-top-nav" />
         </div>
       </header>
       <div className="docs-body">

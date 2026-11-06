@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { CSSProperties } from "react";
 import { CandleChart, Logo, icons } from "./graphics";
+import { SiteNav } from "../site-nav";
 import { LiveQuote } from "./live-quote";
 
 const delay = (ms: number) => ({ "--d": `${ms}ms` }) as CSSProperties;
@@ -15,12 +16,13 @@ export function Nav() {
           <Logo />
           <span>arcusa</span>
         </a>
-        <nav className="lp-nav-links" aria-label="Sections">
-          <a href="#features">Product</a>
-          <a href="#how">How it works</a>
-          <a href="#bridge">Bridge</a>
-          <Link href="/docs">Docs</Link>
-        </nav>
+        <div className="lp-nav-center">
+          <SiteNav className="lp-nav-links" />
+          <nav className="lp-nav-sub" aria-label="On this page">
+            <a href="#features">Product</a>
+            <a href="#how">How it works</a>
+          </nav>
+        </div>
         <div className="lp-nav-right">
           <span className="lp-testnet">Arc testnet demo</span>
           <Link href="/trade" className="lp-btn lp-btn-primary lp-btn-sm">
