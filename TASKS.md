@@ -93,8 +93,8 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 | [T-038](#t-038-payreceive-order-ticket-with-fee-summary) | done | laptop | Pay/receive order ticket with fee summary |
 | [T-039](#t-039-mobile-layout-bottom-sheet-ticket-and-sticky-buysell-bar) | done | laptop | Mobile layout: bottom-sheet ticket and sticky Buy/Sell bar |
 | [T-040](#t-040-pro-mode-toggle-desktop) | done | laptop | Pro mode toggle (desktop) |
-| [T-041](#t-041-theme-foundation-tokens-darklight-switch-font-button-reset) | doing | laptop | Theme foundation: tokens, dark/light switch, font, button reset |
-| [T-042](#t-042-trade-shell-header-and-chart-restyle) | todo | laptop | Trade shell, header and chart restyle |
+| [T-041](#t-041-theme-foundation-tokens-darklight-switch-font-button-reset) | done | laptop | Theme foundation: tokens, dark/light switch, font, button reset |
+| [T-042](#t-042-trade-shell-header-and-chart-restyle) | doing | laptop | Trade shell, header and chart restyle |
 | [T-043](#t-043-ticket-position-and-market-panels-restyle) | todo | laptop | Ticket, position and market panels restyle |
 | [T-044](#t-044-bridge-page-and-toast-on-the-new-theme) | todo | laptop | Bridge page and toast on the new theme |
 | [T-045](#t-045-docs-and-landing-theme-tokens-only) | todo | laptop | Docs and landing theme (tokens only) |
@@ -667,7 +667,7 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 
 ### T-041: Theme foundation: tokens, dark/light switch, font, button reset
 - Owner: laptop
-- Status: doing
+- Status: done
 - ADR: docs/adr/0020-visual-redesign-dark-first-lumatrade.md
 - Goal: One commit that introduces `theme.css` (dark default, light via `data-theme`), the no-flash head script, the header theme button, Figtree, the global button reset and the token renames from ADR 0020 revision 4, with every existing page still readable in both themes.
 - Acceptance criteria:
@@ -676,11 +676,11 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
   - [ ] Figtree loaded, Space Grotesk removed, numbers use `--font-num`, mono only for addresses, hashes and code.
   - [ ] `/`, `/trade`, `/bridge`, `/docs` render without unreadable text in dark and light (screenshots checked).
   - [ ] `tsc`, `oxlint`, `pnpm build` pass.
-- Result:
+- Result: New `app/src/app/theme.css` (dark default, light via `data-theme`) with semantic tokens, chart tokens as plain hex/rgba, and radius and font tokens. All colour literals in `globals.css`, `landing.css`, `docs.css` and `chart.tsx` now use tokens (only `theme.css`, logo and favicon SVGs keep literals). Inline head script plus `suppressHydrationWarning` set the theme before paint (default dark, `localStorage["arcusa.theme"]`, try/catch); `theme-toggle.tsx` is in the app header and the landing nav and renders neutral until mounted. Figtree replaces Inter; Space Grotesk removed; numbers use `--font-num`, JetBrains Mono stays for docs code and addresses in docs. Global buttons are pills. Chart reads tokens on mount and on `data-theme` change via a MutationObserver and re-applies options, left price scale, no vertical grid, dashed crosshair, ring marker (chart part of T-042 done here). Logo and favicon are lime. Checked in the in-app browser at 1440: `/trade` in dark and light (chart re-themes on switch), `/bridge`, `/docs/how-it-works`, `/` in light. `tsc`, `oxlint` pass. NOT verified yet: pixel polish (T-042 to T-045), contrast table (T-046), `pnpm build`, dark screenshots of bridge/docs/landing.
 
 ### T-042: Trade shell, header and chart restyle
 - Owner: laptop
-- Status: todo
+- Status: doing
 - ADR: docs/adr/0020-visual-redesign-dark-first-lumatrade.md
 - Depends on: T-041
 - Goal: Header (centered nav, wallet pill, theme button, Pro switch), page shell, pair header and chart styled to the LumaTrade reference (ADR 0020).

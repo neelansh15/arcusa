@@ -5,9 +5,9 @@ import type { ReactNode } from "react";
 export function Logo({ size = 28 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 32 32" aria-hidden="true">
-      <rect width="32" height="32" rx="8" fill="#2563eb" />
-      <path d="M7.5 23 A8.5 8.5 0 0 1 24.5 23" fill="none" stroke="#fff" strokeWidth="2.6" strokeLinecap="round" />
-      <circle cx="16" cy="13.5" r="2.4" fill="#fff" />
+      <rect width="32" height="32" rx="8" fill="#c3dc4e" />
+      <path d="M7.5 23 A8.5 8.5 0 0 1 24.5 23" fill="none" stroke="#10130a" strokeWidth="2.6" strokeLinecap="round" />
+      <circle cx="16" cy="13.5" r="2.4" fill="#10130a" />
     </svg>
   );
 }

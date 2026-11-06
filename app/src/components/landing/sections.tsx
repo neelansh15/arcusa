@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ThemeToggle } from "@/components/theme-toggle";
 import type { CSSProperties } from "react";
 import { CandleChart, Logo, icons } from "./graphics";
 import { SiteNav } from "../site-nav";
@@ -25,6 +26,7 @@ export function Nav() {
         </div>
         <div className="lp-nav-right">
           <span className="lp-testnet">Arc testnet demo</span>
+          <ThemeToggle />
           <Link href="/trade" className="lp-btn lp-btn-primary lp-btn-sm">
             Launch app
           </Link>

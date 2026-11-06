@@ -6,6 +6,7 @@ import { useAccount, useChainId, useConnect, useDisconnect, useSwitchChain } fro
 import { injected } from "wagmi/connectors";
 import { arcTestnet } from "@/lib/config";
 import { SiteNav } from "./site-nav";
+import { ThemeToggle } from "./theme-toggle";
 
 const short = (a: string) => `${a.slice(0, 6)}…${a.slice(-4)}`;
 
@@ -59,6 +60,7 @@ export function Header({ extra }: { extra?: ReactNode }) {
       </div>
       <div className="header-right">
         {extra}
+        <ThemeToggle />
         {msg && <span className="neg small">{msg.slice(0, 80)}</span>}
         {isConnected && !onArc && <button onClick={() => switchTo(arcTestnet.id).catch(() => {})}>Switch to Arc</button>}
         {isConnected && address ? (
