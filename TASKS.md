@@ -57,7 +57,7 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 | ID | Status | Owner | Title |
 |---|---|---|---|
 | [T-001](#t-001-get-user-decisions-needed-for-submission-and-demo) | todo | alle | Get user decisions needed for submission and demo |
-| [T-002](#t-002-create-repo-skeleton-per-adr-0010) | doing | laptop | Create repo skeleton per ADR 0010 |
+| [T-002](#t-002-create-repo-skeleton-per-adr-0010) | done | laptop | Create repo skeleton per ADR 0010 |
 | [T-003](#t-003-create-the-arc-studio-app-and-link-the-cli-adr-0006) | todo | laptop | Create the Arc Studio app and link the CLI (ADR 0006) |
 | [T-004](#t-004-spike-usdc-bridge-in-from-sepolia-to-arc-with-forwarding-adr-0003) | todo | laptop | Spike: USDC bridge-in from Sepolia to Arc with Forwarding (ADR 0003) |
 | [T-005](#t-005-spike-deploy-taapl-as-a-native-crosschaintoken-on-arc-and-sepolia-adr-0002) | superseded | laptop | Spike: deploy tAAPL as a native CrossChainToken on Arc and Sepolia (ADR 0002) |
@@ -113,7 +113,7 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 
 ### T-002: Create repo skeleton per ADR 0010
 - Owner: laptop
-- Status: doing
+- Status: done
 - ADR: docs/adr/0010-repo-structure.md
 - Depends on: none
 - Goal: Create the folder layout, `.gitignore` and `.env.example` so later tasks have fixed paths.
@@ -123,7 +123,7 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
   - [x] A CI stub (GitHub Actions) runs install and `test` on push. It may be a no-op until tests exist, but it must run green.
   - [x] `.gitignore` covers `.env*` except `.env.example`, `node_modules`, Foundry `out/` and `cache/`, and local Arc Studio CLI state.
   - [x] `.env.example` lists variable names only, for example `DEPLOYER_PRIVATE_KEY`, `RELAYER_PRIVATE_KEY`, `ARC_TESTNET_RPC_URL`, `SEPOLIA_RPC_URL`, `IRIS_API_URL`. No values.
-  - [ ] Arc Foundry is installed (`arc-forge --version` output pasted in Result). See https://docs.arc.io/arc/tutorials/install-arc-foundry.md.
+  - [x] Arc Foundry is installed (`arc-forge --version` output pasted in Result). See https://docs.arc.io/arc/tutorials/install-arc-foundry.md.
   - [x] `git grep -nE '0x[0-9a-fA-F]{64}'` shows no private keys.
 - Notes: Extends ADR 0010 (accepted) with `packages/bridge/` (T-033) and `contracts/sepolia/` (mNVDA and the Sepolia scripts, T-022, T-034). `contracts/arc/` stays Studio-only. The raw CCTS fallback in ADR 0010 no longer applies (ADR 0013).
 - Result:
@@ -134,7 +134,8 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 - Verified: `pnpm install --frozen-lockfile && pnpm test` passed in the container (1 file, 1 test, node 22, pnpm 12.16.1); `tsc --noEmit` clean. CI run on 53f95f4 green: https://github.com/neelansh15/arcusa/actions/runs/42136236925 (node 24, checkout@v7, pnpm/action-setup@v6, setup-node@v7).
 - `.gitignore`: `.env` and `.env.*` except `!.env.example`, `node_modules/`, Foundry `out/`, `cache/`, local-chain `broadcast/*/31337/`, and `.arc-studio/` (the project-local state dir used by @circle-fin/arc-studio-cli 1.2.2, which keeps `pull-manifest.json` there; credentials live in `~/.arc-studio/`). If T-003 shows the pull manifest should be committed so `arc-studio pull` stays clean, narrow that rule.
 - Key grep: only matches are the public Pyth AAPL/USD feed id in TASKS.md (T-007) and docs/adr/0004; no private keys.
-- NOT verified: Arc Foundry install (`arc-forge --version`) needs the laptop; that criterion is left unchecked. Laptop: run `git pull`, `pnpm install && pnpm test` once locally, install Arc Foundry, paste the version here, then set done.
+- Arc Foundry installed on the laptop (macOS, Apple silicon), 2026-11-06, by the user. `arc-forge --version` printed: `forge Version: 1.7.1-dev`, `Commit SHA: 3e95efaeaaaca64d6ac9c1ee988968683dbd0d22`, `Build Timestamp: 2026-11-02T15:35:39.580367000Z`, `Build Profile: release`. The install needed three steps the README does not mention (PATH, Gatekeeper quarantine, `brew install libusb`); see FEEDBACK.md section 1.
+- NOT verified: `pnpm install && pnpm test` has not been run on the laptop yet (run `git pull` first).
 
 ### T-003: Create the Arc Studio app and link the CLI (ADR 0006)
 - Owner: laptop
