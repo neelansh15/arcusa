@@ -938,8 +938,8 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
   - [x] `use-provider-quotes.ts` hook; ranking in `provider-rank.ts`.
   - [x] Selected provider per asset on the trade page; ticket executes only providers with a market; quote-only reason shown.
   - [x] Unit tests for best selection (buy, sell, ties, stale, unavailable, zero amount, single provider).
-  - [ ] Checked in the running app with and without the flag (see Result).
-- Result: (fill in)
+  - [ ] Checked in the running app with and without the flag (see Result): without the flag done, with the flag NOT done.
+- Result: Added `app/src/lib/providers.ts`, `provider-rank.ts` (pure ranking and simulated quotes), `provider-rank.test.ts`, `use-provider-quotes.ts`; `order-ticket.tsx` takes `selectedProviderId`, `onProviderChange` and an optional `providerPicker` render prop; `terminal.tsx` keeps the chosen provider per asset. Run: `pnpm --filter @arcusa/app test` (9 pass, run with node 26 `node --test`), `tsc --noEmit` clean, `next build` succeeds. Checked in the browser on the existing dev server (no flag): the NVDA trade page and ticket render as before, a live quote shows, no console errors. NOT verified: any run with `NEXT_PUBLIC_DEMO_PROVIDERS=1` (port 3100 was already in use by another session's server, so I did not start a second one); the quote-only CTA state on screen; a real trade; the hook (not unit-tested); the picker is not mounted yet (the UI session passes `providerPicker` from `terminal.tsx`).
 
 ### T-054: Deploy TSLA support on the server: price service and relayer
 - Owner: alle
