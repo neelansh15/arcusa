@@ -105,7 +105,7 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 | [T-050](#t-050-landing-faq-final-cta-footer-and-copy-audit) | done | laptop | Landing: FAQ, final CTA, footer and copy audit |
 | [T-051](#t-051-landing-verification-themes-devices-motion-performance) | done | laptop | Landing verification: themes, devices, motion, performance |
 | [T-052](#t-052-asset-selector-button-and-modal-in-the-pair-header) | done | laptop | Asset selector button and modal in the pair header |
-| [T-053](#t-053-custom-wallet-connect-and-account-modals) | doing | laptop | Custom wallet connect and account modals |
+| [T-053](#t-053-custom-wallet-connect-and-account-modals) | done | laptop | Custom wallet connect and account modals |
 | [T-020](#t-020-post-mvp-spike-indexer-options-on-arc-testnet-and-sepolia) | todo | alle | (post-MVP) Spike: indexer options on Arc testnet and Sepolia |
 | [T-021](#t-021-post-mvp-build-indexer-and-holdingshistory-view) | todo | laptop | (post-MVP) Build indexer and holdings/history view |
 
@@ -824,7 +824,7 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 
 ### T-053: Custom wallet connect and account modals
 - Owner: laptop
-- Status: doing
+- Status: done
 - ADR: docs/adr/0023-custom-wallet-modal.md
 - Goal: Replace the single `injected()` connect with a themed modal listing detected wallets, plus an account modal, opened from the header and the order ticket.
 - Acceptance criteria:
@@ -834,7 +834,7 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
   - [ ] Header and ticket "Connect wallet" use one opener; auto-switch to Arc still works.
   - [ ] No `window.ethereum` use except the fallback-row check (grep); wrong-chain path via the account modal; Escape closes one layer; hydration state correct after mount.
   - [ ] Dark and light, 1440 and 375; `tsc`, `oxlint`, `pnpm build` pass; Result says what could not be tested without real wallets.
-- Result:
+- Result: New `wallet-modal.tsx` (`WalletModalProvider` mounted in `Providers`, one `Modal`, `view` is connect, account or closed) and `lib/use-switch-to-arc.ts`. Connect modal lists wallets from `useConnectors()` (discovered EIP-6963 wallets sorted with known ones first; generic injected shown as "Browser wallet" only when none are discovered and `window.ethereum` exists), per-row pending by connector uid, others `aria-disabled`, active wallet shown "Connected", rejection shown as "Request cancelled.", already-pending (-32002) as a friendly message, Escape, backdrop and × blocked while pending with a hint; "no wallet found" only after mount plus 300 ms, with MetaMask and Rabby links (MetaMask app deep link on touch). Icons are untrusted: only data-URI images or https, in an `<img>` with a first-letter fallback. Account modal: wallet name, address, Copy (live region), ArcScan link, network with Switch to Arc, Disconnect; the address pill no longer disconnects on click. Header: placeholder before mount and while reconnecting, auto-switch effect kept, switch errors other than a rejection as a toast, the `window.ethereum` add-chain call replaced by the active connector's provider and the `Window.ethereum` declaration removed. Order ticket "Connect wallet" calls the same opener; `useAccount` migrated to `useConnection` in five files. Tested in the in-app browser with fake EIP-6963 wallets injected at runtime: no-wallet state, a wallet appearing live while the modal is open, connect, auto-switch (wallet_switchEthereumChain called), pill, account modal, Escape returns and unlocks scroll, disconnect, reconnect list, rejected, already pending, a `javascript:` icon rejected to the fallback, Escape blocked while pending; mobile sheet at 375 (dialog focused, no overflow, no horizontal scroll). `tsc`, `oxlint`, `pnpm build` pass. NOT tested: real extensions (MetaMask, Rabby, two at once), a real trade or bridge after connecting through the new modal, reconnect after a reload with a real wallet, the wrong-chain account-modal path with a real wallet, WalletConnect (deferred), focus return when opened by a real click (opener focus is captured by the Modal, exercised only with scripted clicks).
 
 ### T-020: (post-MVP) Spike: indexer options on Arc testnet and Sepolia
 - Owner: alle

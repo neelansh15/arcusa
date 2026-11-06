@@ -1,13 +1,13 @@
 "use client";
 
-import { useAccount } from "wagmi";
+import { useConnection } from "wagmi";
 
 const usd = (n: number) => `$${n.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 type P = { usdc: number | null; nvda: number | null; quote: number | null };
 
 /** Balance hero (Nixtrade-style). Value only; no PnL because we do not track cost basis. */
 export function PositionBody({ usdc, nvda, quote }: P) {
-  const { isConnected } = useAccount();
+  const { isConnected } = useConnection();
   const value = nvda !== null && quote ? nvda * quote : null;
   if (!isConnected) return <div className="pos-sub">Connect a wallet to see your position.</div>;
   return (

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { erc20Abi, formatUnits } from "viem";
-import { useAccount, useReadContract } from "wagmi";
+import { useConnection, useReadContract } from "wagmi";
 import {
   BRIDGE_ETA,
   BRIDGE_STEP_ORDER,
@@ -65,7 +65,7 @@ function Timeline({ steps }: { steps: BridgeStep[] }) {
 }
 
 export function BridgePanel() {
-  const { address, isConnected } = useAccount();
+  const { address, isConnected } = useConnection();
   const [direction, setDirection] = useState<BridgeDirection>("sepolia-to-arc");
   const [amount, setAmount] = useState("1");
   const [legs, setLegs] = useState<BridgeLeg[]>([]);

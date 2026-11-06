@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { erc20Abi, formatUnits } from "viem";
-import { useAccount, useConnect, useReadContract, useSwitchChain, useWriteContract } from "wagmi";
-import { injected } from "wagmi/connectors";
+import { useConnection, useReadContract, useSwitchChain, useWriteContract } from "wagmi";
+import { useWalletModal } from "./wallet-modal";
 import { usePublicClient } from "wagmi";
 import { ARC_CHAIN_ID, ARC_USDC, WNVDA, explorerTx } from "@/lib/config";
 import { ARC_FEES, MARKET_ADDRESS, marketAbi } from "@/lib/market";
@@ -13,9 +13,9 @@ import type { ReactNode } from "react";
 
 
 export function OrderTicket({ market, usdcBal, nvdaBal, onDone, initialSide = "buy", slippageBps = 100, onSlippage, summaryHead }: { market: MarketState; usdcBal: number | null; nvdaBal: number | null; onDone?: () => void; initialSide?: "buy" | "sell"; slippageBps?: number; onSlippage?: (bps: number) => void; summaryHead?: ReactNode }) {
-  const { address, isConnected, chainId } = useAccount();
+  const { address, isConnected, chainId } = useConnection();
   const { switchChainAsync } = useSwitchChain();
-  const { connect, isPending: connecting } = useConnect();
+  const { openConnect } = useWalletModal();
   const { writeContractAsync } = useWriteContract();
   const client = usePublicClient({ chainId: ARC_CHAIN_ID });
   const [side, setSide] = useState<"buy" | "sell">(initialSide);
@@ -99,7 +99,7 @@ export function OrderTicket({ market, usdcBal, nvdaBal, onDone, initialSide = "b
   let label: string;
   let action: (() => void) | undefined;
   let disabled = false;
-  if (!isConnected) { label = connecting ? "Connecting…" : "Connect wallet"; action = () => connect({ connector: injected() }); disabled = connecting; }
+  if (!isConnected) { label = "Connect wallet"; action = openConnect; }
   else if (wrongNet) { label = "Switch to Arc"; action = () => { switchChainAsync({ chainId: ARC_CHAIN_ID }).catch(() => {}); }; }
   else if (busy) { label = busy; disabled = true; }
   else { label = `${needsApproval ? "Approve & " : ""}${word} NVDA`; action = submit; disabled = !canSubmit; }

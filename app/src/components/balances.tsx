@@ -1,11 +1,11 @@
 "use client";
 
 import { erc20Abi, formatUnits } from "viem";
-import { useAccount, useReadContracts } from "wagmi";
+import { useConnection, useReadContracts } from "wagmi";
 import { ARC_CHAIN_ID, ARC_USDC, WNVDA } from "@/lib/config";
 
 export function useBalances() {
-  const { address } = useAccount();
+  const { address } = useConnection();
   const { data, isLoading, error } = useReadContracts({
     allowFailure: true,
     query: { enabled: !!address, refetchInterval: 8_000 },
@@ -19,7 +19,7 @@ export function useBalances() {
 }
 
 export function Balances({ usdc, nvda, quote }: { usdc: number | null; nvda: number | null; quote: number | null }) {
-  const { isConnected } = useAccount();
+  const { isConnected } = useConnection();
   if (!isConnected) return <div className="muted small">Connect a wallet to see balances.</div>;
   const nv = nvda !== null && quote ? nvda * quote : null;
   return (
