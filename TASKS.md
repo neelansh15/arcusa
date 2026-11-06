@@ -51,44 +51,44 @@ Spikes check items that are not verified in proposed ADRs. A spike may use a pro
 
 ## Index
 
-One row per task. Keep Status in sync with the task block when you change it.
+One row per task; the ID links to the task block. Keep Status in sync with the task block when you change it. GitHub also shows an outline button at the top right of this file.
 
 | ID | Status | Owner | Title |
 |---|---|---|---|
-| T-001 | todo | alle | Get user decisions needed for submission and demo |
-| T-002 | todo | laptop | Create repo skeleton per ADR 0010 |
-| T-003 | todo | laptop | Create the Arc Studio app and link the CLI (ADR 0006) |
-| T-004 | todo | laptop | Spike: USDC bridge-in from Sepolia to Arc with Forwarding (ADR 0003) |
-| T-005 | superseded | laptop | Spike: deploy tAAPL as a native CrossChainToken on Arc and Sepolia (ADR 0002) |
-| T-006 | superseded | laptop | Spike: Bridge Kit transfer of tAAPL by token id, in both directions (ADR 0001) |
-| T-007 | superseded | laptop | Spike: oracle source for AAPL/USD on Arc testnet (ADR 0004) |
-| T-008 | superseded | alle | Review spike results and accept or supersede ADRs 0001, 0002, 0004, 0005, 0008 |
-| T-009 | superseded | laptop | Build PriceOracle contract and oracle relayer |
-| T-010 | superseded | laptop | Build market contract (oracle-priced mint and redeem) in Arc Studio |
-| T-011 | todo | laptop | Build terminal UI: price, balances, buy and sell |
-| T-012 | todo | laptop | Add USDC bridge-in flow to the UI |
-| T-013 | todo | laptop | Add wNVDA bridge flow to the UI |
-| T-014 | todo | laptop | Run the full demo flow end to end on a fresh wallet |
-| T-015 | todo | alle | Draft architecture diagram from the ADRs |
-| T-016 | todo | laptop | Write README for judges and finalize the diagram |
-| T-017 | todo | alle | Re-verify fast-moving facts before recording |
-| T-018 | todo | laptop | Record the demo video |
-| T-019 | todo | laptop | Submit to ETHGlobal Mumbai |
-| T-022 | todo | laptop | Spike: mock provider token on Sepolia, lock-and-mint to Arc via the ownerless path (ADR 0012) |
-| T-023 | todo | alle | Research: can real provider tokens be locked and wrapped? (ADR 0012, ADR 0016) |
-| T-024 | todo | laptop | Spike: Bridge Kit transfer of wNVDA by token id, both directions, with measured timing (ADR 0013) |
-| T-025 | parked | alle | Spike: NVDA price source (Ondo API first), access and behaviour by market session (ADR 0015) |
-| T-026 | parked | laptop | Build PriceOracle with guards, and the relayer (ADR 0015) |
-| T-027 | parked | laptop | Build InventoryMarket (ADR 0014) |
-| T-028 | parked | laptop | Pre-position wNVDA inventory and document refills |
-| T-029 | parked | laptop | Parity tests and scenarios (ADR 0015) |
-| T-030 | parked | laptop | Parity panel in the UI (ADR 0015) |
-| T-032 | todo | alle | Review spikes and accept or supersede ADRs 0008, 0012 to 0017 |
-| T-033 | todo | laptop | Build the bridge layer module with unit tests |
-| T-034 | todo | laptop | Contract tests for the mock token and lock-and-mint accounting |
-| T-035 | todo | laptop | Testnet integration tests for the bridge layer |
-| T-020 | todo | alle | (post-MVP) Spike: indexer options on Arc testnet and Sepolia |
-| T-021 | todo | laptop | (post-MVP) Build indexer and holdings/history view |
+| [T-001](#t-001-get-user-decisions-needed-for-submission-and-demo) | todo | alle | Get user decisions needed for submission and demo |
+| [T-002](#t-002-create-repo-skeleton-per-adr-0010) | todo | laptop | Create repo skeleton per ADR 0010 |
+| [T-003](#t-003-create-the-arc-studio-app-and-link-the-cli-adr-0006) | todo | laptop | Create the Arc Studio app and link the CLI (ADR 0006) |
+| [T-004](#t-004-spike-usdc-bridge-in-from-sepolia-to-arc-with-forwarding-adr-0003) | todo | laptop | Spike: USDC bridge-in from Sepolia to Arc with Forwarding (ADR 0003) |
+| [T-005](#t-005-spike-deploy-taapl-as-a-native-crosschaintoken-on-arc-and-sepolia-adr-0002) | superseded | laptop | Spike: deploy tAAPL as a native CrossChainToken on Arc and Sepolia (ADR 0002) |
+| [T-006](#t-006-spike-bridge-kit-transfer-of-taapl-by-token-id-in-both-directions-adr-0001) | superseded | laptop | Spike: Bridge Kit transfer of tAAPL by token id, in both directions (ADR 0001) |
+| [T-007](#t-007-spike-oracle-source-for-aaplusd-on-arc-testnet-adr-0004) | superseded | laptop | Spike: oracle source for AAPL/USD on Arc testnet (ADR 0004) |
+| [T-008](#t-008-review-spike-results-and-accept-or-supersede-adrs-0001-0002-0004-0005-0008) | superseded | alle | Review spike results and accept or supersede ADRs 0001, 0002, 0004, 0005, 0008 |
+| [T-009](#t-009-build-priceoracle-contract-and-oracle-relayer) | superseded | laptop | Build PriceOracle contract and oracle relayer |
+| [T-010](#t-010-build-market-contract-oracle-priced-mint-and-redeem-in-arc-studio) | superseded | laptop | Build market contract (oracle-priced mint and redeem) in Arc Studio |
+| [T-011](#t-011-build-terminal-ui-price-balances-buy-and-sell) | todo | laptop | Build terminal UI: price, balances, buy and sell |
+| [T-012](#t-012-add-usdc-bridge-in-flow-to-the-ui) | todo | laptop | Add USDC bridge-in flow to the UI |
+| [T-013](#t-013-add-wnvda-bridge-flow-to-the-ui) | todo | laptop | Add wNVDA bridge flow to the UI |
+| [T-014](#t-014-run-the-full-demo-flow-end-to-end-on-a-fresh-wallet) | todo | laptop | Run the full demo flow end to end on a fresh wallet |
+| [T-015](#t-015-draft-architecture-diagram-from-the-adrs) | todo | alle | Draft architecture diagram from the ADRs |
+| [T-016](#t-016-write-readme-for-judges-and-finalize-the-diagram) | todo | laptop | Write README for judges and finalize the diagram |
+| [T-017](#t-017-re-verify-fast-moving-facts-before-recording) | todo | alle | Re-verify fast-moving facts before recording |
+| [T-018](#t-018-record-the-demo-video) | todo | laptop | Record the demo video |
+| [T-019](#t-019-submit-to-ethglobal-mumbai) | todo | laptop | Submit to ETHGlobal Mumbai |
+| [T-022](#t-022-spike-mock-provider-token-on-sepolia-lock-and-mint-to-arc-via-the-ownerless-path-adr-0012) | todo | laptop | Spike: mock provider token on Sepolia, lock-and-mint to Arc via the ownerless path (ADR 0012) |
+| [T-023](#t-023-research-can-real-provider-tokens-be-locked-and-wrapped-adr-0012-adr-0016) | todo | alle | Research: can real provider tokens be locked and wrapped? (ADR 0012, ADR 0016) |
+| [T-024](#t-024-spike-bridge-kit-transfer-of-wnvda-by-token-id-both-directions-with-measured-timing-adr-0013) | todo | laptop | Spike: Bridge Kit transfer of wNVDA by token id, both directions, with measured timing (ADR 0013) |
+| [T-025](#t-025-spike-nvda-price-source-ondo-api-first-access-and-behaviour-by-market-session-adr-0015) | parked | alle | Spike: NVDA price source (Ondo API first), access and behaviour by market session (ADR 0015) |
+| [T-026](#t-026-build-priceoracle-with-guards-and-the-relayer-adr-0015) | parked | laptop | Build PriceOracle with guards, and the relayer (ADR 0015) |
+| [T-027](#t-027-build-inventorymarket-adr-0014) | parked | laptop | Build InventoryMarket (ADR 0014) |
+| [T-028](#t-028-pre-position-wnvda-inventory-and-document-refills) | parked | laptop | Pre-position wNVDA inventory and document refills |
+| [T-029](#t-029-parity-tests-and-scenarios-adr-0015) | parked | laptop | Parity tests and scenarios (ADR 0015) |
+| [T-030](#t-030-parity-panel-in-the-ui-adr-0015) | parked | laptop | Parity panel in the UI (ADR 0015) |
+| [T-032](#t-032-review-spikes-and-accept-or-supersede-adrs-0008-0012-to-0017) | todo | alle | Review spikes and accept or supersede ADRs 0008, 0012 to 0017 |
+| [T-033](#t-033-build-the-bridge-layer-module-with-unit-tests) | todo | laptop | Build the bridge layer module with unit tests |
+| [T-034](#t-034-contract-tests-for-the-mock-token-and-lock-and-mint-accounting) | todo | laptop | Contract tests for the mock token and lock-and-mint accounting |
+| [T-035](#t-035-testnet-integration-tests-for-the-bridge-layer) | todo | laptop | Testnet integration tests for the bridge layer |
+| [T-020](#t-020-post-mvp-spike-indexer-options-on-arc-testnet-and-sepolia) | todo | alle | (post-MVP) Spike: indexer options on Arc testnet and Sepolia |
+| [T-021](#t-021-post-mvp-build-indexer-and-holdingshistory-view) | todo | laptop | (post-MVP) Build indexer and holdings/history view |
 
 ## Tasks
 
