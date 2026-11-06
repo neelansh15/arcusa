@@ -1,0 +1,27 @@
+# Foundry project for the Sepolia side of arcusa (T-034, T-022).
+# Dependencies are git submodules under lib/ (see the root .gitmodules).
+# After cloning: git submodule update --init contracts/sepolia/lib/forge-std contracts/sepolia/lib/openzeppelin-contracts
+[profile.default]
+src = "src"
+test = "test"
+script = "script"
+out = "out"
+libs = ["lib"]
+solc_version = "0.8.30"
+evm_version = "cancun"
+optimizer = true
+optimizer_runs = 200
+remappings = [
+  "forge-std/=lib/forge-std/src/",
+  "@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/",
+]
+# The deploy script reads and writes deployments/sepolia.json at the repo root.
+fs_permissions = [{ access = "read-write", path = "../../deployments" }]
+
+[fuzz]
+runs = 512
+
+[invariant]
+runs = 128
+depth = 64
+fail_on_revert = true
