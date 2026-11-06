@@ -70,9 +70,9 @@ export function GOne() {
 export function GPrice() {
   return (
     <svg className="lp-g" viewBox="0 0 220 120" aria-hidden="true">
-      <path className="g-spark" pathLength="1" d="M4 86 C28 80 38 96 62 78 S100 40 124 56 S160 84 184 46 S206 34 216 28" fill="none" />
-      <circle className="g-ping" cx="216" cy="28" r="5" />
-      <circle className="g-ring" cx="216" cy="28" r="5" />
+      <path className="g-spark" pathLength="1" d="M4 86 C28 80 38 96 62 78 S100 40 124 56 S160 84 178 46 S192 34 198 30" fill="none" />
+      <circle className="g-ping" cx="198" cy="30" r="5" />
+      <circle className="g-ring" cx="198" cy="30" r="5" />
     </svg>
   );
 }

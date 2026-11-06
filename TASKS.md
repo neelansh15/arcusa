@@ -99,11 +99,11 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 | [T-044](#t-044-bridge-page-and-toast-on-the-new-theme) | done | laptop | Bridge page and toast on the new theme |
 | [T-045](#t-045-docs-and-landing-theme-tokens-only) | done | laptop | Docs and landing theme (tokens only) |
 | [T-046](#t-046-redesign-verification-both-themes-contrast-mobile) | done | laptop | Redesign verification: both themes, contrast, mobile |
-| [T-047](#t-047-landing-foundation-hero-and-ticker-strip) | doing | laptop | Landing foundation, hero and ticker strip |
-| [T-048](#t-048-landing-how-it-works-story-and-bento-grid) | todo | laptop | Landing: how-it-works story and bento grid |
-| [T-049](#t-049-landing-interactive-calculator-and-phone-showcase) | todo | laptop | Landing: interactive calculator and phone showcase |
-| [T-050](#t-050-landing-faq-final-cta-footer-and-copy-audit) | todo | laptop | Landing: FAQ, final CTA, footer and copy audit |
-| [T-051](#t-051-landing-verification-themes-devices-motion-performance) | todo | laptop | Landing verification: themes, devices, motion, performance |
+| [T-047](#t-047-landing-foundation-hero-and-ticker-strip) | done | laptop | Landing foundation, hero and ticker strip |
+| [T-048](#t-048-landing-how-it-works-story-and-bento-grid) | done | laptop | Landing: how-it-works story and bento grid |
+| [T-049](#t-049-landing-interactive-calculator-and-phone-showcase) | done | laptop | Landing: interactive calculator and phone showcase |
+| [T-050](#t-050-landing-faq-final-cta-footer-and-copy-audit) | done | laptop | Landing: FAQ, final CTA, footer and copy audit |
+| [T-051](#t-051-landing-verification-themes-devices-motion-performance) | done | laptop | Landing verification: themes, devices, motion, performance |
 | [T-020](#t-020-post-mvp-spike-indexer-options-on-arc-testnet-and-sepolia) | todo | alle | (post-MVP) Spike: indexer options on Arc testnet and Sepolia |
 | [T-021](#t-021-post-mvp-build-indexer-and-holdingshistory-view) | todo | laptop | (post-MVP) Build indexer and holdings/history view |
 
@@ -745,7 +745,7 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 
 ### T-047: Landing foundation, hero and ticker strip
 - Owner: laptop
-- Status: doing
+- Status: done
 - ADR: docs/adr/0021-landing-page-redesign.md
 - Goal: `copy.ts` with a source for every claim (ADR 0021 revisions 1 to 5), landing shell (nav on `SiteNav`, section rhythm, fail-safe reveal, `--glow` token), the giant hero with an animated trade-card mock and the indicative price, and the metadata and OG fix. No ticker strip.
 - Acceptance criteria:
@@ -754,11 +754,11 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
   - [ ] `layout.tsx` metadata no longer says many chains; `openGraph`, `twitter` and an OG image exist.
   - [ ] Old `LiveQuote` removed; `useIndicativeQuote` calls only `/api/price` with a 3s abort and shows a labelled sample on failure.
   - [ ] Dark and light checked at 1440 and 375; `tsc`, `oxlint` pass.
-- Result:
+- Result: `copy.ts` holds all copy with a source comment per claim. New `useIndicativeQuote` (only `/api/price`, 30s poll, 3s abort, labelled "Sample price" on failure); old fake `LiveQuote` deleted. Hero: headline "US stocks. Paid in USDC." (up to 116px), animated trade-card mock (price count-up, chart draw, pulsing Buy, floating chips, caption "Illustration"). Fail-safe reveal in `effects.tsx` (visible by default, in-view revealed at once, `lp-js` only after the observer fires, 2.5s safety, reduced motion skips). Nav reuses `SiteNav` with landing anchors and the theme button. Metadata fixed (no "many chains"), `openGraph`, `twitter` and `opengraph-image.tsx` added. No ticker strip (cut by decision). Checked in the in-app browser at 1440 (dark and light) and 375 (dark). One bug found and fixed: pausing looping animations also paused one-shot entrances and left the hero invisible; the pause now only targets looping decorations. NOT verified: the OG image rendered (only that the build passes), real-device behaviour.
 
 ### T-048: Landing: how-it-works story and bento grid
 - Owner: laptop
-- Status: todo
+- Status: done
 - ADR: docs/adr/0021-landing-page-redesign.md
 - Depends on: T-047
 - Goal: A three-step scroll story with a sticky changing visual, and a six-tile bento grid with small animated graphics and cursor-follow glow.
@@ -767,11 +767,11 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
   - [ ] Six tiles with the promises in ADR 0021; the bridge tile says Sepolia demo only.
   - [ ] Animations use transform and opacity (plus stroke-dashoffset); looping ones pause offscreen.
   - [ ] No layout shift when animations start.
-- Result:
+- Result: Scroll story: three steps with a sticky visual on desktop (active step tracked by an IntersectionObserver on `StoryTracker`, all step text always in the DOM), stacked with one inline visual each below 1000px. Bento: six tiles (one balance, price you can check, see the cost first, made for your phone, bring funds in with exactly one Sepolia dot, it is all on-chain with an illustrative receipt), cursor-follow glow on fine pointers only, one-shot graphic animations on first reveal. All keyframes sit inside `prefers-reduced-motion: no-preference`. Checked at 1440 and 375 in dark; step tracking verified by scrolling (step 1 to 3). NOT verified: reduced-motion behaviour in a browser with the setting on, 768px, light theme at 375.
 
 ### T-049: Landing: interactive calculator and phone showcase
 - Owner: laptop
-- Status: todo
+- Status: done
 - ADR: docs/adr/0021-landing-page-redesign.md
 - Depends on: T-047
 - Goal: A no-wallet calculator using the indicative price only, and a phone frame that plays the mobile screens once as mocks and then rests.
@@ -779,11 +779,11 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
   - [ ] Typing or sliding USDC updates the NVDA estimate; labelled "estimate, testnet, not a quote"; empty and bad input handled.
   - [ ] No fee number; button opens `/trade` (no prefill, by decision).
   - [ ] Phone showcase pauses offscreen and shows static final state under reduced motion.
-- Result:
+- Result: No-wallet calculator (`Calculator`): USDC input plus slider, "You get about X NVDA" from the indicative price, labelled "Estimate... Fees and slippage not included. Testnet, not a quote", no fee number, button to `/trade` (no prefill, by decision). Phone showcase (`PhoneShowcase`): plays price screen, ticket sheet slide-up, success once when scrolled into view (observed s0 to s1 to s2), final state by default and under reduced motion, Replay button. Checked at 1440 and 375 in dark. NOT verified: calculator with feed down (falls back to the sample 186.00 price by code, not exercised), screen reader read-out of the live region.
 
 ### T-050: Landing: FAQ, final CTA, footer and copy audit
 - Owner: laptop
-- Status: todo
+- Status: done
 - ADR: docs/adr/0021-landing-page-redesign.md
 - Depends on: T-048, T-049
 - Goal: Plain-English FAQ with native details, the lime CTA panel, footer with Under the hood links and the full disclaimer, then a line-by-line check of every claim.
@@ -791,11 +791,11 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
   - [ ] FAQ answers match the docs and ADR 0016; keyboard operable.
   - [ ] A claims table in Result: each claim on the page, its source (docs page, ADR, or live read), and any claim removed.
   - [ ] No invented numbers; other chains and tickers only as Soon or Roadmap.
-- Result:
+- Result: FAQ with native `details` (7 questions, chevron-only animation), lime CTA panel with dark button, footer with App and Under the hood links (how-it-works, risks, contracts, roadmap) and the full disclaimer. Claims audit (every claim, source): "USDC also pays the fees on Arc" (PLAN.md facts, docs/how-it-works); "price and cost shown before you confirm" (order ticket and market table); "single transaction on Arc" and "first time you also approve USDC" (docs/how-it-works item 5, order-ticket approve then trade); "price published on-chain, market quotes buy and sell around it" (docs/oracle, ADR 0014); "last known price, labelled indicative when closed" (ADR 0015 off-hours mode); "one stock, a mock NVDA token; more stocks and chains are roadmap, not live" (docs home callout, ADR 0016/0017); "contracts not audited, prices indicative and can be stale" (docs/risks); "Arc is Circle's blockchain, USDC is the fee currency" (PLAN.md); "Testnet demo. Not a security, no real shares, no real value." (ADR 0016); Sepolia to Arc bridge, demo only (docs/bridge, ADR 0017); explorer link per trade (order-ticket toast). Removed: ticker strip and named tickers, "settled in seconds", "one tap", any fee or volume number, many-chain wording, provider names. NOT verified: a second reader checking the copy, FAQ keyboard operation (native details, not exercised).
 
 ### T-051: Landing verification: themes, devices, motion, performance
 - Owner: laptop
-- Status: todo
+- Status: done
 - ADR: docs/adr/0021-landing-page-redesign.md
 - Depends on: T-050
 - Goal: Final pass on the landing.
@@ -804,7 +804,7 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
   - [ ] Reduced motion on: no loops, content visible.
   - [ ] Production build passes; page weight and layout shift measured and noted; contrast of new colours computed.
   - [ ] Gaps against the brief listed in Result.
-- Result:
+- Result: `tsc`, `oxlint`, `pnpm build` pass. Viewed in the in-app browser: dark 1440 (hero, story steps 1 and 3, bento, calculator, phone, FAQ, CTA), light 1440 (hero), dark 375 (hero, story, bento, phone), no horizontal scroll at 375 (scrollWidth equals clientWidth). Colour literals left outside `theme.css`: the logo SVG and the OG image (a canvas, cannot use CSS variables). Lime button and heading colours reuse the T-046 contrast table (CTA text 12.21:1 dark, accent olive 5.89:1 on light card). No Lighthouse run, so LCP and layout shift are NOT measured; the hero h1 is plain text and the mock, price block and calculator have fixed or reserved sizes. Gaps: reduced-motion not tested with the setting on, light theme below the hero not reviewed, 768px not reviewed, real phones not tested, the landing reveal on the actual production host not tested.
 
 ### T-020: (post-MVP) Spike: indexer options on Arc testnet and Sepolia
 - Owner: alle

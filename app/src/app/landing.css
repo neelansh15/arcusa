@@ -219,7 +219,8 @@ html:has(.landing) { scroll-behavior: smooth; background: var(--canvas); }
 /* ---------- Reveal (content is visible unless JS proved it can reveal it) ---------- */
 .landing.lp-js [data-reveal] { opacity: 0; transform: translateY(24px); transition: opacity .6s ease, transform .6s ease; transition-delay: var(--d, 0ms); }
 .landing.lp-js [data-reveal].is-in { opacity: 1; transform: none; }
-.landing [data-live="false"], .landing [data-live="false"] *, .landing [data-live="false"] *::before, .landing [data-live="false"] *::after { animation-play-state: paused !important; }
+/* Pause only the looping decorations; one-shot entrances are never paused (a paused fill-forwards animation would hide content). */
+.landing [data-live="false"] .lp-float, .landing [data-live="false"] .lp-mock-buy::after, .landing [data-live="false"] .g-ring, .landing [data-live="false"] .g-packet { animation-play-state: paused !important; }
 
 /* ---------- Motion (only when the user has not asked for less) ---------- */
 @media (prefers-reduced-motion: no-preference) {
@@ -299,3 +300,13 @@ html:has(.landing) { scroll-behavior: smooth; background: var(--canvas); }
 .landing .lp-btn-dark { background: var(--on-accent); color: var(--accent-fill); }
 .landing .lp-nav-links a { color: var(--muted); } .landing .lp-nav-links a:hover { color: var(--text); } .landing .lp-nav-links a.on { color: var(--accent); }
 .landing .lp-section-head .lp-body { margin-top: 28px; }
+.lp-float-b { top: 236px; bottom: auto; left: -44px; }
+@media (max-width: 767px) { .lp-float-b { top: 200px; left: -8px; } }
+.lp-chip-tag { white-space: nowrap; }
+@media (max-width: 767px) {
+  .lp-cta-row { flex-direction: column; } .lp-cta-row .lp-btn { flex: none; width: 100%; white-space: nowrap; }
+  .lp-mock-head b { font-size: 18px; margin-left: 10px; white-space: nowrap; } .lp-chip-tag { font-size: 11px; padding: 4px 10px; }
+  .lp-mock-price { font-size: 44px; }
+}
+.lp-pick-row .lp-ic { flex: none; } .lp-pick-row > div { min-width: 0; } .lp-pick-row small { display: block; }
+@media (max-width: 767px) { .lp-pick { width: 90%; } .lp-pick-row { padding: 14px 16px; gap: 10px; } .lp-pick-row > span { padding: 4px 10px; } .lp-wallet { width: 80%; } }
