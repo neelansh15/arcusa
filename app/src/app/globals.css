@@ -450,6 +450,7 @@ button.asset-row:focus-visible { outline: 2px solid var(--accent); outline-offse
 .wl-row[aria-busy="true"] { border-color: var(--accent-line); opacity: 1; }
 .wl-icon { width: 32px; height: 32px; border-radius: 9px; flex: none; object-fit: cover; }
 .wl-fallback { display: grid; place-items: center; background: var(--accent-fill); color: var(--on-accent); font-weight: 800; }
+.wl-wc { display: grid; place-items: center; background: #3b99fc; color: #fff; }
 .wl-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .wl-state { margin-left: auto; font-size: 13px; color: var(--muted); font-weight: 500; white-space: nowrap; }
 .wl-none, .wl-note { color: var(--muted); font-size: 15px; } .wl-none p { margin: 0 0 10px; }

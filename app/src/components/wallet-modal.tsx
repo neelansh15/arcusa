@@ -35,6 +35,14 @@ function WalletIcon({ name, icon }: { name: string; icon?: string }) {
   return <img className="wl-icon" src={src} alt="" width={32} height={32} referrerPolicy="no-referrer" loading="lazy" decoding="async" onError={() => setBad(true)} />;
 }
 
+function WcIcon() {
+  return (
+    <span className="wl-icon wl-wc" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M5 9.5c3.9-3.8 10.1-3.8 14 0M8 12.7c2.2-2.1 5.8-2.1 8 0M11 15.9c.6-.6 1.4-.6 2 0" /></svg>
+    </span>
+  );
+}
+
 function describeError(e: unknown): { tone: "info" | "err"; text: string } {
   const x = e as { code?: number; cause?: { code?: number }; message?: string };
   if (isRejection(e)) return { tone: "info", text: "Request cancelled." };
@@ -94,10 +102,12 @@ function ConnectView({ onDone, setBusy, hint, firstRow }: { onDone: () => void; 
     return () => setBusy(false);
   }, [isPending, setBusy]);
 
-  const discovered = connectors.filter((c) => c.id !== "injected").sort((a, b) => rank(a) - rank(b));
+  const wc = connectors.find((c) => c.id === "walletConnect");
+  const discovered = connectors.filter((c) => c.id !== "injected" && c.id !== "walletConnect").sort((a, b) => rank(a) - rank(b));
   const generic = connectors.find((c) => c.id === "injected");
   const hasEthereum = typeof window !== "undefined" && !!(window as unknown as { ethereum?: unknown }).ethereum;
-  const list = discovered.length ? discovered : generic && hasEthereum ? [generic] : [];
+  const browser = discovered.length ? discovered : generic && hasEthereum ? [generic] : [];
+  const list = wc ? [...browser, wc] : browser;
   const pendingUid = isPending ? (variables?.connector as Connector | undefined)?.uid : undefined;
   const err = error && !isPending ? describeError(error) : null;
 
@@ -115,6 +125,7 @@ function ConnectView({ onDone, setBusy, hint, firstRow }: { onDone: () => void; 
             const isActive = active?.uid === c.uid;
             const pending = pendingUid === c.uid;
             const name = (c.id === "injected" ? "Browser wallet" : c.name).slice(0, 32);
+            const isWc = c.id === "walletConnect";
             return (
               <li key={c.uid}>
                 <button
@@ -125,16 +136,16 @@ function ConnectView({ onDone, setBusy, hint, firstRow }: { onDone: () => void; 
                   aria-disabled={(isPending && !pending) || isActive}
                   onClick={() => (isActive ? undefined : pick(c))}
                 >
-                  <WalletIcon name={name} icon={c.icon} />
+                  {isWc ? <WcIcon /> : <WalletIcon name={name} icon={c.icon} />}
                   <span className="wl-name">{name}</span>
-                  <span className="wl-state">{pending ? "Confirm in your wallet…" : isActive ? "Connected" : ""}</span>
+                  <span className="wl-state">{pending ? (isWc ? "Scan or pick a wallet…" : "Confirm in your wallet…") : isWc && !isActive ? "Scan with phone" : isActive ? "Connected" : ""}</span>
                 </button>
               </li>
             );
           })}
         </ul>
       )}
-      {list.length === 0 && settled && (
+      {browser.length === 0 && settled && (
         <div className="wl-none">
           <p>No wallet found in this browser.</p>
           {touch ? (
@@ -144,7 +155,7 @@ function ConnectView({ onDone, setBusy, hint, firstRow }: { onDone: () => void; 
           )}
         </div>
       )}
-      {list.length === 0 && !settled && <p className="wl-note" role="status">Looking for wallets…</p>}
+      {browser.length === 0 && !settled && <p className="wl-note" role="status">Looking for wallets…</p>}
       <p className="sr-only" role="status">{isPending ? "Confirm the request in your wallet." : ""}</p>
       {hint && isPending && <p className="wl-msg info">Request still open in your wallet. Approve or reject it there.</p>}
       {err && <p className={`wl-msg ${err.tone}`} role="alert">{err.text}</p>}
