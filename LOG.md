@@ -68,6 +68,12 @@ Newest entries at the bottom. Times are IST (UTC+5:30). Testnet only. Every addr
 - Scripts: contracts/scripts/spikes/{compile-arc,deploy-arc,trade-arc}.mjs.
 - Process note: background agents are killed when my turn ends, so earlier agent runs lost their work; work now runs in my own turn.
 
+## 2026-11-06 19:20 UI redesign, price service, oracle relayer
+- UI rebuilt as a trading terminal (stats strip, candlestick chart, buy/sell ticket, market panel, balances/trades/bridge tabs). Bid/ask, oracle, inventory and trades are live reads from the Arc contracts. The ticket does approve then buy/sell with 1% slippage and the 25 gwei fee. Not yet tested with a wallet in a browser.
+- xStocks `price-data` returns only `{"quote": n}` (no timestamp). /price-history, /history, /chart, /candles return 404 (not an exhaustive search), so we ingest ourselves.
+- services/price: Node + node:sqlite polls every 5s; /api/price, /api/candles, /api/ticks. Live at https://arcusa-api.superd.app (systemd arcusa-price, Caddy, port 4301).
+- Oracle relayer: new throwaway key authorised via setRelayer (address 0xB4964152cD9A6f971446E40b23Ed7513da26faE0, funded 1 USDC; key only on the server and in the agent secrets dir). systemd arcusa-relayer pushes when the price moves >0.1% or every 60s. First update tx 0xfa4cadbd36d40f343d50f7ed68e775e0c2ae86a19e88038a3c8e68d611cffe7f. The oracle is no longer stale.
+
 ## Not verified yet
 - Whether Bridge Kit can move mNVDA by token id (T-024).
 - Fast Transfer availability for mNVDA (T-024; the docs expect `FX_SYMBOL_NOT_CONFIGURED`).
