@@ -85,7 +85,7 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 | [T-029](#t-029-parity-tests-and-scenarios-adr-0015) | parked | laptop | Parity tests and scenarios (ADR 0015) |
 | [T-030](#t-030-parity-panel-in-the-ui-adr-0015) | parked | laptop | Parity panel in the UI (ADR 0015) |
 | [T-032](#t-032-review-spikes-and-accept-or-supersede-adrs-0008-0012-to-0017) | todo | alle | Review spikes and accept or supersede ADRs 0008, 0012 to 0017 |
-| [T-033](#t-033-build-the-bridge-layer-module-with-unit-tests) | todo | laptop | Build the bridge layer module with unit tests |
+| [T-033](#t-033-build-the-bridge-layer-module-with-unit-tests) | doing | laptop | Build the bridge layer module with unit tests |
 | [T-034](#t-034-contract-tests-for-the-mock-token-and-lock-and-mint-accounting) | todo | laptop | Contract tests for the mock token and lock-and-mint accounting |
 | [T-035](#t-035-testnet-integration-tests-for-the-bridge-layer) | todo | laptop | Testnet integration tests for the bridge layer |
 | [T-036](#t-036-bridge-layer-persistence-and-resume) | todo | laptop | Bridge layer persistence and resume |
@@ -535,18 +535,24 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 
 ### T-033: Build the bridge layer module with unit tests
 - Owner: laptop
-- Status: todo
+- Status: doing
 - ADR: docs/adr/0013-wrapped-token-bridging-path.md, docs/adr/0003-usdc-bridge-in-with-forwarding.md
 - Depends on: T-022, T-024, T-004 (early start allowed on 2026-11-06: the types, config, state machine and mocked unit tests need none of them; the real Bridge Kit wiring waits for T-024)
 - Goal: One typed TypeScript module (`packages/bridge`) that the UI and scripts call for every bridge action, with no UI code in it.
 - Acceptance criteria:
   - [ ] API: `quote`, `send`, `status`, `resume` for (a) USDC Sepolia → Arc with Forwarding, (b) wNVDA Arc → Sepolia, (c) mNVDA Sepolia → Arc. Chain and token config in one place (token id, addresses, decimals).
-  - [ ] Bridge Kit is the only transfer path (ADR 0013). Raw `CrossChainTokenService` calls are not part of the module.
-  - [ ] A pure state machine with PENDING, SENT, CONFIRMED, COMPLETE, FAILED. Persistence and resume are T-036.
-  - [ ] Typed errors for the known failures: `TokenNotRegistered` (`0x5d0028cf`), unsupported route, quote rejected (`FX_SYMBOL_NOT_CONFIGURED`; the module requests Standard explicitly), insufficient gas on the source chain, user rejection.
-  - [ ] Unit tests with a mocked kit and mocked RPC (no network): each state transition, each error, amount and decimals handling. Tests run with one command and in CI.
+  - [x] Bridge Kit is the only transfer path (ADR 0013). Raw `CrossChainTokenService` calls are not part of the module.
+  - [x] A pure state machine with PENDING, SENT, CONFIRMED, COMPLETE, FAILED. Persistence and resume are T-036.
+  - [x] Typed errors for the known failures: `TokenNotRegistered` (`0x5d0028cf`), unsupported route, quote rejected (`FX_SYMBOL_NOT_CONFIGURED`; the module requests Standard explicitly), insufficient gas on the source chain, user rejection.
+  - [x] Unit tests with a mocked kit and mocked RPC (no network): each state transition, each error, amount and decimals handling. Tests run with one command and in CI.
 - Notes: `resume` only has its signature here; the storage and behaviour are T-036. Keep it independent of the oracle and market. Do not hardcode secrets.
-- Result:
+- Result: (early start, 2026-11-06; status stays doing until the real Bridge Kit wiring after T-024)
+  - Commits on main: a31b6a5 (types, config, bigint amounts), 3712976 (state machine), a396171 (typed errors and classifier), fcf5202 (quote, send, status, resume), b5412a2 (mocked kit and RPC tests, network blocked in tests). CI passed on b5412a2.
+  - Run: `pnpm install --frozen-lockfile && pnpm test` at the repo root (CI runs the same), or `pnpm test` and `pnpm typecheck` in `packages/bridge`. 79 tests in 7 files, typecheck clean (typescript 7.0.2, vitest 5.1.0, node 22.23).
+  - Layout: `src/config.ts` holds chains, tokens and the three routes (Standard speed, `useForwarder: true`, fee on source). Addresses, the CCTPx token id and decimals are read from `deployments/sepolia.json` and `deployments/arc-testnet.json` (shape in the file header); a missing value is `ConfigMissingError` with the path, a bad or inconsistent one `ConfigInvalidError`. No address or token id is hardcoded. `src/ports.ts` defines our own minimal `BridgeKitPort` (estimate, submit, getStatus) and `RpcPort` (native balance, receipt), injected into `createBridge`. `src/state.ts` is the pure state machine; `onTransition` is the hook for T-036. `resume` throws `NotImplementedError` (T-036). A guard test fails if `src` calls CrossChainTokenService or imports anything but its own files.
+  - Criterion 1 is not ticked: the API exists for all three routes, but `resume` is a signature only and the config values wait for T-022, T-024 and T-004.
+  - Open questions for T-024 (check against the real `@circle-fin/bridge-kit`, write an adapter to `BridgeKitPort`): exact method names and params for estimate, bridge and status; whether the bridge call returns after the source tx or only after the mint (the port needs a source tx hash early); how a CCTPx token id is passed; how Standard speed is requested and what Fast returns (`FX_SYMBOL_NOT_CONFIGURED` shape); fee and gas fields in the estimate; chain names (`Ethereum_Sepolia`, `Arc_Testnet` are from ADR 0003); how errors for `TokenNotRegistered`, wallet rejection and insufficient funds look (the classifier matches assumed shapes: revert data or name, EIP-1193 4001, viem `UserRejectedRequestError`, "insufficient funds"). Also: the Arc deployments file name and whether `deployments/sepolia.json` from T-022 uses the proposed shape; whether route (a) should request Fast for USDC (the module requests Standard everywhere).
+  - Not verified: anything against the real Bridge Kit, a wallet or a live RPC; the real error shapes; the Sepolia chain id 11155111 was not re-fetched today; wNVDA decimals (18 assumed, T-022 records them). No testnet, secrets or wallets were used.
 
 ### T-034: Contract tests for the mock token and lock-and-mint accounting
 - Owner: laptop
