@@ -12,3 +12,6 @@ Endpoints (CORS open):
 
 Deployed on superd.app as the `arcusa-price` systemd unit behind Caddy at arcusa-api.superd.app (port 4301).
 The oracle relayer is a separate step and is not part of this service yet.
+
+## Relayer
+`relayer.mjs` (separate systemd unit `arcusa-relayer`, needs `viem` and `RELAYER_KEY` in an env file on the server only) reads `/api/price` and calls `PriceOracle.updatePrice` when the price moves more than 0.1% or every 60s. Session is Regular during US market hours (Mon-Fri 09:30-16:00 New York), else Closed. The relayer address is authorised on the oracle via `setRelayer`.
