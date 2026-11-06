@@ -77,7 +77,9 @@ contract DeployMockProviderToken is Script {
         vm.serializeString(obj, "name", "Mock NVIDIA (testnet)");
         vm.serializeString(obj, "symbol", "mNVDA");
         vm.serializeUint(obj, "decimals", 18);
-        vm.serializeString(obj, "note", "testnet mock standing in for a provider token (ADR 0012); not a real stock token");
+        vm.serializeString(
+            obj, "note", "testnet mock standing in for a provider token (ADR 0012); not a real stock token"
+        );
         string memory mnvda = vm.serializeUint(obj, "deployedAtBlock", block.number);
 
         if (vm.exists(path)) {

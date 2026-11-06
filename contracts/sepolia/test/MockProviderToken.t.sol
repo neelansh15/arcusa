@@ -163,9 +163,7 @@ contract MockProviderTokenTest is Test {
 
     function test_transfer_insufficientBalanceReverts() public {
         _give(alice, 1e18);
-        vm.expectRevert(
-            abi.encodeWithSelector(IERC20Errors.ERC20InsufficientBalance.selector, alice, 1e18, 1e18 + 1)
-        );
+        vm.expectRevert(abi.encodeWithSelector(IERC20Errors.ERC20InsufficientBalance.selector, alice, 1e18, 1e18 + 1));
         vm.prank(alice);
         token.transfer(bob, 1e18 + 1);
     }
@@ -187,9 +185,7 @@ contract MockProviderTokenTest is Test {
         assertEq(token.allowance(alice, bob), 1e18);
         assertEq(token.balanceOf(bob), 2e18);
 
-        vm.expectRevert(
-            abi.encodeWithSelector(IERC20Errors.ERC20InsufficientAllowance.selector, bob, 1e18, 2e18)
-        );
+        vm.expectRevert(abi.encodeWithSelector(IERC20Errors.ERC20InsufficientAllowance.selector, bob, 1e18, 2e18));
         vm.prank(bob);
         token.transferFrom(alice, bob, 2e18);
     }

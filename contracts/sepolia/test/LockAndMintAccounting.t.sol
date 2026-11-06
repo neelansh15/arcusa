@@ -95,9 +95,7 @@ contract LockAndMintAccountingTest is Test {
 
     function test_unlock_moreThanWrappedBalanceReverts() public {
         manager.deliverMint(_lockAs(alice, 1e18, alice));
-        vm.expectRevert(
-            abi.encodeWithSelector(IERC20Errors.ERC20InsufficientBalance.selector, alice, 1e18, 1e18 + 1)
-        );
+        vm.expectRevert(abi.encodeWithSelector(IERC20Errors.ERC20InsufficientBalance.selector, alice, 1e18, 1e18 + 1));
         vm.prank(alice);
         manager.burnForUnlock(1e18 + 1, alice);
     }
