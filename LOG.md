@@ -34,8 +34,15 @@ Newest entries at the bottom. Times are IST (UTC+5:30). Testnet only. Every addr
 - `registerOwnerlessToken` is permissionless: an EOA that does not control the token registered it. Cost of the remote deploy: 0.00014272 ETH.
 - Next: T-024 (Bridge Kit transfer by token id, both directions, timing, Fast Transfer), then rate limit, max transfer and operator reads on both managers.
 
+## 2026-11-06 12:55 T-022 manager checks
+- Both managers (same address 0x276fACA17FA1C19A0d9B4f1B190C89c2d28C601b on Sepolia and Arc) have owner 0x173d00f7e8702d176628963FbD4E1Bcc18B29F94, which is not our wallet. It is likely Circle's ownerless-manager owner EOA; unconfirmed.
+- operator and pendingOwner are the zero address. Not paused.
+- rateLimit and maxTransferAmount are uint256 max (effectively unlimited). rateLimitWindow is 21600 s (6 h).
+- `token()` on the Sepolia manager returns mNVDA (0xecd2...7423, LOCK_UNLOCK). On Arc it returns the wrapper 0x5ad2...a16.
+- Locked mNVDA is 0 and wNVDA totalSupply is 0, so locked >= wrapped trivially holds. It must be re-checked after the first bridge in T-024.
+- The getters were probed by name (`owner`, `operator`, `rateLimit` and so on) and answered; they are not in Circle's reference page, so they could change.
+
 ## Not verified yet
 - Whether Bridge Kit can move mNVDA by token id (T-024).
-- Rate limit, max transfer amount and operator on both managers (T-022 read pending).
 - Fast Transfer availability for mNVDA (T-024; the docs expect `FX_SYMBOL_NOT_CONFIGURED`).
 - Itemised forwarding fee for USDC.
