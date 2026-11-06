@@ -93,6 +93,12 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 | [T-038](#t-038-payreceive-order-ticket-with-fee-summary) | done | laptop | Pay/receive order ticket with fee summary |
 | [T-039](#t-039-mobile-layout-bottom-sheet-ticket-and-sticky-buysell-bar) | done | laptop | Mobile layout: bottom-sheet ticket and sticky Buy/Sell bar |
 | [T-040](#t-040-pro-mode-toggle-desktop) | done | laptop | Pro mode toggle (desktop) |
+| [T-041](#t-041-theme-foundation-tokens-darklight-switch-font-button-reset) | todo | laptop | Theme foundation: tokens, dark/light switch, font, button reset |
+| [T-042](#t-042-trade-shell-header-and-chart-restyle) | todo | laptop | Trade shell, header and chart restyle |
+| [T-043](#t-043-ticket-position-and-market-panels-restyle) | todo | laptop | Ticket, position and market panels restyle |
+| [T-044](#t-044-bridge-page-and-toast-on-the-new-theme) | todo | laptop | Bridge page and toast on the new theme |
+| [T-045](#t-045-docs-and-landing-theme-tokens-only) | todo | laptop | Docs and landing theme (tokens only) |
+| [T-046](#t-046-redesign-verification-both-themes-contrast-mobile) | todo | laptop | Redesign verification: both themes, contrast, mobile |
 | [T-020](#t-020-post-mvp-spike-indexer-options-on-arc-testnet-and-sepolia) | todo | alle | (post-MVP) Spike: indexer options on Arc testnet and Sepolia |
 | [T-021](#t-021-post-mvp-build-indexer-and-holdingshistory-view) | todo | laptop | (post-MVP) Build indexer and holdings/history view |
 
@@ -658,6 +664,79 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
   - [ ] Off state shows nothing from the Pro list.
   - [ ] Reuses `MarketInfo`, `Balances`, `Trades`; no new data sources.
 - Result: Header "Pro" switch (`pro-toggle.tsx`), desktop only, off by default, persisted under `arcusa.pro` in localStorage with guarded access. When on: stats strip (bid, ask, oracle, oracle age, fee tier = spread, feed), candlestick chart with interval picker, Balances/Trades tabs (Trades has explorer links), `MarketInfo` card (oracle age and session, pool inventory, net flow, status), and a slippage selector (0.5/1/2%) in the ticket. Off state shows none of these. Reuses existing components, no new data sources. Checked in the in-app browser at 1440px: toggle on, reload keeps it, toggle off removes the panels; `tsc`, `oxlint` and `pnpm build` pass. NOT verified: the Trades tab with real trades and the slippage setting on a real trade (no wallet available).
+
+### T-041: Theme foundation: tokens, dark/light switch, font, button reset
+- Owner: laptop
+- Status: todo
+- ADR: docs/adr/0020-visual-redesign-dark-first-lumatrade.md
+- Goal: One commit that introduces `theme.css` (dark default, light via `data-theme`), the no-flash head script, the header theme button, Figtree, the global button reset and the token renames from ADR 0020 revision 4, with every existing page still readable in both themes.
+- Acceptance criteria:
+  - [ ] Colour literals in `globals.css`, `landing.css`, `docs.css` are replaced by tokens; the only remaining literals are in `theme.css`, the chart reader, and logo and favicon SVGs.
+  - [ ] `<html suppressHydrationWarning>`, theme saved in `localStorage["arcusa.theme"]` with try/catch, default dark, no flash on reload.
+  - [ ] Figtree loaded, Space Grotesk removed, numbers use `--font-num`, mono only for addresses, hashes and code.
+  - [ ] `/`, `/trade`, `/bridge`, `/docs` render without unreadable text in dark and light (screenshots checked).
+  - [ ] `tsc`, `oxlint`, `pnpm build` pass.
+- Result:
+
+### T-042: Trade shell, header and chart restyle
+- Owner: laptop
+- Status: todo
+- ADR: docs/adr/0020-visual-redesign-dark-first-lumatrade.md
+- Depends on: T-041
+- Goal: Header (centered nav, wallet pill, theme button, Pro switch), page shell, pair header and chart styled to the LumaTrade reference (ADR 0020).
+- Acceptance criteria:
+  - [ ] Chart reads colours from tokens and re-themes on switch; left price scale, no vertical grid, dashed crosshair, ring-dot marker, white tooltip pill; candles in Pro use tokens.
+  - [ ] Pair header, price (large), change pill and range chips match the reference proportions.
+  - [ ] Mobile sheet, sticky buy bar and Pro toggle still work; before and after screenshots at 1440 and 375.
+- Result:
+
+### T-043: Ticket, position and market panels restyle
+- Owner: laptop
+- Status: todo
+- ADR: docs/adr/0020-visual-redesign-dark-first-lumatrade.md
+- Depends on: T-042
+- Goal: Pay and receive cards, round swap button, lime pill CTA, outlined summary with three columns (fee, receive, spread) and a compact secondary row (execution price, slippage, max per trade), available balance block, market table with honest pills, Pro panels on tokens.
+- Acceptance criteria:
+  - [ ] Slippage, execution price and max per trade remain visible.
+  - [ ] A real buy and a real sell on Arc testnet are run in the new UI (tx hashes in Result), or Result says they were not run.
+  - [ ] Both themes checked; Pro mode checked.
+- Result:
+
+### T-044: Bridge page and toast on the new theme
+- Owner: laptop
+- Status: todo
+- ADR: docs/adr/0020-visual-redesign-dark-first-lumatrade.md
+- Depends on: T-041
+- Goal: Bridge page and toast restyled to tokens and the card language.
+- Acceptance criteria:
+  - [ ] Bridge page readable and consistent in both themes; labels at 10 to 11px raised or use `--text-2`.
+  - [ ] Toast on tokens; no hard-coded colours.
+  - [ ] Bridge flow not regressed (no logic changes; run it if a funded wallet is available, else say not run).
+- Result:
+
+### T-045: Docs and landing theme (tokens only)
+- Owner: laptop
+- Status: todo
+- ADR: docs/adr/0020-visual-redesign-dark-first-lumatrade.md
+- Depends on: T-044
+- Goal: Docs and the landing page on the shared tokens and nav, and `landing/graphics.tsx` fills on tokens. Landing copy and structure are not changed here (to be replaced from a new reference).
+- Acceptance criteria:
+  - [ ] `.landing` tokens alias the global ones; `html:has(.landing)` background uses the token; no white flash in dark.
+  - [ ] Docs sidebar offsets and code blocks fine in both themes.
+  - [ ] No colour literals left outside the allowed places.
+- Result:
+
+### T-046: Redesign verification: both themes, contrast, mobile
+- Owner: laptop
+- Status: todo
+- ADR: docs/adr/0020-visual-redesign-dark-first-lumatrade.md
+- Depends on: T-043, T-044, T-045
+- Goal: Final pass.
+- Acceptance criteria:
+  - [ ] Screenshots of `/`, `/trade`, `/trade` (Pro), `/bridge`, one docs page, in dark and light at 1440 and 375, listed in Result.
+  - [ ] Computed contrast table (text, muted, accent, pos, neg, warn on card and canvas) in Result, AA 4.5:1 for text and 3:1 for UI.
+  - [ ] A comparison note against the LumaTrade reference listing remaining gaps.
+- Result:
 
 ### T-020: (post-MVP) Spike: indexer options on Arc testnet and Sepolia
 - Owner: alle

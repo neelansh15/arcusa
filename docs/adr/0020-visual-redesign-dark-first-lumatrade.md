@@ -1,6 +1,6 @@
 # 0020. Visual redesign: dark-first theme to match the LumaTrade reference, light mode kept
 
-- Status: proposed
+- Status: accepted
 - Date: 2026-11-07
 - Deciders: user, laptop
 
@@ -46,7 +46,7 @@ Option 2.
 
 **Components.** Header: centered nav, wallet pill, theme button, Pro switch. Ticket: text tabs with accent for the active one, tokens with larger icons, dark round swap button with a ring, lime pill CTA, outlined summary card with three columns (estimated spread cost, you receive, spread). Slippage tolerance, execution price and max per trade move to a "Details" disclosure in the summary card. Position becomes the "Available balance" block (value, delta pill omitted unless real). Market table gets per-row coloured status pills.
 
-**Pages.** Trade (T-042), then bridge, docs and toast (T-043), then landing theme only (T-044), then a verification pass in both themes and on mobile (T-045). Landing copy and structure are replaced later from another reference, so landing work is tokens, nav and the SVG graphics only.
+**Pages.** Foundation (T-041), trade shell, header and chart (T-042), ticket and panels (T-043), bridge and toast (T-044), docs and landing theme (T-045), verification (T-046). Landing copy and structure are replaced later from another reference, so landing work is tokens, nav and the SVG graphics only.
 
 ## Consequences
 - ADR 0019's note "keep the light theme" is superseded by this ADR for the visual theme; its layout decisions stand.
@@ -54,3 +54,18 @@ Option 2.
 - Every hard-coded hex in CSS, `chart.tsx` and `landing/graphics.tsx` is replaced by a token. Done when `grep` for hex colours in app source returns only `theme.css`.
 - The lime accent changes the brand feel from blue. The favicon and the logo dot change colour.
 - Not verified: final font choice, final lime value, contrast ratios (target WCAG AA 4.5:1 for text, 3:1 for UI), chart theming on switch.
+
+## Revisions after devil's advocate review (2026-11-07)
+Accepted with these changes. They override anything above that conflicts.
+1. **Priority.** The user asked for this redesign explicitly on 2026-11-07, so it runs ahead of the parked phase 2 list in `TASKS.md`. It touches only `app/` styling and components. It must not touch `packages/bridge`, `contracts/` or the trade and bridge logic, so it does not block T-033 to T-036. Demo-critical subset: T-041 to T-044. T-045 (docs, landing) comes after those are verified.
+2. **Colour inventory.** The real count is 58 hex values (35 in `globals.css`, 18 in `landing.css`, 5 in `docs.css`) plus `rgba()` calls and canvas options in `chart.tsx` and fills in `landing/graphics.tsx`. Done criterion: no hex or rgb colour literal outside `theme.css`, the chart theme reader and the logo and favicon SVGs.
+3. **Chart theming.** lightweight-charts needs resolved colour strings, not `var()`. Chart tokens are therefore plain hex or rgba in `theme.css` (no `color-mix`, no `oklch`). A reader calls `getComputedStyle(document.documentElement)` on mount and again from a `MutationObserver` on `data-theme`, then `applyOptions` on the chart and series (v5.2.1 supports this). Candle colours and the falling and rising line colours go through the same reader. The crosshair marker is a ring dot, not a glow (the library has no glow). Gradient stroke stays a known gap.
+4. **Token names.** `--accent` becomes the text and link colour (lime in dark, olive in light). `--accent-fill` is the button fill and `--on-accent` the text on it. `--accent-soft` is a tinted background. Compound fixes in T-041: `button.primary` and `.tk-*` CTAs use `--accent-fill`/`--on-accent`; `.chart-tip` uses `--tip-bg`/`--tip-text` (not `--text`); `docs.css` line 2, `landing.css` line 3 and `.docs-side a.on` background use tokens; `html, body` background is `--canvas`.
+5. **Layout model.** The current page uses 1px grid-gap hairlines and a `100vh` no-scroll terminal. The trade page is already on the card layout from ADR 0019 (page scrolls), so the shell is restyled, not rewritten. T-042 acceptance includes re-verifying the T-039 mobile sheet, the sticky buy bar, and the sticky docs sidebar offsets, with before and after screenshots.
+6. **Theme switching details.** `<html suppressHydrationWarning>`. The inline head script sets `data-theme` before paint. The theme button renders a neutral state until mounted. The chart theme read also runs once on mount. `prefers-reduced-motion` disables the new gradients and transitions.
+7. **Fonts.** Figtree through `next/font/google` (available). Remove the unused Space Grotesk (`--font-display`) and the hard-coded `"Inter"` fallback in `landing.css`. Audit the 17 `var(--font-mono)` uses: numbers move to `--font-num` (the sans with `tabular-nums`); mono stays for addresses, hashes and code.
+8. **Concrete shape values.** `--r-card: 28px`, `--r-inner: 22px`, `--r-pill: 999px`, `--font-num: var(--font-body)`. Global `button` rules (6px radius, panel fill) get a reset in T-041 so pill styles do not fight them.
+9. **Contrast.** Muted text stays at 12px or larger on dark. Pro stats and bridge labels that are 10 to 11px uppercase use `--text-2` (a step brighter than `--muted`). T-046 includes a computed contrast table for the main text, muted, accent, pos, neg and warn pairs in both themes.
+10. **Honest status pills.** Per-row coloured pills only for real states: oracle session (Regular, Pre-market and so on), feed Live or Stale, demo mode. No decorative statuses.
+11. **Ticket.** Slippage, execution price and max per trade stay visible (a compact secondary row under the three-column summary), not hidden in a disclosure. Acceptance for T-043 includes a real buy and sell on Arc testnet in both themes or an explicit "not run" in Result.
+12. **Task order.** T-041 lands in one commit with the app fully working in dark and light before anything else. The favicon `app/src/app/icon.svg` and the logo SVG are listed explicitly.
