@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { Balances, useBalances } from "./balances";
 import { PriceChart } from "./chart";
+import { BottomSheet } from "./bottom-sheet";
 import { Header } from "./header";
 import { MarketInfo } from "./market-info";
 import { MarketTable } from "./market-table";
@@ -100,13 +101,9 @@ export function Terminal() {
             <button className="sell" onClick={() => setSheet("sell")}>Sell</button>
           </div>
           {sheet && (
-            <div className="sheet-wrap" role="dialog" aria-modal="true" aria-label={`${sheet} NVDA`}>
-              <div className="sheet-bg" onClick={() => setSheet(null)} />
-              <div className="sheet">
-                <div className="sheet-grab"><span /><button aria-label="Close" onClick={() => setSheet(null)}>×</button></div>
-                <OrderTicket key={sheet} initialSide={sheet} market={m} usdcBal={bal.usdc} nvdaBal={bal.nvda} onDone={() => setSheet(null)} />
-              </div>
-            </div>
+            <BottomSheet label={`${sheet} NVDA`} onClose={() => setSheet(null)}>
+              <OrderTicket key={sheet} initialSide={sheet} market={m} usdcBal={bal.usdc} nvdaBal={bal.nvda} onDone={() => setSheet(null)} />
+            </BottomSheet>
           )}
         </>
       )}

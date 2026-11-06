@@ -396,3 +396,9 @@ button.wallet i { background: var(--accent-fill); }
 .tk-sum > .tk-cols { display: grid; }
 .tk-cols > div { margin: 0; }
 .tk-sub { row-gap: 8px; }
+
+/* Draggable sheet handle: a tall touch target, no browser scroll gesture on it */
+.sheet-grab { height: 44px; touch-action: none; cursor: grab; }
+.sheet-grab:active { cursor: grabbing; }
+.sheet-grab span { width: 44px; height: 5px; }
+.sheet { overscroll-behavior: contain; }
