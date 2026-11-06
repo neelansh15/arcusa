@@ -92,7 +92,7 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 | [T-037](#t-037-simple-trade-layout-pair-header-chart-card-market-table) | done | laptop | Simple trade layout: pair header, chart card, market table |
 | [T-038](#t-038-payreceive-order-ticket-with-fee-summary) | done | laptop | Pay/receive order ticket with fee summary |
 | [T-039](#t-039-mobile-layout-bottom-sheet-ticket-and-sticky-buysell-bar) | done | laptop | Mobile layout: bottom-sheet ticket and sticky Buy/Sell bar |
-| [T-040](#t-040-pro-mode-toggle-desktop) | doing | laptop | Pro mode toggle (desktop) |
+| [T-040](#t-040-pro-mode-toggle-desktop) | done | laptop | Pro mode toggle (desktop) |
 | [T-020](#t-020-post-mvp-spike-indexer-options-on-arc-testnet-and-sepolia) | todo | alle | (post-MVP) Spike: indexer options on Arc testnet and Sepolia |
 | [T-021](#t-021-post-mvp-build-indexer-and-holdingshistory-view) | todo | laptop | (post-MVP) Build indexer and holdings/history view |
 
@@ -649,7 +649,7 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 
 ### T-040: Pro mode toggle (desktop)
 - Owner: laptop
-- Status: doing
+- Status: done
 - ADR: docs/adr/0019-simple-default-ui-with-pro-mode.md
 - Depends on: T-038
 - Goal: A header toggle, persisted in `localStorage`, off by default, hidden on mobile. When on it adds the stats strip, Balances and Trades tabs, slippage setting, oracle updated-at and staleness, pool inventory, fee tier and explorer links.
@@ -657,7 +657,7 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
   - [ ] Toggle state survives reload; localStorage access is wrapped in try/catch.
   - [ ] Off state shows nothing from the Pro list.
   - [ ] Reuses `MarketInfo`, `Balances`, `Trades`; no new data sources.
-- Result:
+- Result: Header "Pro" switch (`pro-toggle.tsx`), desktop only, off by default, persisted under `arcusa.pro` in localStorage with guarded access. When on: stats strip (bid, ask, oracle, oracle age, fee tier = spread, feed), candlestick chart with interval picker, Balances/Trades tabs (Trades has explorer links), `MarketInfo` card (oracle age and session, pool inventory, net flow, status), and a slippage selector (0.5/1/2%) in the ticket. Off state shows none of these. Reuses existing components, no new data sources. Checked in the in-app browser at 1440px: toggle on, reload keeps it, toggle off removes the panels; `tsc`, `oxlint` and `pnpm build` pass. NOT verified: the Trades tab with real trades and the slippage setting on a real trade (no wallet available).
 
 ### T-020: (post-MVP) Spike: indexer options on Arc testnet and Sepolia
 - Owner: alle

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { erc20Abi, formatUnits, parseUnits } from "viem";
+import { erc20Abi, formatUnits } from "viem";
 import { useAccount, useConnect, useReadContract, useSwitchChain, useWriteContract } from "wagmi";
 import { injected } from "wagmi/connectors";
 import { usePublicClient } from "wagmi";
@@ -10,9 +10,8 @@ import { ARC_FEES, MARKET_ADDRESS, marketAbi } from "@/lib/market";
 import { Toast, type ToastMsg } from "@/components/toast";
 import { useQuote, type MarketState } from "@/lib/use-market";
 
-const SLIPPAGE_BPS = 100n;
 
-export function OrderTicket({ market, usdcBal, nvdaBal, onDone, initialSide = "buy" }: { market: MarketState; usdcBal: number | null; nvdaBal: number | null; onDone?: () => void; initialSide?: "buy" | "sell" }) {
+export function OrderTicket({ market, usdcBal, nvdaBal, onDone, initialSide = "buy", slippageBps = 100, onSlippage }: { market: MarketState; usdcBal: number | null; nvdaBal: number | null; onDone?: () => void; initialSide?: "buy" | "sell"; slippageBps?: number; onSlippage?: (bps: number) => void }) {
   const { address, isConnected, chainId } = useAccount();
   const { switchChainAsync } = useSwitchChain();
   const { connect, isPending: connecting } = useConnect();
@@ -56,7 +55,7 @@ export function OrderTicket({ market, usdcBal, nvdaBal, onDone, initialSide = "b
         await allowance.refetch();
       }
       setBusy(side === "buy" ? "Buying…" : "Selling…");
-      const min = (q.out * (10_000n - SLIPPAGE_BPS)) / 10_000n;
+      const min = (q.out * (10_000n - BigInt(slippageBps))) / 10_000n;
       const hash = await writeContractAsync({
         chainId: ARC_CHAIN_ID,
         address: MARKET_ADDRESS,
@@ -144,7 +143,12 @@ export function OrderTicket({ market, usdcBal, nvdaBal, onDone, initialSide = "b
         <div><span>You will receive</span><b>{outText} {outSym}</b></div>
         <div><span>Spread</span><b>{market.spreadBps !== null ? `${market.spreadBps / 100}%` : "—"}</b></div>
         <div><span>Execution price</span><b>{px ? `$${px.toFixed(2)}` : "—"}</b></div>
-        <div><span>Slippage tolerance</span><b>{Number(SLIPPAGE_BPS) / 100}%</b></div>
+        <div><span>Slippage tolerance</span><b>{slippageBps / 100}%</b></div>
+        {onSlippage && (
+          <div className="tk-slip"><span>Set slippage</span>
+            <div>{[50, 100, 200].map((b) => (<button key={b} className={slippageBps === b ? "on" : ""} onClick={() => onSlippage(b)}>{b / 100}%</button>))}</div>
+          </div>
+        )}
         <div><span>Max per trade</span><b>{market.maxTradeUsdc !== null ? `${market.maxTradeUsdc} USDC` : "—"}</b></div>
       </div>
       <Toast toast={msg} onClose={() => setMsg(null)} />
