@@ -1,0 +1,23 @@
+# Env files: keep only the example
+.env
+.env.*
+!.env.example
+
+# Node
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+.pnpm-store/
+
+# Foundry
+out/
+cache/
+broadcast/*/31337/
+
+# Arc Studio CLI local state
+.arc-studio/
+
+# OS / editor
+.DS_Store
+*.log
