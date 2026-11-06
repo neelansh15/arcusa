@@ -41,6 +41,8 @@ export const SEPOLIA_MNVDA = {
 // TODO: set once the Arc InventoryMarket (ADR 0014) is deployed.
 export const INVENTORY_MARKET_ADDRESS: Address | null = null;
 
+export const PRICE_API = process.env.NEXT_PUBLIC_PRICE_API ?? "https://arcusa-api.superd.app";
+
 export const PRICE = {
   route: "/api/price",
   upstream: "https://api.xstocks.fi/api/v2/public/assets/NVDAx/price-data",
