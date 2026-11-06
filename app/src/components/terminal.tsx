@@ -7,7 +7,7 @@ import { Header } from "./header";
 import { MarketInfo } from "./market-info";
 import { MarketTable } from "./market-table";
 import { OrderTicket } from "./order-ticket";
-import { Position } from "./position";
+import { Position, PositionBody } from "./position";
 import { ProToggle, usePro } from "./pro-toggle";
 import { Trades } from "./trades";
 import { useMarket } from "@/lib/use-market";
@@ -88,8 +88,8 @@ export function Terminal() {
           )}
         </section>
         <aside className="side">
-          <Position usdc={bal.usdc} nvda={bal.nvda} quote={p.quote} />
-          {!mobile && <OrderTicket market={m} usdcBal={bal.usdc} nvdaBal={bal.nvda} slippageBps={slip} onSlippage={pro ? setSlip : undefined} />}
+          {mobile && <Position usdc={bal.usdc} nvda={bal.nvda} quote={p.quote} />}
+          {!mobile && <OrderTicket market={m} usdcBal={bal.usdc} nvdaBal={bal.nvda} slippageBps={slip} onSlippage={pro ? setSlip : undefined} summaryHead={<PositionBody usdc={bal.usdc} nvda={bal.nvda} quote={p.quote} />} />}
           {pro && <MarketInfo m={m} indicative={p.quote} />}
         </aside>
       </main>

@@ -95,8 +95,8 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 | [T-040](#t-040-pro-mode-toggle-desktop) | done | laptop | Pro mode toggle (desktop) |
 | [T-041](#t-041-theme-foundation-tokens-darklight-switch-font-button-reset) | done | laptop | Theme foundation: tokens, dark/light switch, font, button reset |
 | [T-042](#t-042-trade-shell-header-and-chart-restyle) | done | laptop | Trade shell, header and chart restyle |
-| [T-043](#t-043-ticket-position-and-market-panels-restyle) | doing | laptop | Ticket, position and market panels restyle |
-| [T-044](#t-044-bridge-page-and-toast-on-the-new-theme) | todo | laptop | Bridge page and toast on the new theme |
+| [T-043](#t-043-ticket-position-and-market-panels-restyle) | done | laptop | Ticket, position and market panels restyle |
+| [T-044](#t-044-bridge-page-and-toast-on-the-new-theme) | doing | laptop | Bridge page and toast on the new theme |
 | [T-045](#t-045-docs-and-landing-theme-tokens-only) | todo | laptop | Docs and landing theme (tokens only) |
 | [T-046](#t-046-redesign-verification-both-themes-contrast-mobile) | todo | laptop | Redesign verification: both themes, contrast, mobile |
 | [T-020](#t-020-post-mvp-spike-indexer-options-on-arc-testnet-and-sepolia) | todo | alle | (post-MVP) Spike: indexer options on Arc testnet and Sepolia |
@@ -692,7 +692,7 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 
 ### T-043: Ticket, position and market panels restyle
 - Owner: laptop
-- Status: doing
+- Status: done
 - ADR: docs/adr/0020-visual-redesign-dark-first-lumatrade.md
 - Depends on: T-042
 - Goal: Pay and receive cards, round swap button, lime pill CTA, outlined summary with three columns (fee, receive, spread) and a compact secondary row (execution price, slippage, max per trade), available balance block, market table with honest pills, Pro panels on tokens.
@@ -700,11 +700,11 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
   - [ ] Slippage, execution price and max per trade remain visible.
   - [ ] A real buy and a real sell on Arc testnet are run in the new UI (tx hashes in Result), or Result says they were not run.
   - [ ] Both themes checked; Pro mode checked.
-- Result:
+- Result: Ticket restyled: large text Buy/Sell tabs (accent for the active one), pay and receive cards with 44px token icons, big amounts, stacked balance on the right, round swap button with a card-coloured ring, lime pill CTA, and one outlined summary card that holds the position block (value in USDC, wNVDA and USDC available), a three-column row (estimated fee, you will receive, spread) and a compact row (execution price, slippage, max per trade, all still visible). The standalone position card is shown on mobile only. Oracle tag turns green for the Regular session, warn when stale; no decorative statuses. Pro stat labels raised to 11px and `--text-2`. Checked in the in-app browser at 1440 in dark (disconnected state); `tsc` and `oxlint` pass. NOT verified: a real buy and a real sell on Arc testnet (no wallet in the in-app browser, so no tx hashes), connected-state layout of the position block, light theme and mobile sheet after this change, Pro mode after this change.
 
 ### T-044: Bridge page and toast on the new theme
 - Owner: laptop
-- Status: todo
+- Status: doing
 - ADR: docs/adr/0020-visual-redesign-dark-first-lumatrade.md
 - Depends on: T-041
 - Goal: Bridge page and toast restyled to tokens and the card language.

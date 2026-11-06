@@ -9,9 +9,10 @@ import { ARC_CHAIN_ID, ARC_USDC, WNVDA, explorerTx } from "@/lib/config";
 import { ARC_FEES, MARKET_ADDRESS, marketAbi } from "@/lib/market";
 import { Toast, type ToastMsg } from "@/components/toast";
 import { useQuote, type MarketState } from "@/lib/use-market";
+import type { ReactNode } from "react";
 
 
-export function OrderTicket({ market, usdcBal, nvdaBal, onDone, initialSide = "buy", slippageBps = 100, onSlippage }: { market: MarketState; usdcBal: number | null; nvdaBal: number | null; onDone?: () => void; initialSide?: "buy" | "sell"; slippageBps?: number; onSlippage?: (bps: number) => void }) {
+export function OrderTicket({ market, usdcBal, nvdaBal, onDone, initialSide = "buy", slippageBps = 100, onSlippage, summaryHead }: { market: MarketState; usdcBal: number | null; nvdaBal: number | null; onDone?: () => void; initialSide?: "buy" | "sell"; slippageBps?: number; onSlippage?: (bps: number) => void; summaryHead?: ReactNode }) {
   const { address, isConnected, chainId } = useAccount();
   const { switchChainAsync } = useSwitchChain();
   const { connect, isPending: connecting } = useConnect();
@@ -103,20 +104,25 @@ export function OrderTicket({ market, usdcBal, nvdaBal, onDone, initialSide = "b
   else if (busy) { label = busy; disabled = true; }
   else { label = `${needsApproval ? "Approve & " : ""}${word} NVDA`; action = submit; disabled = !canSubmit; }
 
+  const payBal = bal === null ? "—" : bal.toLocaleString(undefined, { maximumFractionDigits: 4 });
+  const recvBalNum = side === "buy" ? nvdaBal : usdcBal;
+  const recvBal = recvBalNum === null ? "—" : recvBalNum.toLocaleString(undefined, { maximumFractionDigits: 4 });
+
   return (
     <section className="card ticket">
-      <div className="tk-head">
-        <div className="tk-tabs">
-          <button className={side === "buy" ? "on" : ""} onClick={() => setSide("buy")}>Buy</button>
-          <button className={side === "sell" ? "on" : ""} onClick={() => setSide("sell")}>Sell</button>
-        </div>
+      <div className="tk-tabs" role="tablist">
+        <button role="tab" aria-selected={side === "buy"} className={side === "buy" ? "on" : ""} onClick={() => setSide("buy")}>Buy</button>
+        <button role="tab" aria-selected={side === "sell"} className={side === "sell" ? "on" : ""} onClick={() => setSide("sell")}>Sell</button>
       </div>
 
       <div className="tk-card">
-        <div className="tk-top"><span>You pay</span><span className="tk-bal">Balance {bal === null ? "—" : bal.toLocaleString(undefined, { maximumFractionDigits: 4 })}</span></div>
+        <div className="tk-top">
+          <span className={`tk-token ${side === "buy" ? "usdc" : "nvda"}`}><i>{side === "buy" ? "$" : "N"}</i>{inSym}</span>
+          <span className="tk-label">You pay</span>
+        </div>
         <div className="tk-main">
           <input aria-label="Amount to pay" inputMode="decimal" value={amount} onChange={(e) => setAmount(e.target.value)} />
-          <span className={`tk-token ${side === "buy" ? "usdc" : "nvda"}`}><i>{side === "buy" ? "$" : "N"}</i>{inSym}</span>
+          <div className="tk-bal"><span>Balance</span><b>{payBal}</b></div>
         </div>
         <div className="tk-pct">
           {[25, 50, 75, 100].map((p) => (<button key={p} onClick={() => setPct(p)}>{p === 100 ? "Max" : `${p}%`}</button>))}
@@ -126,10 +132,13 @@ export function OrderTicket({ market, usdcBal, nvdaBal, onDone, initialSide = "b
       <button className="tk-swap" aria-label="Flip buy and sell" onClick={() => { setSide(side === "buy" ? "sell" : "buy"); setAmount(""); }}>⇅</button>
 
       <div className="tk-card">
-        <div className="tk-top"><span>You receive</span><span className="tk-bal">Balance {(side === "buy" ? nvdaBal : usdcBal) === null ? "—" : (side === "buy" ? nvdaBal : usdcBal)!.toLocaleString(undefined, { maximumFractionDigits: 4 })}</span></div>
+        <div className="tk-top">
+          <span className={`tk-token ${side === "buy" ? "nvda" : "usdc"}`}><i>{side === "buy" ? "N" : "$"}</i>{outSym}</span>
+          <span className="tk-label">You receive</span>
+        </div>
         <div className="tk-main">
           <output className="tk-out">{outText}</output>
-          <span className={`tk-token ${side === "buy" ? "nvda" : "usdc"}`}><i>{side === "buy" ? "N" : "$"}</i>{outSym}</span>
+          <div className="tk-bal"><span>Balance</span><b>{recvBal}</b></div>
         </div>
       </div>
 
@@ -139,17 +148,22 @@ export function OrderTicket({ market, usdcBal, nvdaBal, onDone, initialSide = "b
       {market.oracle?.stale && <div className="tk-msg warn">Oracle price is stale; off-hours demo mode is on.</div>}
 
       <div className="tk-sum">
-        <div><span>Estimated spread cost</span><b>{spreadCost !== null ? `${spreadCost.toFixed(2)} USDC` : "—"}</b></div>
-        <div><span>You will receive</span><b>{outText} {outSym}</b></div>
-        <div><span>Spread</span><b>{market.spreadBps !== null ? `${market.spreadBps / 100}%` : "—"}</b></div>
-        <div><span>Execution price</span><b>{px ? `$${px.toFixed(2)}` : "—"}</b></div>
-        <div><span>Slippage tolerance</span><b>{slippageBps / 100}%</b></div>
+        {summaryHead && <div className="tk-sum-head">{summaryHead}</div>}
+        <div className="tk-cols">
+          <div><span>Estimated fee</span><b>{spreadCost !== null ? `${spreadCost.toFixed(2)} USDC` : "—"}</b></div>
+          <div><span>You will receive</span><b>{outText} {outSym}</b></div>
+          <div><span>Spread</span><b>{market.spreadBps !== null ? `${market.spreadBps / 100}%` : "—"}</b></div>
+        </div>
+        <div className="tk-sub">
+          <span>Execution price <b>{px ? `$${px.toFixed(2)}` : "—"}</b></span>
+          <span>Slippage <b>{slippageBps / 100}%</b></span>
+          <span>Max per trade <b>{market.maxTradeUsdc !== null ? `${market.maxTradeUsdc} USDC` : "—"}</b></span>
+        </div>
         {onSlippage && (
           <div className="tk-slip"><span>Set slippage</span>
             <div>{[50, 100, 200].map((b) => (<button key={b} className={slippageBps === b ? "on" : ""} onClick={() => onSlippage(b)}>{b / 100}%</button>))}</div>
           </div>
         )}
-        <div><span>Max per trade</span><b>{market.maxTradeUsdc !== null ? `${market.maxTradeUsdc} USDC` : "—"}</b></div>
       </div>
       <Toast toast={msg} onClose={() => setMsg(null)} />
     </section>

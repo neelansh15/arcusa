@@ -322,3 +322,39 @@ button.wallet i { background: var(--accent-fill); }
   .pill { font-size: 12px; padding: 4px 10px; white-space: nowrap; }
   .mdetails summary { white-space: nowrap; }
 }
+
+/* T-043: ticket, summary and position in the LumaTrade language */
+.ticket { background: transparent !important; padding: 0 !important; gap: 0; }
+.tk-tabs { display: flex; gap: 22px; padding: 0; background: transparent; margin: 4px 0 18px; }
+.tk-tabs button { padding: 0; background: transparent; border: 0; font-size: 26px; font-weight: 700; color: var(--dim); letter-spacing: -.01em; border-radius: 0; }
+.tk-tabs button.on { background: transparent; color: var(--accent); }
+.tk-card { background: var(--panel2); border-radius: var(--r-inner); padding: 20px 22px; }
+.tk-top { align-items: center; }
+.tk-label { color: var(--muted); font-size: 14px; }
+.tk-token { background: transparent; border: 0; padding: 0; font-size: 22px; font-weight: 700; gap: 12px; }
+.tk-token i { width: 44px; height: 44px; font-size: 18px; }
+.tk-main { align-items: flex-end; margin: 18px 0 6px; }
+.tk-main input, .tk-out { font-size: 44px; font-weight: 600; letter-spacing: -.02em; }
+.tk-bal { display: flex; flex-direction: column; align-items: flex-end; font-size: 14px; color: var(--muted); padding-bottom: 6px; }
+.tk-bal b { color: var(--text); font-weight: 600; font-size: 15px; }
+.tk-pct button { background: var(--panel); border: 0; color: var(--text-2); padding: 4px 12px; font-size: 12px; }
+.tk-swap { width: 44px; height: 44px; margin: -14px 0; background: var(--panel); color: var(--text); border: 4px solid var(--card); box-shadow: none; font-size: 18px; }
+.tk-submit { margin-top: 16px; padding: 18px; font-size: 18px; }
+.tk-msg { font-size: 13px; }
+.tk-sum { margin-top: 16px; border: 1px solid var(--line2); border-radius: var(--r-inner); padding: 20px 22px; display: block; font-size: 13px; gap: 0; }
+.tk-sum-head { margin-bottom: 16px; }
+.tk-sum-head .pos-label { margin-bottom: 4px; }
+.tk-sum-head .pos-big { font-size: 38px; }
+.tk-cols { display: grid; grid-template-columns: 1fr 1.2fr .8fr; gap: 12px; }
+.tk-cols > div { display: flex; flex-direction: column; gap: 4px; align-items: flex-start; }
+.tk-cols span { color: var(--muted); font-size: 13px; } .tk-cols b { font-size: 16px; font-weight: 600; }
+.tk-sub { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; }
+.tk-sub b { color: var(--text-2); font-weight: 600; margin-left: 4px; }
+.tk-slip { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; color: var(--muted); font-size: 12px; }
+.position { padding: 18px 20px; }
+.pos-big { font-size: 34px; font-weight: 700; }
+.pro-stats span { font-size: 11px; color: var(--text-2); }
+@media (max-width: 767px) {
+  .tk-token i { width: 36px; height: 36px; } .tk-main input, .tk-out { font-size: 34px; }
+  .sheet .ticket { padding: 8px !important; } .tk-cols { grid-template-columns: 1fr 1fr; } .tk-cols > div:last-child { grid-column: 1 / -1; }
+}

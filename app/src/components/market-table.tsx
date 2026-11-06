@@ -12,7 +12,7 @@ export function MarketTable({ m, stale }: { m: MarketState; stale: boolean }) {
   return (
     <div className="mtable" role="table" aria-label="Market">
       <div className="mrow head" role="row"><span>Market</span><span>Price</span><span>Status</span></div>
-      <div className="mrow" role="row"><span>Oracle</span><b>{f(m.oracle?.price)}</b><span className={`tag ${oracleStale ? "warn" : ""}`}>{m.oracle ? SESSIONS[m.oracle.session] : "—"}{oracleStale ? " · stale" : ""}</span></div>
+      <div className="mrow" role="row"><span>Oracle</span><b>{f(m.oracle?.price)}</b><span className={`tag ${oracleStale ? "warn" : m.oracle?.session === 1 ? "ok" : ""}`}>{m.oracle ? SESSIONS[m.oracle.session] : "—"}{oracleStale ? " · stale" : ""}</span></div>
       <div className="mrow" role="row"><span>Bid (you sell)</span><b>{f(m.bid)}</b><span className="tag">{spread}</span></div>
       <div className="mrow" role="row"><span>Ask (you buy)</span><b>{f(m.ask)}</b><span className="tag">{spread}</span></div>
       <div className="mrow" role="row"><span>Price feed</span><b>{stale ? "Stale" : "Live"}</b><span className={`tag ${stale ? "warn" : "ok"}`}>{stale ? "Delayed" : "xstocks.fi"}</span></div>
