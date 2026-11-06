@@ -1,3 +1,4 @@
+import { CONTRACT_SET } from "./contracts";
 // Contract data for the docs. Every address below comes from the repo:
 // deployments/arc-testnet.json, app/src/lib/config.ts, app/src/lib/market.ts or LOG.md.
 // Nothing here is a mainnet address that arcusa deployed.
@@ -72,6 +73,42 @@ export const ARC_CONTRACTS: ContractRow[] = [
     deployTx: "0xff278d0295f5da914392d4a4900611eed1cf63b623eb4096f21a83b361c908b4",
     source: "deployments/arc-testnet.json (tsla), LOG.md",
     note: "No trade has been made on it yet and it is not wired into the app.",
+  },
+  {
+    name: "PriceOracle (NVDA, Arc Studio set)",
+    address: "0x8503bb2d15f88bb31a9363bc0dfbe9391028ebda",
+    purpose: "Same PriceOracle source, built, tested and deployed in Arc Studio (ADR 0025). Owner is the arcusa deployer, staleness 300.",
+    owner: "arcusa",
+    deployTx: "0x8d8efb77b5151177c6d0c12b977e3e362d4efc347f65644fb5c43d0952a2dade",
+    source: "deployments/arc-testnet.json (studio), app/src/lib/contracts.ts",
+    note: CONTRACT_SET === "studio" ? "In use by the app." : "Verified on-chain, not used by the app yet: it still needs its owner setup (T-056).",
+  },
+  {
+    name: "InventoryMarket (NVDA, Arc Studio set)",
+    address: "0x0e0d70183cfdf6192e0f43cea39d5567f3698d13",
+    purpose: "Same InventoryMarket source, deployed from Arc Studio, wired to the Studio NVDA oracle and the existing wNVDA.",
+    owner: "arcusa",
+    deployTx: "0x4016a613de4ce1eca593c86c6dca9d1d4f302d8a02a5dca4bec1e34b7b92c833",
+    source: "deployments/arc-testnet.json (studio), app/src/lib/contracts.ts",
+    note: CONTRACT_SET === "studio" ? "In use by the app." : "Verified on-chain, not used by the app yet. Deployed at block 71093406.",
+  },
+  {
+    name: "PriceOracle (TSLA, Arc Studio set)",
+    address: "0x1b53204d9d873b74760fd1933e8151220995de05",
+    purpose: "PriceOracle for TSLA, deployed from Arc Studio. Staleness 301 instead of 300 so the deploy tool did not de-duplicate it against the NVDA oracle.",
+    owner: "arcusa",
+    deployTx: "0xca1d5a23bcb592e6b157ff3c3ef1a3d714313159a24a082f9a8c34bdc505c845",
+    source: "deployments/arc-testnet.json (studio), app/src/lib/contracts.ts",
+    note: CONTRACT_SET === "studio" ? "In use by the app." : "Verified on-chain, not used by the app yet (T-056).",
+  },
+  {
+    name: "InventoryMarket (TSLA, Arc Studio set)",
+    address: "0x3fb35049ebee5618538214bb504743cdf4f0b5f2",
+    purpose: "InventoryMarket for wTSLA, deployed from Arc Studio, wired to the Studio TSLA oracle.",
+    owner: "arcusa",
+    deployTx: "0x35422af41a2e89c36b3c6daa6037e0af5813c720e91f39ff32c83152761851e7",
+    source: "deployments/arc-testnet.json (studio), app/src/lib/contracts.ts",
+    note: CONTRACT_SET === "studio" ? "In use by the app." : "Verified on-chain, not used by the app yet. Deployed at block 71093934.",
   },
   {
     name: "wNVDA",

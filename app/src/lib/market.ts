@@ -1,8 +1,11 @@
 import { parseAbi } from "viem";
 
-export const MARKET_DEPLOY_BLOCK = 71030220n;
-export const ORACLE_ADDRESS = "0xcd92cc2ff8d630a93090c203463843ffd685f83d" as const;
-export const MARKET_ADDRESS = "0x8046c2bcb05c8750772bfcc2109659c85f3b10f4" as const;
+import { ACTIVE } from "./contracts";
+
+// NVDA instances. The addresses live in contracts.ts so the whole app switches contract set in one place (ADR 0025).
+export const MARKET_DEPLOY_BLOCK = ACTIVE.nvda.marketDeployBlock;
+export const ORACLE_ADDRESS = ACTIVE.nvda.oracle;
+export const MARKET_ADDRESS = ACTIVE.nvda.market;
 
 export const marketAbi = parseAbi([
   "function buy(uint256 usdcIn, uint256 minWnvdaOut) returns (uint256 wnvdaOut)",

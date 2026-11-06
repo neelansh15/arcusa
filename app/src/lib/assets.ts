@@ -1,6 +1,6 @@
 import type { Address } from "viem";
 import { WNVDA, WTSLA } from "./config";
-import { MARKET_ADDRESS, MARKET_DEPLOY_BLOCK, ORACLE_ADDRESS } from "./market";
+import { ACTIVE } from "./contracts";
 
 /**
  * Asset registry for the selector and the trade page (ADR 0022, ADR 0024).
@@ -33,7 +33,7 @@ export const ASSETS: Asset[] = [
     pair: "NVDA / USDC",
     label: "Mock NVDA token (wNVDA)",
     status: "live",
-    live: { token: WNVDA, priceSymbol: "NVDA", market: MARKET_ADDRESS, oracle: ORACLE_ADDRESS, marketDeployBlock: MARKET_DEPLOY_BLOCK },
+    live: { token: WNVDA, priceSymbol: "NVDA", market: ACTIVE.nvda.market, oracle: ACTIVE.nvda.oracle, marketDeployBlock: ACTIVE.nvda.marketDeployBlock },
   },
   {
     ticker: "TSLA",
@@ -43,9 +43,9 @@ export const ASSETS: Asset[] = [
     live: {
       token: WTSLA,
       priceSymbol: "TSLA",
-      market: "0x7872ad4bb1a18b63140d4df0fe31af451470f0f3",
-      oracle: "0xf17f5449be304de315e48eee44cf889e8e47867d",
-      marketDeployBlock: 71085047n,
+      market: ACTIVE.tsla.market,
+      oracle: ACTIVE.tsla.oracle,
+      marketDeployBlock: ACTIVE.tsla.marketDeployBlock,
     },
   },
   { ticker: "AAPL", pair: "AAPL / USDC", label: "Coming soon", status: "planned" },
