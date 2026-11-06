@@ -104,7 +104,7 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 | [T-049](#t-049-landing-interactive-calculator-and-phone-showcase) | done | laptop | Landing: interactive calculator and phone showcase |
 | [T-050](#t-050-landing-faq-final-cta-footer-and-copy-audit) | done | laptop | Landing: FAQ, final CTA, footer and copy audit |
 | [T-051](#t-051-landing-verification-themes-devices-motion-performance) | done | laptop | Landing verification: themes, devices, motion, performance |
-| [T-052](#t-052-asset-selector-button-and-modal-in-the-pair-header) | todo | laptop | Asset selector button and modal in the pair header |
+| [T-052](#t-052-asset-selector-button-and-modal-in-the-pair-header) | doing | laptop | Asset selector button and modal in the pair header |
 | [T-020](#t-020-post-mvp-spike-indexer-options-on-arc-testnet-and-sepolia) | todo | alle | (post-MVP) Spike: indexer options on Arc testnet and Sepolia |
 | [T-021](#t-021-post-mvp-build-indexer-and-holdingshistory-view) | todo | laptop | (post-MVP) Build indexer and holdings/history view |
 
@@ -809,7 +809,7 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 
 ### T-052: Asset selector button and modal in the pair header
 - Owner: laptop
-- Status: todo
+- Status: doing
 - ADR: docs/adr/0022-asset-selector-modal.md
 - Goal: A chevron selector after "NVDA / USDC" whose whole group highlights on hover and opens a modal asset list (centered dialog on desktop, bottom sheet on mobile).
 - Acceptance criteria:
@@ -818,6 +818,7 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
   - [ ] Esc, scrim and close button dismiss; focus goes to search, is trapped, and returns to the button; body scroll locked.
   - [ ] Works in dark and light, at 1440 and 375; mobile uses the bottom sheet.
   - [ ] `tsc`, `oxlint`, `pnpm build` pass; trade and ticket behaviour unchanged.
+  - [ ] Escape fires once; search focuses on desktop only, dialog focus on mobile; planned rows are ticker-only, labelled Coming soon, with the ADR 0016 line in the modal.
 - Result:
 
 ### T-020: (post-MVP) Spike: indexer options on Arc testnet and Sepolia

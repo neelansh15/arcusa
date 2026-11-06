@@ -1,6 +1,6 @@
 # 0022. Asset selector in the pair header, with a modal list
 
-- Status: proposed
+- Status: accepted
 - Date: 2026-11-07
 - Deciders: user, laptop
 
@@ -27,3 +27,15 @@ The trade page header shows one hard-coded pair, "NVDA / USDC". The user says ar
 - `terminal.tsx` header uses `AssetSelector`; the static `h1` text becomes the button label.
 - Real multi-asset trading needs per-asset market and oracle config; out of scope.
 - Not verified: how many assets can be live on testnet, and whether each needs its own wrapper.
+
+## Revisions after devil's advocate review (2026-11-07)
+Accepted with these changes. They override anything above that conflicts.
+1. **Named tickers.** ADR 0021's "no named tickers" rule applies to the landing page only. In the app, ADR 0018 (user decision 2026-11-06) allows greyed planned rows. The fixed planned set is `AAPL`, `TSLA`, `MSFT`, `AMZN`, shown as ticker only (no company name, no logo, neutral text), each labelled "Coming soon" in visible text, not selectable, with no price. The modal carries the ADR 0016 line: "Testnet demo. Not a security, no real shares, no real value."
+2. **The live row is a mock.** Its label is "Mock NVDA token (wNVDA)", never "NVIDIA". It shows the same two-logo group as the header.
+3. **Own `Modal`, `BottomSheet` untouched.** A new `Modal` component (portal to `body`, z-index 70, below the toast at 1000) with one Escape handler, a focus trap, focus return to the opener, inert background and body scroll lock with restore. On desktop it is a centered dialog; under 768px the same component is styled as a bottom sheet by CSS (no drag). It is mounted only when open, so nothing renders during SSR.
+4. **Search focus.** The search field takes focus on desktop only; on mobile the dialog itself is focused so the keyboard does not open and shrink the viewport. The sheet uses `dvh` units. Acceptance in T-052 says this explicitly.
+5. **Semantics.** The button lives inside the `h1`; its name is the pair text plus visually hidden "choose asset", with `aria-haspopup="dialog"`. Disabled rows are `li` elements with `aria-disabled="true"` and visible "Coming soon" text (no `disabled` buttons, no opacity-only dimming: muted text colour). Search is `input type="search"` with a label and a polite live region ("N results", "No assets match"). Plain buttons, no listbox; Tab only, no arrow-key navigation for now.
+6. **Hover and focus.** A `--hover` token in both themes (white 7 percent in dark, dark 6 percent in light), padding reserved so nothing shifts, and a visible `:focus-visible` ring in addition to the tint.
+7. **Display only.** `asset` in the trade page is display-only state that feeds the header label. Picking NVDA is a no-op. It is not a working switch until per-asset market config exists (ADR 0018).
+8. **Cut for now.** Prices in rows, arrow-key navigation, per-row logo badges for planned rows, token addresses in `assets.ts`.
+9. **Acceptance additions.** Escape fires once and closes only the topmost layer; screenshots in dark and light at 1440 and 375; the mobile sheet's pull-down is not used here (no drag), so list scrolling cannot dismiss it.
