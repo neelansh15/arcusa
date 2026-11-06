@@ -29,6 +29,7 @@ One file per decision: `NNNN-short-title.md`, copied from `0000-template.md`. St
 | [0022](0022-asset-selector-modal.md) | Asset selector in the pair header, with a modal list | proposed |
 | [0023](0023-custom-wallet-modal.md) | Custom wallet connect modal on wagmi 3 (not RainbowKit) | proposed |
 | [0025](0025-contracts-built-and-deployed-in-arc-studio.md) | Arc contracts rebuilt, tested and deployed in Arc Studio; the app switches to them | accepted |
+| [0026](0026-provider-selector.md) | Provider selector: choose between providers of the same stock, shown only with two or more | accepted |
 
 Note: ADR 0010 (accepted, immutable) still says `tAAPL`. Read it as the wrapped token `wNVDA` (ADR 0012).
 

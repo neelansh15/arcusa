@@ -110,6 +110,7 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 | [T-055](#t-055-build-test-and-deploy-the-arc-contracts-in-arc-studio-adr-0025) | done | laptop | Build, test and deploy the Arc contracts in Arc Studio (ADR 0025) |
 | [T-056](#t-056-configure-the-studio-deployed-markets-and-move-inventory-adr-0025) | todo | alle | Configure the Studio-deployed markets and move inventory (ADR 0025) |
 | [T-057](#t-057-switch-the-app-relayer-and-docs-to-the-studio-deployments-adr-0025) | todo | laptop | Switch the app, relayer and docs to the Studio deployments (ADR 0025) |
+| [T-058](#t-058-provider-selector-control-and-modal-adr-0026) | todo | laptop | Provider selector control and modal (ADR 0026) |
 | [T-020](#t-020-post-mvp-spike-indexer-options-on-arc-testnet-and-sepolia) | todo | alle | (post-MVP) Spike: indexer options on Arc testnet and Sepolia |
 | [T-021](#t-021-post-mvp-build-indexer-and-holdingshistory-view) | todo | laptop | (post-MVP) Build indexer and holdings/history view |
 
@@ -912,6 +913,19 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
   - [ ] `lib/market.ts`, `lib/assets.ts` and the docs contract pages use the new addresses; trades work on NVDA and TSLA in the app (or Result says what was not run).
   - [ ] `deployments/arc-testnet.json` lists the Studio deployments and keeps the old ones under `superseded`.
   - [ ] README and docs state plainly which parts were built where, and carry the Studio URL.
+- Result:
+
+### T-058: Provider selector control and modal (ADR 0026)
+- Owner: laptop
+- Status: doing
+- ADR: docs/adr/0026-provider-selector.md
+- Goal: A control and modal to choose between providers of the same stock, rendered only when there are two or more providers.
+- Acceptance criteria:
+  - [ ] With one provider the component renders nothing and the ticket looks unchanged (screenshot).
+  - [ ] Control in the ticket and modal (desktop dialog, mobile sheet), dark and light, all states (loading, stale, unavailable, empty amount, error), screenshots.
+  - [ ] Rows are buttons with accessible names; Tab, Enter and Space only; visible focus; no hex colours; tabular numbers; copy says "best among these providers".
+  - [ ] A list of what could not be verified (real FE data, ticket mount, flag).
+- Notes: The FE session owns `providers.ts`, `use-provider-quotes.ts` and the ticket wiring; this task does not edit them.
 - Result:
 
 ### T-054: Deploy TSLA support on the server: price service and relayer
