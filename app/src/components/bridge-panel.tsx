@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { erc20Abi, formatUnits } from "viem";
 import { useAccount, useReadContract } from "wagmi";
 import {
@@ -32,6 +32,9 @@ const DIRECTION_TEXT: Record<BridgeDirection, string> = {
   "sepolia-to-arc": "Sepolia → Arc",
   "arc-to-sepolia": "Arc → Sepolia",
 };
+
+const upsert = (ls: BridgeLeg[], l: BridgeLeg) =>
+  ls.some((x) => x.id === l.id) ? ls.map((x) => (x.id === l.id ? l : x)) : [l, ...ls];
 
 const short = (h: string) => `${h.slice(0, 8)}…${h.slice(-6)}`;
 
@@ -67,6 +70,8 @@ export function BridgePanel() {
   const [amount, setAmount] = useState("1");
   const [legs, setLegs] = useState<BridgeLeg[]>([]);
   const [err, setErr] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+  const resumed = useRef(new Set<string>());
   const { from, to } = chainsFor(direction);
 
   // Read-only balance of the token on the source chain, for the max hint.
@@ -83,22 +88,51 @@ export function BridgePanel() {
   const balanceText = balance === null ? "—" : Number(balance).toLocaleString(undefined, { maximumFractionDigits: 6 });
   const sourceSymbol = direction === "sepolia-to-arc" ? SEPOLIA_MNVDA.symbol : WNVDA.symbol;
 
-  async function start() {
-    if (!address) return;
-    setErr(null);
-    const leg: BridgeLeg = {
-      id: `${Date.now()}`,
-      request: { direction, amount, recipient: address },
-      steps: emptySteps(),
-      createdAt: Date.now(),
-    };
-    try {
-      await bridgeClient.start(leg.request, (l) => setLegs((ls) => [l, ...ls.filter((x) => x.id !== l.id)]));
-    } catch (e) {
-      leg.steps = leg.steps.map((s, i) => (i === 0 ? { ...s, state: "error" } : s));
-      setLegs((ls) => [leg, ...ls]);
-      setErr(e instanceof Error ? e.message : "bridge failed");
+  const onUpdate = (l: BridgeLeg) => setLegs((ls) => upsert(ls, l));
+
+  // Load saved legs when a wallet connects. Legs whose burn was sent but whose mint is not done
+  // are resumed once (a poll of the attestation and forwarded mint; no new transaction is sent).
+  useEffect(() => {
+    if (!address) {
+      setLegs([]);
+      return;
     }
+    let cancelled = false;
+    bridgeClient.list(address).then((saved) => {
+      if (cancelled) return;
+      setLegs(saved);
+      for (const l of saved) {
+        const burned = l.steps.some((s) => s.name === "burn" && s.txHash);
+        if (l.status === "running" && burned && !resumed.current.has(l.id)) {
+          resumed.current.add(l.id);
+          bridgeClient.resume(l, onUpdate).catch((e) => setErr(e instanceof Error ? e.message : "resume failed"));
+        }
+      }
+    });
+    return () => {
+      cancelled = true;
+    };
+    // onUpdate only calls a state setter.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [address]);
+
+  async function start() {
+    if (!address || busy) return;
+    setErr(null);
+    setBusy(true);
+    try {
+      await bridgeClient.start({ direction, amount, recipient: address }, onUpdate);
+    } catch (e) {
+      // The client has already saved the failed leg and reported it through onUpdate.
+      setErr(e instanceof Error ? e.message : "bridge failed");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  function retry(l: BridgeLeg) {
+    setErr(null);
+    bridgeClient.resume(l, onUpdate).catch((e) => setErr(e instanceof Error ? e.message : "resume failed"));
   }
 
   return (
@@ -165,8 +199,8 @@ export function BridgePanel() {
           </div>
         </dl>
 
-        <button className="bridge-submit" disabled={!isConnected || !(Number(amount) > 0)} onClick={start}>
-          {isConnected ? "Bridge" : "Connect wallet to bridge"}
+        <button className="bridge-submit" disabled={!isConnected || busy || !(Number(amount) > 0)} onClick={start}>
+          {!isConnected ? "Connect wallet to bridge" : busy ? "Bridging…" : "Bridge"}
         </button>
         {err && <div className="bridge-error">{err}</div>}
 
@@ -194,6 +228,12 @@ export function BridgePanel() {
                   <time>{new Date(l.createdAt).toLocaleTimeString()}</time>
                 </div>
                 <Timeline steps={BRIDGE_STEP_ORDER.map((n) => l.steps.find((s) => s.name === n)!)} />
+                {l.status === "error" && l.error && <div className="bridge-error">{l.error}</div>}
+                {l.status === "error" && l.steps.some((s) => s.name === "burn" && s.txHash) && (
+                  <button type="button" className="bridge-max" onClick={() => retry(l)}>
+                    Resume
+                  </button>
+                )}
               </li>
             ))}
           </ul>
