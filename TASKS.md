@@ -96,8 +96,8 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 | [T-041](#t-041-theme-foundation-tokens-darklight-switch-font-button-reset) | done | laptop | Theme foundation: tokens, dark/light switch, font, button reset |
 | [T-042](#t-042-trade-shell-header-and-chart-restyle) | done | laptop | Trade shell, header and chart restyle |
 | [T-043](#t-043-ticket-position-and-market-panels-restyle) | done | laptop | Ticket, position and market panels restyle |
-| [T-044](#t-044-bridge-page-and-toast-on-the-new-theme) | doing | laptop | Bridge page and toast on the new theme |
-| [T-045](#t-045-docs-and-landing-theme-tokens-only) | todo | laptop | Docs and landing theme (tokens only) |
+| [T-044](#t-044-bridge-page-and-toast-on-the-new-theme) | done | laptop | Bridge page and toast on the new theme |
+| [T-045](#t-045-docs-and-landing-theme-tokens-only) | doing | laptop | Docs and landing theme (tokens only) |
 | [T-046](#t-046-redesign-verification-both-themes-contrast-mobile) | todo | laptop | Redesign verification: both themes, contrast, mobile |
 | [T-020](#t-020-post-mvp-spike-indexer-options-on-arc-testnet-and-sepolia) | todo | alle | (post-MVP) Spike: indexer options on Arc testnet and Sepolia |
 | [T-021](#t-021-post-mvp-build-indexer-and-holdingshistory-view) | todo | laptop | (post-MVP) Build indexer and holdings/history view |
@@ -704,7 +704,7 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 
 ### T-044: Bridge page and toast on the new theme
 - Owner: laptop
-- Status: doing
+- Status: done
 - ADR: docs/adr/0020-visual-redesign-dark-first-lumatrade.md
 - Depends on: T-041
 - Goal: Bridge page and toast restyled to tokens and the card language.
@@ -712,11 +712,11 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
   - [ ] Bridge page readable and consistent in both themes; labels at 10 to 11px raised or use `--text-2`.
   - [ ] Toast on tokens; no hard-coded colours.
   - [ ] Bridge flow not regressed (no logic changes; run it if a funded wallet is available, else say not run).
-- Result:
+- Result: Bridge page and toast restyled with CSS only (no logic changes): transparent page, `--card` panel with 28px radius, pill direction switch with accent fill, large amount input on an inner card, pill CTA, 12px labels in `--text-2`, toast on the card tokens. Checked at 1440 in dark. NOT verified: light theme, mobile, a real bridge run (no funded wallet in the in-app browser).
 
 ### T-045: Docs and landing theme (tokens only)
 - Owner: laptop
-- Status: todo
+- Status: doing
 - ADR: docs/adr/0020-visual-redesign-dark-first-lumatrade.md
 - Depends on: T-044
 - Goal: Docs and the landing page on the shared tokens and nav, and `landing/graphics.tsx` fills on tokens. Landing copy and structure are not changed here (to be replaced from a new reference).

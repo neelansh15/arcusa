@@ -358,3 +358,32 @@ button.wallet i { background: var(--accent-fill); }
   .tk-token i { width: 36px; height: 36px; } .tk-main input, .tk-out { font-size: 34px; }
   .sheet .ticket { padding: 8px !important; } .tk-cols { grid-template-columns: 1fr 1fr; } .tk-cols > div:last-child { grid-column: 1 / -1; }
 }
+
+/* T-044: bridge page and toast on the card language */
+.bridge-main { background: transparent; }
+.bridge-wrap { max-width: 560px; padding: 24px 16px 72px; gap: 24px; }
+.bridge-intro h1 { font-size: 40px; letter-spacing: -.03em; }
+.bridge-intro p { font-size: 15px; }
+.bridge-links { gap: 20px; font-size: 14px; font-weight: 600; }
+.bridge-card { background: var(--card); border: 0; border-radius: var(--r-card); padding: 28px; }
+.bridge-card-head h2 { font-size: 18px; font-weight: 700; }
+.bridge-pill { background: var(--panel2); border: 0; padding: 4px 12px; color: var(--text-2); }
+.bridge-seg { background: var(--panel2); border: 0; border-radius: var(--r-pill); padding: 4px; }
+.bridge-seg button { border-radius: var(--r-pill); padding: 10px 12px; font-size: 14px; }
+.bridge-seg button.on { background: var(--accent-fill); border-color: var(--accent-fill); color: var(--on-accent); }
+.bridge-route { font-size: 13px; }
+.bridge-input { background: var(--panel2); border: 1px solid transparent; border-radius: var(--r-inner); padding: 0 20px; }
+.bridge-input:focus-within { border-color: var(--accent-line); }
+.bridge-input input { font-size: 34px; padding: 18px 0; font-weight: 600; letter-spacing: -.02em; }
+.bridge-input b { font-size: 15px; color: var(--text-2); }
+.bridge-max { background: var(--panel2); border: 0; color: var(--accent); padding: 2px 10px; border-radius: var(--r-pill); }
+.bridge-field-top { font-size: 13px; }
+.bridge-meta { border-color: var(--line); }
+.bridge-meta > div { font-size: 14px; }
+.bridge-submit { border-radius: var(--r-pill); padding: 18px; font-size: 18px; font-weight: 700; }
+.bridge-label { font-size: 12px; color: var(--text-2); }
+.bridge-step-meta, .bridge-empty { font-size: 13px; }
+.bridge-error { background: var(--neg-soft); border: 0; border-left: 3px solid var(--neg); }
+.toast { background: var(--card); border: 1px solid var(--line2); border-left: 3px solid var(--pos); border-radius: var(--r-inner); }
+.toast-body b { color: var(--text); }
+@media (max-width: 767px) { .bridge-card { padding: 20px; } .bridge-intro h1 { font-size: 32px; } .bridge-input input { font-size: 28px; } }
