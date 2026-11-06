@@ -8,7 +8,7 @@
 .docs-side-group { margin-bottom: 22px; }
 .docs-side-title { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; margin-bottom: 6px; padding: 0 8px; }
 .docs-side ul { list-style: none; margin: 0; padding: 0; }
-.docs-side a { display: block; padding: 5px 8px; border-radius: 6px; color: var(--muted); font-size: 14px; }
+.docs-side a { display: block; padding: 6px 12px; border-radius: var(--r-pill); color: var(--muted); font-size: 14px; }
 .docs-side a:hover { color: var(--text); background: var(--panel2); text-decoration: none; }
 .docs-side a.on { color: var(--accent); background: var(--accent-soft); font-weight: 600; }
 

@@ -186,3 +186,8 @@ html:has(.landing) { scroll-behavior: smooth; background: var(--canvas); }
 @media (prefers-reduced-motion: reduce) {
   .landing .lp-load { animation: none; }
 }
+
+/* T-045: theme the landing shapes to match the app (content to be replaced later) */
+.landing .lp-btn { border-radius: var(--r-pill); }
+.landing .lp-chart-card { border-radius: var(--r-card); background: var(--card); border-color: transparent; }
+.landing .lp-testnet, .landing .lp-tag { border-radius: var(--r-pill); }

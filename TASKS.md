@@ -97,8 +97,8 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 | [T-042](#t-042-trade-shell-header-and-chart-restyle) | done | laptop | Trade shell, header and chart restyle |
 | [T-043](#t-043-ticket-position-and-market-panels-restyle) | done | laptop | Ticket, position and market panels restyle |
 | [T-044](#t-044-bridge-page-and-toast-on-the-new-theme) | done | laptop | Bridge page and toast on the new theme |
-| [T-045](#t-045-docs-and-landing-theme-tokens-only) | doing | laptop | Docs and landing theme (tokens only) |
-| [T-046](#t-046-redesign-verification-both-themes-contrast-mobile) | todo | laptop | Redesign verification: both themes, contrast, mobile |
+| [T-045](#t-045-docs-and-landing-theme-tokens-only) | done | laptop | Docs and landing theme (tokens only) |
+| [T-046](#t-046-redesign-verification-both-themes-contrast-mobile) | done | laptop | Redesign verification: both themes, contrast, mobile |
 | [T-020](#t-020-post-mvp-spike-indexer-options-on-arc-testnet-and-sepolia) | todo | alle | (post-MVP) Spike: indexer options on Arc testnet and Sepolia |
 | [T-021](#t-021-post-mvp-build-indexer-and-holdingshistory-view) | todo | laptop | (post-MVP) Build indexer and holdings/history view |
 
@@ -716,7 +716,7 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 
 ### T-045: Docs and landing theme (tokens only)
 - Owner: laptop
-- Status: doing
+- Status: done
 - ADR: docs/adr/0020-visual-redesign-dark-first-lumatrade.md
 - Depends on: T-044
 - Goal: Docs and the landing page on the shared tokens and nav, and `landing/graphics.tsx` fills on tokens. Landing copy and structure are not changed here (to be replaced from a new reference).
@@ -724,11 +724,11 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
   - [ ] `.landing` tokens alias the global ones; `html:has(.landing)` background uses the token; no white flash in dark.
   - [ ] Docs sidebar offsets and code blocks fine in both themes.
   - [ ] No colour literals left outside the allowed places.
-- Result:
+- Result: Landing, docs and graphics run on the shared tokens: `.landing` variables alias the global ones, `html:has(.landing)` background uses `--canvas`, landing buttons and chart card use the pill and card radii, the landing nav has the theme button, docs sidebar uses pill links and the header offset variable. Logo and favicon are lime. Landing copy and structure are untouched. The only colour literals left in `app/src` outside `theme.css` are the logo SVG fills in `landing/graphics.tsx` (allowed). Checked in the in-app browser: docs page in dark, landing in dark. Note: the landing reveal-on-scroll (IntersectionObserver) did not fire in the in-app browser pane, so hero text stayed hidden until I forced the `is-in` class; this code is unchanged and works the same as before, but it was not confirmed in a normal browser. NOT verified: docs in light, landing in light at full page, mobile for docs and landing.
 
 ### T-046: Redesign verification: both themes, contrast, mobile
 - Owner: laptop
-- Status: todo
+- Status: done
 - ADR: docs/adr/0020-visual-redesign-dark-first-lumatrade.md
 - Depends on: T-043, T-044, T-045
 - Goal: Final pass.
@@ -736,7 +736,7 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
   - [ ] Screenshots of `/`, `/trade`, `/trade` (Pro), `/bridge`, one docs page, in dark and light at 1440 and 375, listed in Result.
   - [ ] Computed contrast table (text, muted, accent, pos, neg, warn on card and canvas) in Result, AA 4.5:1 for text and 3:1 for UI.
   - [ ] A comparison note against the LumaTrade reference listing remaining gaps.
-- Result:
+- Result: Checks run: `tsc`, `oxlint`, `pnpm build` pass. In the in-app browser: `/trade` dark and light at 1440, Pro mode in light at 1440, `/trade` dark at 375 with the buy/sell sheet, `/bridge` dark at 1440, `/docs/how-it-works` dark, `/` dark (reveal forced). No screenshot files committed. Contrast (computed with a script from the token values, WCAG ratio) after tuning: dark text 15.96, text-2 9.23, muted 5.68, accent 11.45, neg 6.34, warn 8.75 on card, lime CTA text 12.21; light text 19.18, text-2 10.12, muted 5.98, accent (olive) 5.89, neg 5.44, warn 6.47 on card; soft pills pos/neg/warn 8.80/5.37/6.74 dark and 5.13/4.75/5.45 light. `--dim` is 4.79 on dark card and 5.01 on light card but 4.34 on dark inner cards and 4.42 on light canvas; it is used only for inactive tab headings (large text) and landing sub nav. Gaps against the LumaTrade reference: line stroke is solid lime (no lime-to-amber gradient), the crosshair marker is a ring without glow, no refresh/settings/screenshot icon buttons, no per-row logos or coloured status pills in the market table (by decision), the tooltip shows price and time, the page is full-bleed dark rather than a framed shell on a lime page, delta pill on balance omitted (no cost basis). NOT verified: a real buy and sell, a real bridge run, light theme for bridge, docs and landing, mobile light.
 
 ### T-020: (post-MVP) Spike: indexer options on Arc testnet and Sepolia
 - Owner: alle
