@@ -37,3 +37,8 @@ Mechanism (Circle CCTP for non-USDC assets, sources in ADR 0001, fetched 2026-11
 - Whether the ownerless LOCK_UNLOCK manager can hold permissioned provider tokens.
 - Whether an ownerless token can be registered by anyone for a token we do not control, and what Circle's registry (Iris `GET /v2/cctpx/tokens`) lists for it.
 - Whether the wrapped token decimals follow the home token (T-022 checks), and the NVDAon decimals on chain (T-023).
+
+## Amendment 2026-11-06 (devil's-advocate review)
+- Ownerless managers have no operator, so there is no rate limit to set. Circle's ownerless docs say there are no rate limits by default. An ownerless Sepolia to Arc token read on chain on 2026-11-06 had `rateLimit` and `maxTransferAmount` at uint256 max and a zero operator. Circle's quickstart says to confirm a non-zero rate limit; that conflicts with the ownerless docs. T-022 reads and records the values instead of setting them.
+- The Arc wrapper copies the home token's name and symbol, so the mock's name is what shows on Arc.
+- Circle says ownerless is for tokens without an issuer. We control `mNVDA`, so the README must say the mock stands in for a provider token we do not control.

@@ -26,10 +26,11 @@ One block per task, newest at the bottom. Do not reuse IDs.
 **Phase 1: the bridge layer, with tests.** Price parity and the oracle come later (the user's decision).
 
 1. T-002 Repo skeleton
-2. T-003 Arc Studio app
-3. T-022 Mock provider token, lock-and-mint on Arc (spike)
+2. T-003 Arc Studio app (not needed by the bridge spikes; needed by the UI)
+3. T-022 Mock provider token, lock-and-mint on Arc (spike; depends on T-002 only)
 4. T-024 Bridge Kit for wNVDA, both directions, timings (spike)
 5. T-033 Bridge layer module with unit tests
+   - T-036 Persistence and resume (after T-033)
 6. T-034 Contract tests for the mock token and the lock-and-mint accounting
 7. T-035 Testnet integration tests for the bridge layer
 8. T-032 ADR review for the bridge ADRs (0012, 0013, 0016, 0017, 0008)
@@ -87,6 +88,7 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 | [T-033](#t-033-build-the-bridge-layer-module-with-unit-tests) | todo | laptop | Build the bridge layer module with unit tests |
 | [T-034](#t-034-contract-tests-for-the-mock-token-and-lock-and-mint-accounting) | todo | laptop | Contract tests for the mock token and lock-and-mint accounting |
 | [T-035](#t-035-testnet-integration-tests-for-the-bridge-layer) | todo | laptop | Testnet integration tests for the bridge layer |
+| [T-036](#t-036-bridge-layer-persistence-and-resume) | todo | laptop | Bridge layer persistence and resume |
 | [T-020](#t-020-post-mvp-spike-indexer-options-on-arc-testnet-and-sepolia) | todo | alle | (post-MVP) Spike: indexer options on Arc testnet and Sepolia |
 | [T-021](#t-021-post-mvp-build-indexer-and-holdingshistory-view) | todo | laptop | (post-MVP) Build indexer and holdings/history view |
 
@@ -116,12 +118,14 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 - Depends on: none
 - Goal: Create the folder layout, `.gitignore` and `.env.example` so later tasks have fixed paths.
 - Acceptance criteria:
-  - [ ] Folders exist: `app/`, `contracts/arc/`, `contracts/scripts/`, `services/oracle-relayer/`, `docs/architecture/`, `docs/demo/`, `deployments/`. Use a `.gitkeep` where a folder is empty.
+  - [ ] Folders exist: `app/`, `contracts/arc/`, `contracts/sepolia/`, `contracts/scripts/`, `packages/bridge/`, `services/oracle-relayer/`, `docs/architecture/`, `docs/demo/`, `deployments/`. Use a `.gitkeep` where a folder is empty.
+  - [ ] A package-manager workspace (pnpm) covers `packages/*` and `app/`, with one test runner configured (vitest for TypeScript) and one `test` command at the root.
+  - [ ] A CI stub (GitHub Actions) runs install and `test` on push. It may be a no-op until tests exist, but it must run green.
   - [ ] `.gitignore` covers `.env*` except `.env.example`, `node_modules`, Foundry `out/` and `cache/`, and local Arc Studio CLI state.
   - [ ] `.env.example` lists variable names only, for example `DEPLOYER_PRIVATE_KEY`, `RELAYER_PRIVATE_KEY`, `ARC_TESTNET_RPC_URL`, `SEPOLIA_RPC_URL`, `IRIS_API_URL`. No values.
   - [ ] Arc Foundry is installed (`arc-forge --version` output pasted in Result). See https://docs.arc.io/arc/tutorials/install-arc-foundry.md.
   - [ ] `git grep -nE '0x[0-9a-fA-F]{64}'` shows no private keys.
-- Notes:
+- Notes: Extends ADR 0010 (accepted) with `packages/bridge/` (T-033) and `contracts/sepolia/` (mNVDA and the Sepolia scripts, T-022, T-034). `contracts/arc/` stays Studio-only. The raw CCTS fallback in ADR 0010 no longer applies (ADR 0013).
 - Result:
 
 ### T-003: Create the Arc Studio app and link the CLI (ADR 0006)
@@ -286,7 +290,7 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 - Status: todo
 - ADR: docs/adr/0013-wrapped-token-bridging-path.md (must be accepted)
 - Depends on: T-024, T-011
-- Goal: A user moves wNVDA from Arc to Sepolia, and back, from the terminal with Bridge Kit, or the fallback from ADR 0001.
+- Goal: A user moves wNVDA from Arc to Sepolia, and back, from the terminal with Bridge Kit (no raw-call fallback, ADR 0013).
 - Acceptance criteria:
   - [ ] The "Send wNVDA to Sepolia" and "Bring wNVDA to Arc" flows work. The UI shows the states PENDING, SENT, CONFIRMED, COMPLETE and FAILED.
   - [ ] The expected wait is shown, with SLOW for the Sepolia-source direction.
@@ -319,7 +323,7 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
     - the user wallet;
     - the Sepolia USDC and Forwarding path;
     - Arc USDC;
-    - the market contract, PriceOracle and relayer with Pyth Hermes;
+    - the market contract, PriceOracle and relayer (Ondo API, ADR 0015);
     - wNVDA and its TokenManagers on both chains;
     - CCTS and Iris;
     - Bridge Kit;
@@ -387,15 +391,17 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 - Owner: laptop
 - Status: todo
 - ADR: docs/adr/0012-provider-token-lock-and-wrap.md
-- Depends on: T-003
+- Depends on: T-002
 - Goal: Prove that a mock provider token `mNVDA` on Sepolia can be registered as an ownerless LOCK_UNLOCK token and wrapped as `wNVDA` on Arc testnet.
 - Acceptance criteria:
   - [ ] `mNVDA` is deployed on Sepolia (clearly named as a mock).
   - [ ] `registerOwnerlessToken` succeeds with LOCK_UNLOCK; the Iris quote is fetched; `deployRemoteOwnerlessToken` succeeds on Arc.
   - [ ] `mNVDA` uses the same decimals as Ondo's real tokens (18); `wNVDA` decimals are recorded.
-  - [ ] Remote rate limit is set above 0 and a transfer lock-and-mint works; locked amount on Sepolia equals `wNVDA` supply on Arc.
+  - [ ] The mock name and symbol are chosen knowing the Arc wrapper copies them from the home token. Record what the wrapper shows on Arc.
+  - [ ] Wallets are funded (Sepolia ETH, Arc USDC for gas) and the faucet sources are recorded in the Result.
+  - [ ] A lock-and-mint transfer works; locked amount on Sepolia equals `wNVDA` supply on Arc. `rateLimit`, `maxTransferAmount` and the operator are read on both managers and recorded (ownerless managers have no operator and, per Circle, no rate limit by default, so there is nothing to set; see the ADR 0012 amendment).
   - [ ] Result lists tx hashes, addresses, the token id, and any revert or doc discrepancy.
-- Notes: Replaces T-005. Record whether anyone can register a token they do not control.
+- Notes: Replaces T-005. Record whether anyone can register a token they do not control. Circle says ownerless is for tokens without an issuer and we control mNVDA; the README must explain that the mock stands in for a provider token we do not control.
 - Result:
 
 ### T-023: Research: can real provider tokens be locked and wrapped? (ADR 0012, ADR 0016)
@@ -418,9 +424,11 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 - Goal: Prove the user bridge path and measure it.
 - Acceptance criteria:
   - [ ] Bridge Kit (required, no raw-contract fallback) moves `wNVDA` Arc → Sepolia (unlock) and `mNVDA` Sepolia → Arc (mint). If it rejects the token, report the evidence as a blocker.
-  - [ ] Elapsed time of each leg is recorded, and whether Fast Transfer exists for this token.
+  - [ ] Elapsed time of each leg is recorded, and whether Fast Transfer exists for this token. Expect Standard speed (about 15 to 19 min) from Sepolia: Circle rejects Fast quotes for tokens without an FX symbol (`FX_SYMBOL_NOT_CONFIGURED`). Confirm or refute with a real quote.
   - [ ] The zero-address versus `TokenNotRegistered` discrepancy is confirmed or not.
-- Notes: Replaces T-006.
+  - [ ] Bridge Kit imports and runs in a browser bundle (Vite or Next), the check T-006 used to do. Result says which bundler.
+  - [ ] Gas is in place on both chains first (Sepolia ETH, Arc USDC; see T-022).
+- Notes: Replaces T-006. No fallback: the user decided on 2026-11-06 not to fall back to raw calls or a custom token. If Bridge Kit cannot complete an ownerless transfer, stop and report the evidence to the user as a blocker.
 - Result:
 
 ### T-025: Spike: NVDA price source (Ondo API first), access and behaviour by market session (ADR 0015)
@@ -504,27 +512,27 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 - Owner: alle
 - Status: todo
 - ADR: docs/adr/0012-provider-token-lock-and-wrap.md, docs/adr/0013-wrapped-token-bridging-path.md, docs/adr/0014-trading-against-pre-positioned-inventory.md, docs/adr/0015-price-parity-and-off-hours-policy.md, docs/adr/0016-compliance-provider-tokens.md, docs/adr/0017-demo-scope-with-wrapped-token.md, docs/adr/0008-frontend-stack-and-wallet.md
-- Depends on: T-001, T-003, T-022, T-023, T-024
-- Goal: Turn the proposed ADRs into accepted ones, or supersede them, so the build tasks have rules to follow.
+- Depends on: T-003, T-022, T-023, T-024
+- Goal: Turn the remaining proposed ADRs into accepted ones, or supersede them, so the build tasks have rules to follow.
 - Acceptance criteria:
-  - [ ] Each ADR is `accepted`, or replaced by a new ADR linking the spike Result it is based on.
-  - [ ] The off-hours demo mode decision from T-001 is in ADR 0015.
+  - [ ] Phase 1 scope: ADRs 0008, 0016 and 0017 are `accepted` or replaced by a new ADR linking the spike Result it is based on. ADRs 0012 and 0013 were accepted on 2026-11-06; check them against the T-022 and T-024 Results and amend if needed.
+  - [ ] Phase 2 (after the parked tasks start): the off-hours demo mode decision from T-001 is in ADR 0015, and ADRs 0014 and 0015 are accepted or replaced.
   - [ ] `docs/adr/README.md` is updated.
-- Notes: Replaces T-008. Phase 1 scope: accept or supersede ADRs 0012, 0013, 0016, 0017 and 0008. ADRs 0014 and 0015 are reviewed after phase 2 starts (price parity and oracle are parked). Re-fetch fast-moving facts on the day.
+- Notes: Replaces T-008. ADRs 0014 and 0015 are reviewed after phase 2 starts (price parity and oracle are parked). Re-fetch fast-moving facts on the day.
 - Result:
 
 ### T-033: Build the bridge layer module with unit tests
 - Owner: laptop
 - Status: todo
 - ADR: docs/adr/0013-wrapped-token-bridging-path.md, docs/adr/0003-usdc-bridge-in-with-forwarding.md
-- Depends on: T-022, T-024
+- Depends on: T-022, T-024, T-004
 - Goal: One typed TypeScript module (`packages/bridge`) that the UI and scripts call for every bridge action, with no UI code in it.
 - Acceptance criteria:
   - [ ] API: `quote`, `send`, `status`, `resume` for (a) USDC Sepolia → Arc with Forwarding, (b) wNVDA Arc → Sepolia, (c) mNVDA Sepolia → Arc. Chain and token config in one place (token id, addresses, decimals).
-  - [ ] Bridge Kit is used first, and the raw `CrossChainTokenService` path is the fallback behind the same interface (ADR 0013).
-  - [ ] A state machine with PENDING, SENT, CONFIRMED, COMPLETE, FAILED, persisted so a reload or restart resumes a transfer.
-  - [ ] Typed errors for the known failures: rate limit 0, `TokenNotRegistered` (`0x5d0028cf`), insufficient gas on the source chain, amount above the limit, user rejection.
-  - [ ] Unit tests with a mocked kit and mocked RPC (no network): each state transition, resume after a crash, each error, amount and decimals handling, fallback switch. Tests run with one command and in CI.
+  - [ ] Bridge Kit is the only transfer path (ADR 0013). Raw `CrossChainTokenService` calls are not part of the module.
+  - [ ] A pure state machine with PENDING, SENT, CONFIRMED, COMPLETE, FAILED. Persistence and resume are T-036.
+  - [ ] Typed errors for the known failures: `TokenNotRegistered` (`0x5d0028cf`), unsupported route, quote rejected (`FX_SYMBOL_NOT_CONFIGURED`, falls back to Standard), insufficient gas on the source chain, user rejection.
+  - [ ] Unit tests with a mocked kit and mocked RPC (no network): each state transition, each error, amount and decimals handling. Tests run with one command and in CI.
 - Notes: Keep it independent of the oracle and market. Do not hardcode secrets.
 - Result:
 
@@ -537,7 +545,7 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 - Acceptance criteria:
   - [ ] `MockProviderToken` (mNVDA) is clearly named as a mock and has a faucet or mint for testnet use only.
   - [ ] Tests for transfers, decimals and the lock-and-unlock round trip, using a local stand-in for the manager if the real service cannot run locally.
-  - [ ] A script `check-supply` reads both chains and fails if locked ≠ wrapped supply.
+  - [ ] A script `check-supply` reads both chains and fails if locked mNVDA is less than the total wNVDA supply across every deployment. It tolerates in-flight transfers (retry or report pending) and does not fail when extra mNVDA was sent straight to the manager (that only raises locked).
   - [ ] Deploy and registration scripts are re-runnable and print addresses and the token id.
 - Result:
 
@@ -545,14 +553,27 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 - Owner: laptop
 - Status: todo
 - ADR: docs/adr/0013-wrapped-token-bridging-path.md
-- Depends on: T-033, T-034
+- Depends on: T-033, T-034, T-036
 - Goal: Prove the bridge layer on real testnets and record timings.
 - Acceptance criteria:
   - [ ] Opt-in test command (`test:integration`) with funded testnet wallets from env, never committed. Skipped by default.
   - [ ] Round trip: USDC in; mNVDA Sepolia → Arc; wNVDA Arc → Sepolia. After each leg, balances match and `check-supply` passes.
-  - [ ] Failure cases against the real contracts: rate limit 0, unregistered token, amount above the limit, too little gas.
+  - [ ] Failure cases against the real contracts: unregistered token, unsupported route, too little gas.
   - [ ] Resume test: kill the process mid-transfer and complete it.
   - [ ] Timings per leg are in the Result, and whether Fast Transfer exists for this token.
+- Result:
+
+### T-036: Bridge layer persistence and resume
+- Owner: laptop
+- Status: todo
+- ADR: docs/adr/0013-wrapped-token-bridging-path.md
+- Depends on: T-033
+- Goal: Persist transfer state so a page reload or process restart resumes an in-flight transfer.
+- Acceptance criteria:
+  - [ ] A storage interface in `packages/bridge` with a file or localStorage implementation; the state machine from T-033 writes every transition.
+  - [ ] `resume` completes a transfer after a restart, using only the stored record.
+  - [ ] Unit tests with a mocked kit: crash after SENT, crash after CONFIRMED, duplicate resume is safe.
+- Notes: Split out of T-033 so each fits one session.
 - Result:
 
 ### T-020: (post-MVP) Spike: indexer options on Arc testnet and Sepolia

@@ -29,3 +29,9 @@ Facts (fetched 2026-11-05/06, see ADR 0001 for links):
 - Fast Transfer for non-USDC tokens, in either direction.
 - Whether Bridge Kit lists our token ids without the token being in the Iris registry.
 - Real timings on Arc testnet for the mock token (T-024).
+
+## Amendment 2026-11-06 (devil's-advocate review)
+- No fallback of any kind. The user ruled out raw calls and a custom LOCK_UNLOCK token. If Bridge Kit cannot complete an ownerless transfer, T-024 stops and reports the evidence as a blocker.
+- Expect Standard speed from Sepolia (about 15 to 19 min). Circle's docs say a Fast quote is rejected for tokens without an FX symbol (`FX_SYMBOL_NOT_CONFIGURED`). T-024 confirms with a real quote.
+- The 0.5s Arc-source figure is for USDC; Sepolia block time adds to delivery.
+- Arc's Bridge page still says "USDC and EURC" only (checked 2026-11-06).

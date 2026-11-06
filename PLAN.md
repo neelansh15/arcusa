@@ -14,7 +14,7 @@ A stock terminal settled on Arc: US-stock exposure for non-US users, funded with
 - (Nov 6, Circle docs fetched live) CCTP for non-USDC is **permissionless on testnet**: register your own ERC-20 with `registerCustomToken`, no config fee on testnet (check mainnet fees). Four paths: transfer pre-configured token (EURC, cirBTC, WETH), custom token, ownerless token, native crosschain token (CREATE3).
 - Arc Testnet is supported (domain 26). `CrossChainTokenService`: testnets (incl. Arc) `0x63753E722bd2C2A5DF6EE19C5106662208B81077`, mainnet `0x431871229103b780868f8C6BB820cd16ECf942BC`. Per-token manager via `resolveTokenManager()`. Addresses are from the docs; not checked onchain.
 - Non-USDC fees are paid in native gas (USDC on Arc), not deducted from the transfer. Forwarding fee is $0.05 for most destinations; $0.20-1.20 tiers are HyperCore routes.
-- Gotchas: same deployer + salt on every chain or the link breaks silently; grant each TokenManager the minter role; rate limit defaults to 0 and blocks all transfers.
+- Gotchas: same deployer + salt on every chain or the link breaks silently; grant each TokenManager the minter role; rate limit defaults to 0 and blocks all transfers (custom tokens only; ownerless managers have no operator and no rate limit to set).
 
 ## Doc discrepancy to remember
 Some Arc pages (Bridge page, provider README, `llms.txt`) still say "USDC and EURC only" while the supported-tokens page and Circle news say WETH, cirBTC and CCTPx third-party assets. Docs lag the product. Always re-check fresh before relying on either.
@@ -46,10 +46,10 @@ How the price is kept right, and what the demo does when the US market is closed
 
 ## MVP
 1. Fresh-wallet testnet bridge: Sepolia USDC -> Arc testnet with `useForwarder: true`.
-2. Mock provider token `mNVDA` on Sepolia, registered ownerless (LOCK_UNLOCK); `wNVDA` deployed on Arc; non-zero rate limit.
+2. Mock provider token `mNVDA` on Sepolia, registered ownerless (LOCK_UNLOCK); `wNVDA` deployed on Arc; rate limit and operator read and recorded (nothing to set).
 3. Price oracle on Arc with guards and session awareness (Pyth Pro or Stork if access works, else a labelled relayer).
 4. Terminal UI: balance, price, session status, buy and sell against USDC on Arc from inventory.
-5. Bridge `wNVDA` Arc -> Sepolia with Bridge Kit as a visible step; raw contract calls as fallback.
+5. Bridge `wNVDA` Arc -> Sepolia with Bridge Kit as a visible step (required; no raw-call fallback, user decision 2026-11-06).
 
 Nov 6: the MVP is broken into tasks in [TASKS.md](TASKS.md). The first plan (own token, ADR 0002) was superseded the same day by ADRs 0012 to 0017 after the user's decision not to issue a token.
 
@@ -67,3 +67,4 @@ CCIP route (Chainlink CCIP track), Stablecoin FX for EUR users, ENS names, Defin
 - 2026-11-06: user decided arcusa issues no token: provider tokens are locked on their home chain and wrapped on Arc, with pre-positioned inventory and the bridge shown as a demo step. ADRs 0012 to 0017 supersede 0001, 0002, 0004, 0005, 0007 and 0009; new tasks T-022 to T-032; price parity policy in ADR 0015.
 - 2026-11-06: demo stock set to NVDA; Ondo API is the first-choice price source ([ADR 0015](docs/adr/0015-price-parity-and-off-hours-policy.md), T-025); off-hours demo mode approved.
 - 2026-11-06: priorities set by the user: build the bridge layer with tests first (T-033 to T-035); oracle, market and price parity are parked (T-025 to T-030) until phase 1 is done.
+- 2026-11-06: ADRs 0012 and 0013 accepted. Review fixes applied (T-022 rate limit, no fallback in T-033/T-013, T-002 layout, T-036 split, T-032 scope). The user ruled out any fallback if Bridge Kit cannot complete an ownerless transfer; T-024 reports a blocker instead.

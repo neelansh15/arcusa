@@ -12,7 +12,7 @@ One file per decision: `NNNN-short-title.md`, copied from `0000-template.md`. St
 | [0005](0005-trading-and-settlement.md) | Trading and settlement: oracle-priced mint and redeem against USDC on Arc | superseded by 0014 |
 | [0006](0006-arc-studio-workflow.md) | Arc Studio as the starting point; laptop drives it through the CLI and pulls code into this repo | accepted |
 | [0007](0007-track-targeting-and-demo-scope.md) | Track targeting and demo scope | superseded by 0017 |
-| [0008](0008-frontend-stack-and-wallet.md) | Frontend, stack and wallet | proposed (T-003, T-006) |
+| [0008](0008-frontend-stack-and-wallet.md) | Frontend, stack and wallet | proposed (T-003, T-024) |
 | [0009](0009-compliance-stance-testnet-demo.md) | Compliance and legal stance for the testnet demo | superseded by 0016 |
 | [0010](0010-repo-structure.md) | Repo structure | accepted |
 | [0011](0011-indexer-post-mvp.md) | Indexer for holdings, trades and history (post-MVP) | proposed (spike T-020, post-MVP) |
@@ -24,3 +24,5 @@ One file per decision: `NNNN-short-title.md`, copied from `0000-template.md`. St
 | [0017](0017-demo-scope-with-wrapped-token.md) | Demo scope with the wrapped token | proposed |
 
 Note: ADR 0010 (accepted, immutable) still says `tAAPL`. Read it as the wrapped token `wNVDA` (ADR 0012).
+
+Note: T-002 extends ADR 0010 (accepted) with `packages/bridge/` and `contracts/sepolia/`. The raw CCTS fallback in 0010 no longer applies (ADR 0013).
