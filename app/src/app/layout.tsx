@@ -12,14 +12,14 @@ const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono", displ
 const THEME_SCRIPT = `try{var t=localStorage.getItem("arcusa.theme");document.documentElement.setAttribute("data-theme",t==="light"?"light":"dark")}catch(e){}`;
 
 export const metadata: Metadata = {
-  title: "arcusa: US stocks, paid in USDC",
+  title: "arcusa: Bringing US stocks to Arc",
   description: "Buy a mock NVIDIA stock token with USDC, settled on Arc. A simple testnet demo: no real money, no real shares.",
   openGraph: {
-    title: "arcusa: US stocks, paid in USDC",
+    title: "arcusa: Bringing US stocks to Arc",
     description: "A simple testnet demo: buy a mock NVIDIA stock token with USDC, settled on Arc. No real money.",
     type: "website",
   },
-  twitter: { card: "summary_large_image", title: "arcusa: US stocks, paid in USDC", description: "A simple testnet demo on Arc. No real money, no real shares." },
+  twitter: { card: "summary_large_image", title: "arcusa: Bringing US stocks to Arc", description: "A simple testnet demo on Arc. No real money, no real shares." },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

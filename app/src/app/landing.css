@@ -320,3 +320,4 @@ html:has(.landing) { scroll-behavior: smooth; background: var(--canvas); }
   .lp-nav-inner { position: relative; } .lp-nav .menu-panel { top: calc(100% - 4px); left: 18px; right: 18px; }
 }
 @media (max-width: 420px) { .lp-nav-right { gap: 6px; } .lp-nav-right .lp-btn-sm { padding: 8px 14px; font-size: 14px; } }
+.lp-h1 { text-wrap: balance; }

@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "arcusa: US stocks, paid in USDC";
+export const alt = "arcusa: Bringing US stocks to Arc";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -12,9 +12,9 @@ export default function OgImage() {
           <div style={{ width: 44, height: 44, borderRadius: 12, background: "#c3dc4e", display: "flex" }} />
           arcusa
         </div>
-        <div style={{ display: "flex", flexDirection: "column", fontSize: 112, fontWeight: 800, lineHeight: 1.02, letterSpacing: -4, marginTop: 40 }}>
-          <span>US stocks.</span>
-          <span style={{ color: "#c3dc4e" }}>Paid in USDC.</span>
+        <div style={{ display: "flex", flexDirection: "column", fontSize: 100, fontWeight: 800, lineHeight: 1.02, letterSpacing: -4, marginTop: 40 }}>
+          <span>Bringing US stocks</span>
+          <span style={{ color: "#c3dc4e" }}>to Arc</span>
         </div>
         <div style={{ marginTop: 40, fontSize: 30, color: "#8b93a1" }}>Testnet demo. Not a security, no real shares, no real value.</div>
       </div>

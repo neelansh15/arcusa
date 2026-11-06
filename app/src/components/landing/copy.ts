@@ -9,8 +9,8 @@ export const DISCLAIMER_SHORT = "Testnet demo. Not a security, no real shares, n
 
 export const HERO = {
   eyebrow: "Testnet demo · no real money",
-  h1a: "US stocks.",
-  h1b: "Paid in USDC.",
+  h1a: "Bringing US stocks",
+  h1b: "to Arc",
   lead: "Buy a mock NVIDIA stock token with digital dollars. One balance, settled on Arc. Try it free on testnet.", // docs/how-it-works: USDC is Arc gas; mock token ADR 0016
   primary: "Open the app",
   secondary: "See how it works",
