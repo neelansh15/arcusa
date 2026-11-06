@@ -14,6 +14,9 @@ import { useQuote, type MarketState } from "@/lib/use-market";
 import type { ReactNode } from "react";
 
 
+// Native USDC left unspent on buys to cover gas for this and follow-up transactions.
+const GAS_RESERVE_USDC = 0.1;
+
 export function OrderTicket({ asset, market, usdcBal, nvdaBal, onDone, initialSide = "buy", slippageBps = 100, onSlippage, summaryHead }: { asset: LiveAsset; market: MarketState; usdcBal: number | null; nvdaBal: number | null; onDone?: () => void; initialSide?: "buy" | "sell"; slippageBps?: number; onSlippage?: (bps: number) => void; summaryHead?: ReactNode }) {
   const MARKET_ADDRESS = asset.live.market;
   const WNVDA = asset.live.token;
@@ -85,8 +88,12 @@ export function OrderTicket({ asset, market, usdcBal, nvdaBal, onDone, initialSi
 
   const setPct = (p: number) => {
     if (bal === null) return;
-    const v = (bal * p) / 100;
-    setAmount(side === "buy" ? v.toFixed(2) : v.toFixed(6));
+    // USDC is also Arc's gas token: keep a small reserve when paying with it, and truncate (never round up) so the amount never exceeds the balance.
+    const usable = side === "buy" ? Math.max(0, bal - GAS_RESERVE_USDC) : bal;
+    const dp = side === "buy" ? 2 : 6;
+    const f = 10 ** dp;
+    const v = Math.floor(((usable * p) / 100) * f + 1e-9) / f;
+    setAmount(v.toFixed(dp));
   };
 
   const wrongNet = isConnected && chainId !== ARC_CHAIN_ID;
