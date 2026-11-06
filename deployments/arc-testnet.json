@@ -17,5 +17,27 @@
   "sample": {
     "buyTx": "0xccbfdfa863c4cc2b962b2c40202b80ec4c5799f7b715240b7a8dfeddd3c600c6",
     "sellTx": "0xf089a3b0117ddea968bb429dff8c6d35193e51f2227aabd4187d6106c54082ba"
+  },
+  "tsla": {
+    "sourceToken": {
+      "address": "0xbd0ae58afe2d6c42a3b31f8d97b31093fcbc8bdf",
+      "chain": "ethereum-sepolia",
+      "deployTx": "0x1e20e2a08ae39939ee1bcef7c867661e4dadc3496cc4eacfe96885550cfa8130"
+    },
+    "tokenId": "0x7f1c9fb53db47fd1c05448f8551ce0db9d2a30cdd4836c55ab890597f278f930",
+    "registerTx": "0x88b72ca6d3fba249b967356c55673b296f06ca317d01e0dc050b8acdca06c1f7",
+    "deployRemoteTx": "0xd4d0e7bae2699c651e80716035804c64d52e4c6244b1178878856fe67cd596f1",
+    "tokenManager": "0xc49A72ceF1c4cDA64A4a12aBA9859a0E3BFE877f",
+    "wTSLA": "0xD6bB2FFfCc37845fe44767E40569b801c9F9afd5",
+    "priceOracle": {
+      "address": "0xf17f5449be304de315e48eee44cf889e8e47867d",
+      "tx": "0xd8b694e1680fe544a2a84b14606751a420341b30329cbf9cdb1ffa07a665fb59"
+    },
+    "inventoryMarket": {
+      "address": "0x7872ad4bb1a18b63140d4df0fe31af451470f0f3",
+      "tx": "0xff278d0295f5da914392d4a4900611eed1cf63b623eb4096f21a83b361c908b4"
+    },
+    "firstPriceTx": "0xb59157a5588ad03b3042c42f517f7679572b897f42e5eac5a9801afb69219934",
+    "setRelayerTx": "0xbf9a66fc0767d42e5a208b5e1a426d136da3e143de9b4da7a72bcc0f5c9577b3"
   }
 }

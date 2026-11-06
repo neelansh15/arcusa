@@ -38,6 +38,22 @@ export const SEPOLIA_MNVDA = {
   symbol: "mNVDA",
 } as const;
 
+export const WTSLA = {
+  address: "0xD6bB2FFfCc37845fe44767E40569b801c9F9afd5" as Address,
+  decimals: 18,
+  symbol: "wTSLA",
+} as const;
+
+export const SEPOLIA_MTSLA = {
+  address: "0xbd0ae58afe2d6c42a3b31f8d97b31093fcbc8bdf" as Address,
+  tokenId: "0x7f1c9fb53db47fd1c05448f8551ce0db9d2a30cdd4836c55ab890597f278f930" as Hex,
+  symbol: "mTSLA",
+} as const;
+
+// TSLA market (not wired into the UI yet; the app trades NVDA only).
+export const TSLA_PRICE_ORACLE_ADDRESS: Address = "0xf17f5449be304de315e48eee44cf889e8e47867d";
+export const TSLA_INVENTORY_MARKET_ADDRESS: Address = "0x7872ad4bb1a18b63140d4df0fe31af451470f0f3";
+
 // TODO: set once the Arc InventoryMarket (ADR 0014) is deployed.
 export const INVENTORY_MARKET_ADDRESS: Address | null = null;
 
