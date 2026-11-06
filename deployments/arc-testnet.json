@@ -1,0 +1,21 @@
+{
+  "chainId": 5042002,
+  "deployedAt": "2026-11-06",
+  "deployer": "0x07621e39424914f633D478DdE751f3FF728CB351",
+  "priceOracle": {
+    "address": "0xcd92cc2ff8d630a93090c203463843ffd685f83d",
+    "tx": "0x00af89531f97fbea3c63115bfd7edd388e1a50fabf561e7a23774f1b10ed489f"
+  },
+  "inventoryMarket": {
+    "address": "0x8046c2bcb05c8750772bfcc2109659c85f3b10f4",
+    "tx": "0xa01b539e5f78fb5df9e6d33baac2c1ac982924cfe4bbfa711a763f3f3e699b07"
+  },
+  "wNVDA": "0x5ad2862787d5C7F42a09014CE4C973d162878a16",
+  "usdc": "0x3600000000000000000000000000000000000000",
+  "ccts": "0x63753E722bd2C2A5DF6EE19C5106662208B81077",
+  "ownerlessTokenManager": "0x276fACA17FA1C19A0d9B4f1B190C89c2d28C601b",
+  "sample": {
+    "buyTx": "0xccbfdfa863c4cc2b962b2c40202b80ec4c5799f7b715240b7a8dfeddd3c600c6",
+    "sellTx": "0xf089a3b0117ddea968bb429dff8c6d35193e51f2227aabd4187d6106c54082ba"
+  }
+}
