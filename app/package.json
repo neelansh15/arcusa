@@ -12,7 +12,8 @@
     "start": "next start",
     "lint": "oxlint .",
     "format": "oxfmt .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "node --test src/lib/provider-rank.test.ts"
   },
   "dependencies": {
     "@circle-fin/adapter-viem-v2": "1.20.1",

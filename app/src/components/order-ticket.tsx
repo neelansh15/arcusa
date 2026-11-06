@@ -12,12 +12,19 @@ import { Toast, type ToastMsg } from "@/components/toast";
 import { friendlyMarketError } from "@/lib/market-errors";
 import { useQuote, type MarketState } from "@/lib/use-market";
 import type { ReactNode } from "react";
+import { useProviderQuotes } from "@/lib/use-provider-quotes";
+import { providersFor, type ProviderQuote } from "@/lib/providers";
+
+export const QUOTE_ONLY_REASON = "Quote only. This provider has no market yet.";
+
+/** What the optional provider picker slot receives (ADR 0026). Only rendered when an asset has 2+ providers. */
+export interface ProviderPickerCtx { quotes: ProviderQuote[]; selectedId: string | undefined; onSelect: (providerId: string) => void; side: "buy" | "sell" }
 
 
 // Native USDC left unspent on buys to cover gas for this and follow-up transactions.
 const GAS_RESERVE_USDC = 0.1;
 
-export function OrderTicket({ asset, market, usdcBal, nvdaBal, onDone, initialSide = "buy", slippageBps = 100, onSlippage, summaryHead }: { asset: LiveAsset; market: MarketState; usdcBal: number | null; nvdaBal: number | null; onDone?: () => void; initialSide?: "buy" | "sell"; slippageBps?: number; onSlippage?: (bps: number) => void; summaryHead?: ReactNode }) {
+export function OrderTicket({ asset, market, usdcBal, nvdaBal, onDone, initialSide = "buy", slippageBps = 100, onSlippage, summaryHead, selectedProviderId, onProviderChange, providerPicker }: { asset: LiveAsset; market: MarketState; usdcBal: number | null; nvdaBal: number | null; onDone?: () => void; initialSide?: "buy" | "sell"; slippageBps?: number; onSlippage?: (bps: number) => void; summaryHead?: ReactNode; selectedProviderId?: string; onProviderChange?: (id: string) => void; providerPicker?: (ctx: ProviderPickerCtx) => ReactNode }) {
   const MARKET_ADDRESS = asset.live.market;
   const WNVDA = asset.live.token;
   const { address, isConnected, chainId } = useConnection();
@@ -35,6 +42,12 @@ export function OrderTicket({ asset, market, usdcBal, nvdaBal, onDone, initialSi
   const token = side === "buy" ? ARC_USDC.address : WNVDA.address;
   const q = useQuote(asset, side, amount, inDec);
 
+  // Provider comparison (ADR 0026). Default = best; with one provider this is just that provider and nothing changes.
+  const pq = useProviderQuotes(asset, side, amount);
+  const selQ = pq.quotes.find((x) => x.providerId === selectedProviderId) ?? pq.best;
+  const provider = providersFor(asset.ticker).find((p) => p.id === selQ?.providerId);
+  const quoteOnly = !!provider && !provider.market;
+
   const allowance = useReadContract({
     chainId: ARC_CHAIN_ID,
     address: token,
@@ -45,14 +58,14 @@ export function OrderTicket({ asset, market, usdcBal, nvdaBal, onDone, initialSi
   });
 
   const bal = side === "buy" ? usdcBal : nvdaBal;
-  const outText = q.out !== null ? Number(formatUnits(q.out, outDec)).toLocaleString(undefined, { maximumFractionDigits: side === "buy" ? 6 : 4 }) : "—";
+  const outText = quoteOnly && selQ ? Number(selQ.amountOut).toLocaleString(undefined, { maximumFractionDigits: side === "buy" ? 6 : 4 }) : q.out !== null ? Number(formatUnits(q.out, outDec)).toLocaleString(undefined, { maximumFractionDigits: side === "buy" ? 6 : 4 }) : "—";
   const px = q.out && q.parsed ? (side === "buy" ? Number(formatUnits(q.parsed, 6)) / Number(formatUnits(q.out, 18)) : Number(formatUnits(q.out, 6)) / Number(formatUnits(q.parsed, 18))) : null;
   const overBal = bal !== null && Number(amount) > bal;
-  const quoteErr = q.error ? friendlyMarketError(q.error) : null;
-  const canSubmit = isConnected && q.parsed !== null && q.out !== null && !overBal && !busy && !market.inventory?.paused;
+  const quoteErr = q.error && !quoteOnly ? friendlyMarketError(q.error) : null;
+  const canSubmit = !quoteOnly && isConnected && q.parsed !== null && q.out !== null && !overBal && !busy && !market.inventory?.paused;
 
   async function submit() {
-    if (!address || !client || q.parsed === null || q.out === null) return;
+    if (quoteOnly || !address || !client || q.parsed === null || q.out === null) return;
     setMsg(null);
     try {
       if (chainId !== ARC_CHAIN_ID) await switchChainAsync({ chainId: ARC_CHAIN_ID });
@@ -99,8 +112,9 @@ export function OrderTicket({ asset, market, usdcBal, nvdaBal, onDone, initialSi
   const wrongNet = isConnected && chainId !== ARC_CHAIN_ID;
   const needsApproval = q.parsed !== null && ((allowance.data as bigint | undefined) ?? 0n) < q.parsed;
   const word = side === "buy" ? "Buy" : "Sell";
-  const outSym = side === "buy" ? WNVDA.symbol : "USDC";
-  const inSym = side === "buy" ? "USDC" : WNVDA.symbol;
+  const tokenSym = quoteOnly && provider ? provider.tokenSymbol : WNVDA.symbol;
+  const outSym = side === "buy" ? tokenSym : "USDC";
+  const inSym = side === "buy" ? "USDC" : tokenSym;
   // Estimated spread cost in USDC: notional * spread. Notional is the pay amount (buy) or the proceeds grossed up (sell).
   const spreadFrac = market.spreadBps !== null ? market.spreadBps / 10_000 : null;
   const outUsdc = q.out !== null && side === "sell" ? Number(formatUnits(q.out, 6)) : null;
@@ -112,6 +126,7 @@ export function OrderTicket({ asset, market, usdcBal, nvdaBal, onDone, initialSi
   let disabled = false;
   if (!isConnected) { label = "Connect wallet"; action = openConnect; }
   else if (wrongNet) { label = "Switch to Arc"; action = () => { switchChainAsync({ chainId: ARC_CHAIN_ID }).catch(() => {}); }; }
+  else if (quoteOnly) { label = "Quote only"; disabled = true; }
   else if (busy) { label = busy; disabled = true; }
   else { label = `${needsApproval ? "Approve & " : ""}${word} ${asset.ticker}`; action = submit; disabled = !canSubmit; }
 
@@ -153,7 +168,9 @@ export function OrderTicket({ asset, market, usdcBal, nvdaBal, onDone, initialSi
         </div>
       </div>
 
+      {providerPicker && pq.quotes.length > 1 && providerPicker({ quotes: pq.quotes, selectedId: selQ?.providerId, onSelect: (id) => onProviderChange?.(id), side })}
       <button className="tk-submit" disabled={disabled} onClick={action}>{label}</button>
+      {quoteOnly && <div className="tk-msg warn">{QUOTE_ONLY_REASON}</div>}
       {overBal && <div className="tk-msg neg">Amount exceeds your balance.</div>}
       {quoteErr && !overBal && <div className={`tk-alert ${quoteErr.tone}`} role="alert"><i aria-hidden="true">{quoteErr.tone === "info" ? "i" : "!"}</i><div><b>{quoteErr.title}</b><span>{quoteErr.text}</span></div></div>}
       {market.oracle?.stale && <div className="tk-msg warn">Oracle price is stale; off-hours demo mode is on.</div>}

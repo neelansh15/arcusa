@@ -32,6 +32,9 @@ export function Terminal() {
   const pro = proPref && !mobile; // Pro is desktop only
   const [slip, setSlip] = useState(100);
   const [tab, setTab] = useState<"balances" | "trades">("balances");
+  // Provider chosen per asset (ADR 0026). Unset = the ticket follows the best quote.
+  const [picked, setPicked] = useState<Record<string, string>>({});
+  const pickProps = { selectedProviderId: picked[asset.ticker], onProviderChange: (id: string) => setPicked((s) => ({ ...s, [asset.ticker]: id })) };
   const [sheet, setSheet] = useState<"buy" | "sell" | null>(null);
 
   // A range chip is enabled only when the price history actually spans it; no fabricated history.
@@ -93,7 +96,7 @@ export function Terminal() {
         </section>
         <aside className="side">
           {mobile && <Position usdc={bal.usdc} nvda={bal.nvda} quote={p.quote} symbol={sym} />}
-          {!mobile && <OrderTicket key={asset.ticker} asset={asset} market={m} usdcBal={bal.usdc} nvdaBal={bal.nvda} slippageBps={slip} onSlippage={pro ? setSlip : undefined} summaryHead={<PositionBody usdc={bal.usdc} nvda={bal.nvda} quote={p.quote} symbol={sym} />} />}
+          {!mobile && <OrderTicket key={asset.ticker} asset={asset} market={m} usdcBal={bal.usdc} nvdaBal={bal.nvda} {...pickProps} slippageBps={slip} onSlippage={pro ? setSlip : undefined} summaryHead={<PositionBody usdc={bal.usdc} nvda={bal.nvda} quote={p.quote} symbol={sym} />} />}
           {pro && <MarketInfo m={m} indicative={p.quote} symbol={sym} />}
         </aside>
       </main>
@@ -105,7 +108,7 @@ export function Terminal() {
           </div>
           {sheet && (
             <BottomSheet label={`${sheet} ${asset.ticker}`} onClose={() => setSheet(null)}>
-              <OrderTicket key={sheet + asset.ticker} asset={asset} initialSide={sheet} market={m} usdcBal={bal.usdc} nvdaBal={bal.nvda} onDone={() => setSheet(null)} />
+              <OrderTicket key={sheet + asset.ticker} asset={asset} initialSide={sheet} market={m} usdcBal={bal.usdc} nvdaBal={bal.nvda} {...pickProps} onDone={() => setSheet(null)} />
             </BottomSheet>
           )}
         </>

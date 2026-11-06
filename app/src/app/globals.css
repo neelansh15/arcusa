@@ -505,3 +505,34 @@ button.asset-row:focus-visible { outline: 2px solid var(--accent); outline-offse
 .tk-alert.info { background: var(--panel2); } .tk-alert.info i { background: var(--muted); }
 .logo svg { flex: none; display: block; }
 @media (max-width: 420px) { .logo svg { width: 26px; height: 26px; } }
+
+/* Provider selector (T-058, ADR 0026) */
+.prov-btn { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border: 1px solid transparent; border-radius: var(--r-pill); background: var(--panel2); color: var(--text); font: inherit; font-size: 14px; cursor: pointer; transition: background-color .15s; }
+.prov-btn:hover { background: var(--hover); border-color: var(--line2); } .prov-btn[aria-expanded="true"] { background: var(--hover); }
+.prov-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.prov-btn-label { color: var(--muted); } .prov-chev { color: var(--muted); } .prov-btn:hover .prov-chev { color: var(--text); }
+.prov-pill { display: inline-block; padding: 3px 10px; border-radius: var(--r-pill); font-size: 12px; font-weight: 600; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.prov-pill.best { background: var(--accent-fill); color: var(--on-accent); }
+.prov-pill.worse { background: var(--neg-soft); color: var(--neg); }
+.prov-pill.warn { background: var(--warn-soft); color: var(--warn); }
+.prov-pill.quote { background: var(--panel2); color: var(--text-2); border: 1px solid var(--line2); }
+.prov-pill.off { background: var(--panel2); color: var(--muted); }
+.prov-lead { margin: 0 2px 12px; font-size: 13px; color: var(--muted); line-height: 1.45; }
+.prov-state { margin: 0 0 12px; padding: 12px 14px; border-radius: 16px; background: var(--panel2); color: var(--text-2); font-size: 14px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.prov-state.err { background: var(--neg-soft); color: var(--text); }
+.prov-retry { padding: 6px 14px; font-size: 13px; font-weight: 600; }
+.prov-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; max-height: 52dvh; overflow-y: auto; }
+.prov-row { width: 100%; position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "main nums" "tags tags"; gap: 8px 14px; align-items: center; padding: 14px 16px; border-radius: 20px; background: var(--panel2); border: 1px solid transparent; color: var(--text); text-align: left; font: inherit; }
+button.prov-row { cursor: pointer; } button.prov-row:hover { background: var(--hover); border-color: var(--line2); }
+button.prov-row:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.prov-row.selected { box-shadow: 0 0 0 2px var(--accent); background: var(--accent-soft); }
+.prov-row.off { cursor: default; } .prov-row.off .prov-main b, .prov-row.off .prov-out { color: var(--muted); }
+.prov-main { grid-area: main; display: flex; flex-direction: column; min-width: 0; } .prov-main b { font-size: 17px; } .prov-main small { color: var(--muted); font-size: 13px; }
+.prov-nums { grid-area: nums; display: flex; flex-direction: column; align-items: flex-end; font-variant-numeric: tabular-nums; }
+.prov-out { font-size: 20px; font-weight: 700; letter-spacing: -.01em; } .prov-sub { display: flex; gap: 10px; font-size: 12px; color: var(--muted); }
+.prov-tags { grid-area: tags; display: flex; flex-wrap: wrap; gap: 6px; min-height: 0; } .prov-tags:empty { display: none; }
+.prov-check { position: absolute; right: 14px; top: 12px; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; background: var(--accent-fill); color: var(--on-accent); font-size: 13px; font-weight: 800; }
+.prov-row.selected .prov-nums { margin-right: 28px; }
+.prov-row.skeleton { min-height: 76px; }
+.sk { display: block; height: 14px; border-radius: 7px; background: var(--line2); animation: prov-pulse 1.2s ease-in-out infinite alternate; } .sk-a { width: 34%; } .sk-b { width: 22%; justify-self: end; } .sk-c { width: 28%; grid-column: 1 / -1; }
+@keyframes prov-pulse { from { opacity: .35; } to { opacity: .9; } }
