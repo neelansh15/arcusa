@@ -56,7 +56,8 @@ export function usePrice(symbol = "NVDA"): PriceState {
           const last = s.history[s.history.length - 1];
           const history =
             last && last.time >= time ? s.history : [...s.history, { time, value: body.quote }].slice(-5000);
-          return { quote: body.quote, fetchedAt: body.fetchedAt, stale: false, error: null, history };
+          // Fresh means the quote's own time is recent, not merely that the request succeeded: the price service answers 200 with its last tick even when the upstream feed has paused.
+          return { quote: body.quote, fetchedAt: body.fetchedAt, stale: Date.now() - body.fetchedAt > PRICE.staleAfterMs, error: null, history };
         });
       } catch (e) {
         if (!alive) return;
