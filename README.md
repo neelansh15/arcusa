@@ -116,6 +116,10 @@ What was built where, plainly:
 
 Status today: the app trades against the Studio-deployed contracts (NVDA and TSLA oracle and market, built, tested and deployed in Arc Studio, ADR 0025). The first, script-deployed set is superseded and kept under `superseded` in [`deployments/arc-testnet.json`](./deployments/arc-testnet.json). Real buys and sells on both stocks were run against the Studio markets on 2026-11-07 (hashes in [LOG.md](./LOG.md)).
 
+### Chainlink CRE parity monitor
+
+A Chainlink CRE workflow (`chainlink/cre/`) reads the locked token on Ethereum Sepolia, the wrapped supply and oracle round on Arc Testnet, and the xStocks price, and reports the lock-versus-wrap delta and the oracle deviation. It was run with `cre workflow simulate`; it is not deployed and does not feed the oracle. See [chainlink/cre/README.md](chainlink/cre/README.md).
+
 ## What is real and what is mocked
 
 | Real on testnet | Mocked or simplified |

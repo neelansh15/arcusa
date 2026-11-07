@@ -964,14 +964,14 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 
 ### T-060: Chainlink CRE parity monitor (track: Best workflow with CRE)
 - Owner: laptop
-- Status: blocked
+- Status: done
 - ADR: docs/adr/0028-chainlink-cre-parity-monitor.md (to be written)
 - Goal: a CRE workflow `chainlink/cre/parity-monitor` that reads locked mNVDA/mTSLA on Sepolia, wrapped supply and oracle round on Arc Testnet, and the xStocks price, reports lock-vs-wrap delta and oracle deviation; shown with `cre workflow simulate`. Plan: docs/research/extra-sponsor-tracks.md section 5.
 - Acceptance criteria:
-  - [ ] CRE CLI installed, `cre login` done, `cre workflow supported-chains` checked for Arc Testnet and Ethereum Sepolia.
-  - [ ] Workflow simulated for NVDA and TSLA, real output saved in `chainlink/cre/README.md`.
-  - [ ] README states what it does not do; link from main README; ADR 0028 (proposed).
+  - [x] CRE CLI installed, `cre login` done, `cre workflow supported-chains` checked for Arc Testnet and Ethereum Sepolia.
+  - [x] Workflow simulated for NVDA and TSLA, real output saved in `chainlink/cre/README.md`.
+  - [x] README states what it does not do; link from main README; ADR 0028 (proposed).
 - Notes: (earlier dropped, then reinstated by the user 2026-11-07; CLI v1.39.0 installed by the user session at ~/.cre/bin/cre, not on PATH.) Earlier BLOCKED 2026-11-07. The auto-mode classifier denied running the official installer (`curl -sSL https://app.chain.link/cre/install.sh | bash`, script downloaded to scratch and read: it fetches a signed release from the cre-cli GitHub releases and verifies checksum/PGP). Question for the user: run the install yourself, or allow it. Also needed: Bun >= 1.2.21 (not installed), and `cre login` (interactive, your Chainlink account).
-- Result:
 - Blocked 2026-11-07 (laptop): `cre version` works (v1.39.0, ~/.cre/bin) but `cre workflow supported-chains` and every other command stop with "not logged in". Needs the user: `~/.cre/bin/cre login` (interactive, Chainlink account). Also needs Bun (not installed; node 26 via fnm only). Nothing built.
 - Update 2026-11-07 (laptop): login done; `cre workflow supported-chains` lists both `ethereum-testnet-sepolia` and `arc-testnet`. Scaffold and workflow code committed in `chainlink/cre/` (`tsc --noEmit` passes). `cre workflow simulate` fails at compile: "bun is required for TypeScript workflows but was not found in PATH". Needs Bun from the user. NOT simulated, no README/ADR yet.
+- Result (2026-11-07, laptop): Built `chainlink/cre/` (CLI v1.39.0, Bun 1.4.4 installed by the user). `cre login` succeeded; `supported-chains` lists `ethereum-testnet-sepolia` and `arc-testnet`. `parity-monitor` reads the Sepolia lock, Arc wrapped supply, Studio oracle `latestRound()` and the xStocks price. Simulated for NVDA and TSLA: both succeeded, all four reads worked, both `healthy: true` (NVDA deviation -0.8 bps, TSLA -0.14 bps, locked equals wrapped). Output and exact commands in `chainlink/cre/README.md`. ADR 0028 (proposed) and a README subsection added. NOT verified: deployment (not done, Deploy Access not enabled), multi-node consensus, repeated cron ticks; the 30 bps limit is my reading of ADR 0015. The TSLA oracle was 54 s old against a 60 s limit. `docs/adr/README.md` index not updated (existing file).
