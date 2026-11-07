@@ -53,7 +53,8 @@ export const SEPOLIA_MTSLA = {
 // TODO: set once the Arc InventoryMarket (ADR 0014) is deployed.
 export const INVENTORY_MARKET_ADDRESS: Address | null = null;
 
-export const PRICE_API = process.env.NEXT_PUBLIC_PRICE_API ?? "https://arcusa-api.superd.app";
+// Same-origin proxy to the price service (see next.config.ts). Never point the browser at the backend directly.
+export const PRICE_API = "/ingest";
 
 export const PRICE = {
   route: "/api/price",
