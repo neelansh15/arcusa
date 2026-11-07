@@ -189,6 +189,15 @@ button.primary:hover:not(:disabled) { background: var(--accent2); border-color: 
 .chart-wrap { height: 100%; display: flex; flex-direction: column; }
 .chart-box { position: relative; flex: 1; min-height: 0; }
 .chart-box .chart { position: absolute; inset: 0; }
+/* Hover state: the title price rolls to the hovered point and the date shows underneath. */
+.price-wrap { display: flex; flex-direction: column; }
+.price-sub { font-size: 13px; color: var(--muted); min-height: 1.3em; opacity: 0; transform: translateY(-3px); transition: opacity .15s ease, transform .15s ease; font-variant-numeric: tabular-nums; }
+.price-sub.on { opacity: 1; transform: none; }
+.roll { display: inline-flex; white-space: pre; line-height: 1; }
+.roll-digit { display: inline-block; height: 1em; overflow: hidden; }
+.roll-strip { display: flex; flex-direction: column; transition: transform .28s cubic-bezier(.2, .8, .2, 1); }
+.roll-strip > span { height: 1em; line-height: 1; }
+@media (prefers-reduced-motion: reduce) { .roll-strip, .price-sub { transition: none; } }
 .chart-tip { position: absolute; z-index: 5; pointer-events: none; background: var(--tip-bg); color: var(--tip-text); border-radius: 10px; padding: 6px 10px; display: flex; flex-direction: column; gap: 1px; min-width: 110px; }
 .chart-tip b { font-family: var(--font-num); font-size: 14px; } .chart-tip span { font-size: 11px; opacity: .7; }
 .mtable { display: flex; flex-direction: column; }

@@ -2,7 +2,8 @@
 
 import { useMemo, useState } from "react";
 import { Balances, useBalances } from "./balances";
-import { PriceChart } from "./chart";
+import { PriceChart, type HoverPoint } from "./chart";
+import { RollingPrice } from "./rolling-price";
 import { AssetSelector } from "./asset-selector";
 import { BottomSheet } from "./bottom-sheet";
 import { Header } from "./header";
@@ -28,6 +29,7 @@ export function Terminal() {
   const m = useMarket(asset);
   const bal = useBalances(asset);
   const sym = asset.live.token.symbol;
+  const [hover, setHover] = useState<HoverPoint | null>(null);
   const [range, setRange] = useState<Range>("All");
   const mobile = useMedia("(max-width: 767px)");
   const [proPref, setPro] = usePro();
@@ -65,7 +67,8 @@ export function Terminal() {
   }, [p.history, active]);
 
   const first = view[0]?.value;
-  const chg = p.quote && first ? ((p.quote - first) / first) * 100 : null;
+  const shown = hover?.price ?? p.quote; // while hovering the chart, the title shows the hovered point
+  const chg = shown && first ? ((shown - first) / first) * 100 : null;
   const down = chg !== null && chg < 0;
 
   return (
@@ -77,7 +80,10 @@ export function Terminal() {
             <h1><AssetSelector asset={asset} onSelect={(a: Asset) => { if (a.live) setAsset(a as LiveAsset); }} /></h1>
           </div>
           <div className="price-row">
-            <span className="price">${p.quote ? p.quote.toFixed(2) : "—"}</span>
+            <div className="price-wrap">
+              {shown ? <RollingPrice className="price" value={`$${shown.toFixed(2)}`} /> : <span className="price">—</span>}
+              <span className={`price-sub ${hover ? "on" : ""}`}>{hover ? new Date(hover.time * 1000).toLocaleString(undefined, { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" }) : " "}</span>
+            </div>
             {chg !== null && <span className={`pill ${down ? "down" : "up"}`}>{chg >= 0 ? "+" : ""}{chg.toFixed(2)}%{active === "All" ? " session" : ` ${active}`}</span>}
             <div className="chips" role="tablist" aria-label="Range">
               {(Object.keys(RANGES) as Range[]).map((r) => (
@@ -95,7 +101,7 @@ export function Terminal() {
               <div><span>Feed</span><b className={p.stale ? "warn" : "pos"}>{p.stale ? "STALE" : "LIVE"}</b></div>
             </div>
           )}
-          <div className="chart-slot"><PriceChart history={view} variant={pro ? "candles" : "line"} ticker={asset.ticker} /></div>
+          <div className="chart-slot"><PriceChart history={view} variant={pro ? "candles" : "line"} ticker={asset.ticker} onHover={setHover} /></div>
           {mobile ? (
             <details className="mdetails"><summary>Market details</summary><MarketTable m={m} stale={p.stale} /></details>
           ) : !pro ? (

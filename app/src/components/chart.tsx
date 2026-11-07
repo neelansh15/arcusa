@@ -27,21 +27,21 @@ function readTheme() {
 }
 type ChartTheme = ReturnType<typeof readTheme>;
 
-interface Hover {
-  x: number;
-  y: number;
+/** The point under the crosshair (line chart only). The page shows it in the title price; there is no tooltip. */
+export interface HoverPoint {
   price: number;
   time: number;
 }
 
 /** Simple: a smooth area line with a hover tooltip. Pro: candlesticks with an interval picker. Colours come from the theme tokens. */
-export function PriceChart({ history, variant = "line", ticker = "NVDA" }: { history: PricePoint[]; variant?: "line" | "candles"; ticker?: string }) {
+export function PriceChart({ history, variant = "line", ticker = "NVDA", onHover }: { history: PricePoint[]; variant?: "line" | "candles"; ticker?: string; onHover?: (p: HoverPoint | null) => void }) {
   const el = useRef<HTMLDivElement>(null);
   const chartRef = useRef<IChartApi | null>(null);
   const area = useRef<ISeriesApi<"Area"> | null>(null);
   const candle = useRef<ISeriesApi<"Candlestick"> | null>(null);
   const [interval, setIntervalKey] = useState<Interval>("1m");
-  const [hover, setHover] = useState<Hover | null>(null);
+  const onHoverRef = useRef(onHover);
+  onHoverRef.current = onHover;
   const [theme, setTheme] = useState<ChartTheme | null>(null);
   const candles = useMemo(() => toCandles(history, interval), [history, interval]);
   const falling = history.length > 1 && history[history.length - 1].value < history[0].value;
@@ -88,11 +88,12 @@ export function PriceChart({ history, variant = "line", ticker = "NVDA" }: { his
       });
       chart.subscribeCrosshairMove((p) => {
         const d = area.current && p.seriesData.get(area.current);
-        if (!p.point || !d || !("value" in d) || p.time === undefined) return setHover(null);
-        setHover({ x: p.point.x, y: p.point.y, price: d.value, time: p.time as number });
+        if (!p.point || !d || !("value" in d) || p.time === undefined) return onHoverRef.current?.(null);
+        onHoverRef.current?.({ price: d.value, time: p.time as number });
       });
     }
     return () => {
+      onHoverRef.current?.(null);
       chart.remove();
       chartRef.current = null;
       area.current = null;
@@ -136,12 +137,6 @@ export function PriceChart({ history, variant = "line", ticker = "NVDA" }: { his
       )}
       <div className="chart-box">
         <div ref={el} className="chart" />
-        {hover && variant === "line" && (
-          <div className="chart-tip" style={{ left: Math.min(Math.max(hover.x + 14, 4), (el.current?.clientWidth ?? 400) - 130), top: Math.max(hover.y - 56, 4) }}>
-            <b>${hover.price.toFixed(2)}</b>
-            <span>{new Date(hover.time * 1000).toLocaleString(undefined, { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}</span>
-          </div>
-        )}
       </div>
     </div>
   );
