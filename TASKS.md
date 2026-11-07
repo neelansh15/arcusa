@@ -964,7 +964,7 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
 
 ### T-060: Chainlink CRE parity monitor (track: Best workflow with CRE)
 - Owner: laptop
-- Status: doing
+- Status: blocked
 - ADR: docs/adr/0028-chainlink-cre-parity-monitor.md (to be written)
 - Goal: a CRE workflow `chainlink/cre/parity-monitor` that reads locked mNVDA/mTSLA on Sepolia, wrapped supply and oracle round on Arc Testnet, and the xStocks price, reports lock-vs-wrap delta and oracle deviation; shown with `cre workflow simulate`. Plan: docs/research/extra-sponsor-tracks.md section 5.
 - Acceptance criteria:
@@ -973,3 +973,4 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
   - [ ] README states what it does not do; link from main README; ADR 0028 (proposed).
 - Notes: (earlier dropped, then reinstated by the user 2026-11-07; CLI v1.39.0 installed by the user session at ~/.cre/bin/cre, not on PATH.) Earlier BLOCKED 2026-11-07. The auto-mode classifier denied running the official installer (`curl -sSL https://app.chain.link/cre/install.sh | bash`, script downloaded to scratch and read: it fetches a signed release from the cre-cli GitHub releases and verifies checksum/PGP). Question for the user: run the install yourself, or allow it. Also needed: Bun >= 1.2.21 (not installed), and `cre login` (interactive, your Chainlink account).
 - Result:
+- Blocked 2026-11-07 (laptop): `cre version` works (v1.39.0, ~/.cre/bin) but `cre workflow supported-chains` and every other command stop with "not logged in". Needs the user: `~/.cre/bin/cre login` (interactive, Chainlink account). Also needs Bun (not installed; node 26 via fnm only). Nothing built.
