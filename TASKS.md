@@ -961,3 +961,15 @@ One row per task; the ID links to the task block. Keep Status in sync with the t
   - [ ] `latestRound()` on the TSLA oracle shows a stale flag of false and age under a minute.
 - Notes: Written by laptop, which cannot reach the server. The relayer itself needs no code change. The working tree on the laptop had uncommitted edits to `services/price/relayer.mjs` (not mine), so check what is on main before restarting the NVDA relayer.
 - Result:
+
+### T-060: Chainlink CRE parity monitor (track: Best workflow with CRE)
+- Owner: laptop
+- Status: blocked
+- ADR: docs/adr/0028-chainlink-cre-parity-monitor.md (to be written)
+- Goal: a CRE workflow `chainlink/cre/parity-monitor` that reads locked mNVDA/mTSLA on Sepolia, wrapped supply and oracle round on Arc Testnet, and the xStocks price, reports lock-vs-wrap delta and oracle deviation; shown with `cre workflow simulate`. Plan: docs/research/extra-sponsor-tracks.md section 5.
+- Acceptance criteria:
+  - [ ] CRE CLI installed, `cre login` done, `cre workflow supported-chains` checked for Arc Testnet and Ethereum Sepolia.
+  - [ ] Workflow simulated for NVDA and TSLA, real output saved in `chainlink/cre/README.md`.
+  - [ ] README states what it does not do; link from main README; ADR 0028 (proposed).
+- Notes: BLOCKED 2026-11-07. The auto-mode classifier denied running the official installer (`curl -sSL https://app.chain.link/cre/install.sh | bash`, script downloaded to scratch and read: it fetches a signed release from the cre-cli GitHub releases and verifies checksum/PGP). Question for the user: run the install yourself, or allow it. Also needed: Bun >= 1.2.21 (not installed), and `cre login` (interactive, your Chainlink account).
+- Result:
