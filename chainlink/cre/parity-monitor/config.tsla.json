@@ -1,0 +1,14 @@
+{
+  "schedule": "0 */5 * * * *",
+  "sourceChain": "ethereum-testnet-sepolia",
+  "arcChain": "arc-testnet",
+  "thresholds": { "maxOracleAgeSeconds": 60, "maxDeviationBps": 30 },
+  "asset": {
+    "symbol": "TSLA",
+    "sourceToken": "0xbd0ae58afe2d6c42a3b31f8d97b31093fcbc8bdf",
+    "tokenManager": "0xc49A72ceF1c4cDA64A4a12aBA9859a0E3BFE877f",
+    "wrappedToken": "0xD6bB2FFfCc37845fe44767E40569b801c9F9afd5",
+    "priceOracle": "0x1b53204d9d873b74760fd1933e8151220995de05",
+    "priceUrl": "https://api.xstocks.fi/api/v2/public/assets/TSLAx/price-data"
+  }
+}

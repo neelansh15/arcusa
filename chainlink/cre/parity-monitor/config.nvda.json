@@ -1,0 +1,14 @@
+{
+  "schedule": "0 */5 * * * *",
+  "sourceChain": "ethereum-testnet-sepolia",
+  "arcChain": "arc-testnet",
+  "thresholds": { "maxOracleAgeSeconds": 60, "maxDeviationBps": 30 },
+  "asset": {
+    "symbol": "NVDA",
+    "sourceToken": "0xecD2332b5E119C0a34dbd80043EC54cd1a9B7423",
+    "tokenManager": "0x276fACA17FA1C19A0d9B4f1B190C89c2d28C601b",
+    "wrappedToken": "0x5ad2862787d5C7F42a09014CE4C973d162878a16",
+    "priceOracle": "0x8503bb2d15f88bb31a9363bc0dfbe9391028ebda",
+    "priceUrl": "https://api.xstocks.fi/api/v2/public/assets/NVDAx/price-data"
+  }
+}
