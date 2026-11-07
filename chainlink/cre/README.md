@@ -50,7 +50,7 @@ Both runs printed `Workflow compiled` and `Workflow Simulation Result`; all four
 
 ## What it does NOT do
 
-- It is not deployed on the CRE network (the account shows "Deploy Access: Not enabled"). It was only simulated.
+- It is not deployed on the CRE network (the account shows "Deploy Access: Not enabled"). It was only simulated. Deployment access was requested with `cre account access` on 2026-11-07 (purpose: Hackathon) and is pending; this file will say so if it is granted.
 - It does not write onchain and does not feed the oracle. The oracle price still comes from xStocks through our own relayer.
 - It does not replace the relayer or any contract check.
 - It uses no Chainlink Data Feeds or Data Streams. The price source is the xStocks API.
